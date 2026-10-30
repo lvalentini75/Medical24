@@ -1,0 +1,97 @@
+{
+ "name": "CKD-EPI 2021 (creatinina, senza coefficiente etnico)",
+ "version": "0.1-draft",
+ "status": "draft",
+ "source": "Inker LA et al. New creatinine- and cystatin C-based equations to estimate GFR without race. N Engl J Med 2021;385:1737-1749. Stadi KDIGO 2012.",
+ "inputs": [
+  {
+   "id": "scr",
+   "unit": "mg/dL",
+   "loinc": "2160-0",
+   "note": "umol/L / 88.4"
+  },
+  {
+   "id": "age",
+   "unit": "years"
+  },
+  {
+   "id": "sex",
+   "values": [
+    "male",
+    "female"
+   ]
+  }
+ ],
+ "formula": "eGFR = 142 × min(Scr/κ, 1)^α × max(Scr/κ, 1)^-1.200 × 0.9938^età × 1.012 [se femmina]; κ = 0.7 (F) / 0.9 (M); α = -0.241 (F) / -0.302 (M); unità mL/min/1.73 m²",
+ "output_loinc": "98979-8",
+ "stages": [
+  {
+   "id": "G1",
+   "min": 90,
+   "level": "low"
+  },
+  {
+   "id": "G2",
+   "min": 60,
+   "max": 89.99,
+   "level": "low"
+  },
+  {
+   "id": "G3a",
+   "min": 45,
+   "max": 59.99,
+   "level": "medium"
+  },
+  {
+   "id": "G3b",
+   "min": 30,
+   "max": 44.99,
+   "level": "high"
+  },
+  {
+   "id": "G4",
+   "min": 15,
+   "max": 29.99,
+   "level": "high"
+  },
+  {
+   "id": "G5",
+   "max": 14.99,
+   "level": "high"
+  }
+ ],
+ "notes": "G1 e G2 indicano funzione normale o lievemente ridotta: il livello di rischio resta basso salvo albuminuria (non valutata qui). Il valore eGFR stampato sul referto, se presente, ha la precedenza su quello calcolato.",
+ "test_cases": [
+  {
+   "scr": 0.9,
+   "age": 50,
+   "sex": "male",
+   "expected_egfr": 104.0
+  },
+  {
+   "scr": 0.7,
+   "age": 50,
+   "sex": "female",
+   "expected_egfr": 105.3
+  },
+  {
+   "scr": 1.5,
+   "age": 65,
+   "sex": "male",
+   "expected_egfr": 51.3
+  },
+  {
+   "scr": 2.2,
+   "age": 70,
+   "sex": "female",
+   "expected_egfr": 23.5
+  },
+  {
+   "scr": 0.6,
+   "age": 30,
+   "sex": "male",
+   "expected_egfr": 133.2
+  }
+ ],
+ "disclaimer_it": "Stima della funzione renale (eGFR, CKD-EPI 2021). Non è una diagnosi: discutila con il medico."
+}

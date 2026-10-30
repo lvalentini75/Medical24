@@ -1,0 +1,74 @@
+code,name_it,name_en,synonyms_it,synonyms_en,category,unit_canonical,unit_alternatives,ref_low_m,ref_high_m,ref_low_f,ref_high_f,age_note,plausible_min,plausible_max,safety_low,safety_high,organs,notes,status,board_version
+718-7,Emoglobina,Hemoglobin,Hb;HGB;emoglobina,Hb;HGB,ematologia,g/dL,g/L:0.1;mmol/L:1.611,13.5,17.5,12.0,16.0,,3,25,7,20,blood,,draft,0
+4544-3,Ematocrito,Hematocrit,Hct;HCT;ematocrito,Hct;HCT;PCV,ematologia,%,L/L:100,40,52,36,46,,10,70,,,blood,,draft,0
+789-8,Eritrociti,Erythrocytes (RBC),globuli rossi;RBC;GR,RBC;red blood cells,ematologia,10*6/uL,10*12/L:1,4.5,5.9,4.0,5.2,,1,8,,,blood,,draft,0
+6690-2,Leucociti,Leukocytes (WBC),globuli bianchi;WBC;GB,WBC;white blood cells,ematologia,10*3/uL,10*9/L:1;/uL:0.001,4.0,10.0,4.0,10.0,,0.1,200,1.0,50,blood;immune,,draft,0
+777-3,Piastrine,Platelets,PLT;trombociti,PLT;thrombocytes,ematologia,10*3/uL,10*9/L:1;/uL:0.001,150,400,150,400,,5,2000,30,1000,blood,,draft,0
+787-2,MCV,MCV (mean corpuscular volume),volume corpuscolare medio;VCM,mean cell volume,ematologia,fL,,80,100,80,100,,40,150,,,blood,,draft,0
+785-6,MCH,MCH (mean corpuscular hemoglobin),emoglobina corpuscolare media;HCM,mean cell hemoglobin,ematologia,pg,,27,33,27,33,,10,50,,,blood,,draft,0
+786-4,MCHC,MCHC,concentrazione emoglobinica corpuscolare media;CHCM,mean cell hemoglobin concentration,ematologia,g/dL,g/L:0.1,32,36,32,36,,20,45,,,blood,,draft,0
+788-0,RDW,RDW (red cell distribution width),ampiezza di distribuzione eritrocitaria;RDW-CV,RDW-CV,ematologia,%,,11.5,14.5,11.5,14.5,,5,40,,,blood,,draft,0
+751-8,Neutrofili,Neutrophils (absolute),granulociti neutrofili;neutrofili assoluti,ANC;neutrophil count,ematologia,10*3/uL,10*9/L:1;/uL:0.001,1.8,7.5,1.8,7.5,,0,100,0.5,,blood;immune,"conta assoluta, non percentuale",draft,0
+731-0,Linfociti,Lymphocytes (absolute),linfociti assoluti,lymphocyte count,ematologia,10*3/uL,10*9/L:1;/uL:0.001,1.0,4.0,1.0,4.0,,0,100,,,blood;immune,conta assoluta,draft,0
+742-7,Monociti,Monocytes (absolute),monociti assoluti,monocyte count,ematologia,10*3/uL,10*9/L:1;/uL:0.001,0.2,0.8,0.2,0.8,,0,20,,,blood;immune,conta assoluta,draft,0
+711-2,Eosinofili,Eosinophils (absolute),eosinofili assoluti,eosinophil count,ematologia,10*3/uL,10*9/L:1;/uL:0.001,0.0,0.5,0.0,0.5,,0,20,,,blood;immune,conta assoluta,draft,0
+704-7,Basofili,Basophils (absolute),basofili assoluti,basophil count,ematologia,10*3/uL,10*9/L:1;/uL:0.001,0.0,0.2,0.0,0.2,,0,5,,,blood;immune,conta assoluta,draft,0
+4537-7,VES,ESR (Westergren),velocità di eritrosedimentazione;VES 1h,erythrocyte sedimentation rate,infiammazione,mm/h,,0,15,0,20,"sopra i 50 anni: M fino a 20, F fino a 30",0,150,,,immune,,draft,0
+2345-7,Glicemia,Glucose,glucosio;glucosio a digiuno;glicemia basale,glucose;fasting glucose;FBG,glicemia,mg/dL,mmol/L:18.016,70,99,70,99,a digiuno,20,1000,50,400,pancreas;metabolism,"intervallo a digiuno; 100-125 alterata, >=126 da confermare con il medico",draft,0
+4548-4,Emoglobina glicata,Hemoglobin A1c,HbA1c;emoglobina glicosilata;A1c,HbA1c;A1c;glycated hemoglobin,glicemia,%,mmol/mol:IFCC,4.0,5.6,4.0,5.6,,3,20,,,pancreas;metabolism,conversione IFCC: mmol/mol = (% x 10.93) - 23.5; 5.7-6.4 prediabete secondo ADA,draft,0
+20448-7,Insulina,Insulin,insulinemia;insulina a digiuno,insulin;fasting insulin,glicemia,u[IU]/mL,pmol/L:0.144,2,25,2,25,a digiuno,0,300,,,pancreas;metabolism,,draft,0
+2093-3,Colesterolo totale,"Cholesterol, total",colesterolemia;colesterolo,total cholesterol;TC,lipidi,mg/dL,mmol/L:38.67,,200,,200,,50,800,,,heart;metabolism,desiderabile <200,draft,0
+2085-9,Colesterolo HDL,Cholesterol in HDL,HDL;colesterolo buono,HDL-C;HDL cholesterol,lipidi,mg/dL,mmol/L:38.67,40,,50,,,5,150,,,heart;metabolism,"desiderabile: M >40, F >50",draft,0
+13457-7,Colesterolo LDL (calcolato),Cholesterol in LDL by calculation,LDL;colesterolo cattivo;LDL calcolato;Friedewald,LDL-C;LDL cholesterol calculated,lipidi,mg/dL,mmol/L:38.67,,116,,116,,10,600,,,heart;metabolism,"obiettivo dipende dal rischio cardiovascolare (ESC/EAS 2019): <116 rischio basso, <100 moderato, <70 alto, <55 molto alto",draft,0
+2089-1,Colesterolo LDL (diretto),"Cholesterol in LDL, direct",LDL diretto,LDL-C direct,lipidi,mg/dL,mmol/L:38.67,,116,,116,,10,600,,,heart;metabolism,"come 13457-7, misurato direttamente",draft,0
+2571-8,Trigliceridi,Triglycerides,trigliceridemia;TG,TG;triglycerides,lipidi,mg/dL,mmol/L:88.57,,150,,150,a digiuno,20,5000,,1000,heart;metabolism;pancreas,desiderabile <150; >=500 rischio di pancreatite,draft,0
+10835-7,Lipoproteina (a),Lipoprotein (a),Lp(a),Lp(a),lipidi,mg/dL,nmol/L:0.4167,,30,,30,,0,500,,,heart,valore unico nella vita; desiderabile <30 mg/dL (<75 nmol/L),draft,0
+1884-6,Apolipoproteina B,Apolipoprotein B,ApoB;apo B,ApoB,lipidi,mg/dL,g/L:100,,100,,100,,10,300,,,heart;metabolism,"desiderabile <100; <80 ad alto rischio, <65 a rischio molto alto",draft,0
+2160-0,Creatinina,Creatinine,creatininemia;creatinina sierica,creatinine;serum creatinine,reni,mg/dL,umol/L:0.01131,0.7,1.2,0.5,1.0,,0.1,30,,5,kidney,,draft,0
+98979-8,eGFR (CKD-EPI 2021),eGFR (CKD-EPI 2021),filtrato glomerulare stimato;VFG;GFR stimato;clearance stimata,eGFR;estimated GFR,reni,mL/min/{1.73_m2},,90,,90,,sopra i 65 anni valori 60-89 frequenti,1,200,15,,kidney,">=90 normale; 60-89 lieve riduzione; <60 da valutare con il medico; calcolo da creatinina, età e sesso",draft,0
+3091-6,Urea (azotemia),Urea,azotemia;urea sierica,urea;blood urea,reni,mg/dL,mmol/L:6.006;BUN mg/dL:2.14,17,49,17,49,,2,400,,,kidney,BUN = urea / 2.14,draft,0
+3084-1,Acido urico,Uric acid,uricemia;urato,urate;uric acid,reni;metabolism,mg/dL,umol/L:0.01681,3.5,7.2,2.6,6.0,,0.5,25,,,kidney;metabolism;bone,,draft,0
+2951-2,Sodio,Sodium,natriemia;Na,Na;sodium,elettroliti,mmol/L,mEq/L:1,136,145,136,145,,100,180,120,160,kidney;heart,,draft,0
+2823-3,Potassio,Potassium,potassiemia;K;kaliemia,K;potassium,elettroliti,mmol/L,mEq/L:1,3.5,5.1,3.5,5.1,,1.5,10,2.5,6.5,kidney;heart,,draft,0
+2075-0,Cloro,Chloride,cloremia;Cl,Cl;chloride,elettroliti,mmol/L,mEq/L:1,98,107,98,107,,60,140,,,kidney,,draft,0
+17861-6,Calcio,Calcium,calcemia;Ca;calcio totale,Ca;calcium,elettroliti,mg/dL,mmol/L:4.008,8.6,10.2,8.6,10.2,,4,18,6,13,bone;kidney,"calcio totale, non ionizzato",draft,0
+19123-9,Magnesio,Magnesium,magnesiemia;Mg,Mg;magnesium,elettroliti,mg/dL,mmol/L:2.431;mEq/L:1.215,1.7,2.4,1.7,2.4,,0.5,8,,,kidney;heart;muscle,,draft,0
+2777-1,Fosforo,Phosphate,fosforemia;fosfato;P,phosphorus;phosphate,elettroliti,mg/dL,mmol/L:3.097,2.5,4.5,2.5,4.5,,0.5,15,,,bone;kidney,,draft,0
+1920-8,AST (GOT),AST (SGOT),transaminasi GOT;aspartato aminotransferasi;SGOT,AST;aspartate aminotransferase,fegato,U/L,ukat/L:60,,40,,32,,1,20000,,,liver;muscle;heart,,draft,0
+1742-6,ALT (GPT),ALT (SGPT),transaminasi GPT;alanina aminotransferasi;SGPT,ALT;alanine aminotransferase,fegato,U/L,ukat/L:60,,41,,33,,1,20000,,,liver,,draft,0
+2324-2,Gamma GT,Gamma glutamyl transferase,GGT;gamma glutamil transferasi;γGT,GGT,fegato,U/L,ukat/L:60,10,71,6,42,,1,5000,,,liver,,draft,0
+6768-6,Fosfatasi alcalina,Alkaline phosphatase,ALP;fosfatasi alcalina totale,ALP;alk phos,fegato,U/L,ukat/L:60,40,130,35,105,adolescenti in crescita: valori più alti,5,3000,,,liver;bone,,draft,0
+1975-2,Bilirubina totale,"Bilirubin, total",bilirubinemia totale,total bilirubin,fegato,mg/dL,umol/L:0.05848,0.2,1.2,0.2,1.2,,0,50,,,liver,,draft,0
+1968-7,Bilirubina diretta,"Bilirubin, direct",bilirubina coniugata,direct bilirubin;conjugated bilirubin,fegato,mg/dL,umol/L:0.05848,0,0.3,0,0.3,,0,30,,,liver,,draft,0
+1751-7,Albumina,Albumin,albuminemia,albumin;serum albumin,fegato,g/dL,g/L:0.1,3.5,5.0,3.5,5.0,,1,7,,,liver;kidney,,draft,0
+2885-2,Proteine totali,"Protein, total",protidemia;proteine totali sieriche,total protein,fegato,g/dL,g/L:0.1,6.4,8.3,6.4,8.3,,2,12,,,liver;kidney,,draft,0
+2532-0,LDH,Lactate dehydrogenase,lattato deidrogenasi;LDH totale,LDH;LD,fegato;muscle,U/L,ukat/L:60,135,225,135,225,,20,10000,,,liver;muscle;blood,intervallo dipende dal metodo,draft,0
+1798-8,Amilasi,Amylase,amilasemia;amilasi totale,amylase,pancreas,U/L,ukat/L:60,28,100,28,100,,1,5000,,,pancreas,,draft,0
+3040-3,Lipasi,Lipase,lipasemia,lipase,pancreas,U/L,ukat/L:60,13,60,13,60,,1,5000,,,pancreas,,draft,0
+2157-6,CK (CPK),Creatine kinase,creatinchinasi;CPK;creatinfosfochinasi,CK;CPK;creatine kinase,muscle,U/L,ukat/L:60,39,308,26,192,,5,100000,,,muscle;heart,,draft,0
+3016-3,TSH,TSH,tireotropina;ormone tireostimolante,thyrotropin;TSH,tiroide,m[IU]/L,u[IU]/mL:1,0.27,4.2,0.27,4.2,gravidanza: intervalli per trimestre,0.005,200,,,thyroid,,draft,0
+3024-7,FT4,Free T4,tiroxina libera;T4 libero,free thyroxine,tiroide,ng/dL,pmol/L:0.0777,0.93,1.7,0.93,1.7,,0.1,10,,,thyroid,,draft,0
+3051-0,FT3,Free T3,triiodotironina libera;T3 libero,free triiodothyronine,tiroide,pg/mL,pmol/L:0.651,2.0,4.4,2.0,4.4,,0.1,30,,,thyroid,,draft,0
+2498-4,Sideremia,Iron,ferro sierico;ferro,serum iron,ferro,ug/dL,umol/L:5.587,59,158,37,145,,5,1000,,,blood;liver,,draft,0
+2276-4,Ferritina,Ferritin,ferritinemia,ferritin,ferro,ng/mL,ug/L:1;pmol/L:0.445,30,400,13,150,,1,20000,,,blood;liver,,draft,0
+3034-6,Transferrina,Transferrin,transferrinemia,transferrin,ferro,mg/dL,g/L:100;umol/L:7.87,200,360,200,360,,50,700,,,blood;liver,,draft,0
+2502-3,Saturazione della transferrina,Iron saturation,saturazione transferrina;TSAT,transferrin saturation;TSAT,ferro,%,,20,50,15,50,,1,100,,,blood;liver,,draft,0
+2500-7,TIBC,Iron binding capacity,capacità totale legante il ferro,TIBC,ferro,ug/dL,umol/L:5.587,250,450,250,450,,50,900,,,blood,,draft,0
+2132-9,Vitamina B12,Vitamin B12,cobalamina;B12,cobalamin;B12,vitamine,pg/mL,pmol/L:1.355,197,771,197,771,,20,5000,,,blood,,draft,0
+2284-8,Folati,Folate,acido folico;folato sierico,folic acid;serum folate,vitamine,ng/mL,nmol/L:0.4413,3.9,26.8,3.9,26.8,,0.1,100,,,blood,,draft,0
+62292-8,Vitamina D (25-OH),25-Hydroxyvitamin D (D2+D3),25-idrossivitamina D;25-OH-D;calcifediolo,25-OH vitamin D;calcidiol,vitamine,ng/mL,nmol/L:0.4006,30,100,30,100,,1,300,,,bone;immune,20-30 insufficienza; <20 carenza; sufficienza >=30 (soglie da confermare dal board),draft,0
+1988-5,Proteina C reattiva,C reactive protein,PCR;CRP,CRP,infiammazione,mg/L,mg/dL:10,,5,,5,,0,1000,,,immune,,draft,0
+30522-7,PCR ad alta sensibilità,hs-CRP,hs-PCR;PCR ultrasensibile,hs-CRP,infiammazione,mg/L,mg/dL:10,,3,,3,,0,100,,,heart;immune,"rischio cardiovascolare: <1 basso, 1-3 medio, >3 alto",draft,0
+13965-9,Omocisteina,Homocysteine,omocisteinemia,homocysteine,infiammazione,umol/L,mg/L:7.397,5,15,5,15,,1,500,,,heart;blood,,draft,0
+5902-2,Tempo di protrombina,Prothrombin time,PT;tempo di Quick,PT,coagulazione,s,,11,13.5,11,13.5,,5,120,,,blood;liver,,draft,0
+6301-6,INR,INR,rapporto internazionale normalizzato;PT INR,INR,coagulazione,{INR},,0.8,1.2,0.8,1.2,in terapia anticoagulante l intervallo lo fissa il medico,0.5,20,,5,blood;liver,,draft,0
+3173-2,aPTT,aPTT,tempo di tromboplastina parziale attivata;PTT,activated partial thromboplastin time,coagulazione,s,,25,35,25,35,,10,300,,,blood,,draft,0
+3255-7,Fibrinogeno,Fibrinogen,fibrinogenemia,fibrinogen,coagulazione,mg/dL,g/L:100,200,400,200,400,,20,1500,100,,blood;liver,,draft,0
+48065-7,D-dimero,D-dimer (FEU),D-dimeri;DD,D-dimer,coagulazione,ug/mL{FEU},ng/mL{FEU}:0.001,,0.5,,0.5,sopra i 50 anni: soglia età x 0.01,0,100,,,blood;heart,,draft,0
+2143-6,Cortisolo (mattino),Cortisol (morning),cortisolemia;cortisolo ore 8,cortisol,ormoni,ug/dL,nmol/L:0.03625,6.2,19.4,6.2,19.4,prelievo del mattino,0.1,150,,,immune;metabolism,,draft,0
+2986-8,Testosterone totale,"Testosterone, total",testosteronemia,testosterone,ormoni,ng/dL,nmol/L:28.84;ng/mL:100,264,916,15,70,adulti; cala con l età,1,3000,,,reproductive,,draft,0
+2243-4,Estradiolo,Estradiol,E2;17-beta estradiolo,E2;estradiol,ormoni,pg/mL,pmol/L:0.2724,11,44,,,"donne: dipende dalla fase del ciclo (follicolare 12-166, luteale 44-211, postmenopausa <40)",1,5000,,,reproductive,,draft,0
+15067-2,FSH,FSH,ormone follicolo-stimolante;follitropina,follicle stimulating hormone,ormoni,m[IU]/mL,[IU]/L:1,1.5,12.4,,,"donne: follicolare 3.5-12.5, postmenopausa 25.8-134.8",0.1,300,,,reproductive,,draft,0
+10501-5,LH,LH,ormone luteinizzante;lutropina,luteinizing hormone,ormoni,m[IU]/mL,[IU]/L:1,1.7,8.6,,,"donne: follicolare 2.4-12.6, picco ovulatorio 14-96, postmenopausa 7.7-58.5",0.1,300,,,reproductive,,draft,0
+2842-3,Prolattina,Prolactin,PRL;prolattinemia,PRL;prolactin,ormoni,ng/mL,m[IU]/L:0.04717,4,15,5,23,,0.5,2000,,,reproductive,,draft,0
+2857-1,PSA totale,"PSA, total",antigene prostatico specifico;PSA,prostate specific antigen,oncologia,ng/mL,ug/L:1,,4,,,"solo uomini; per età: 40-49 <2.5, 50-59 <3.5, 60-69 <4.5, 70+ <6.5",0,5000,,,prostate,,draft,0

@@ -1,0 +1,217 @@
+{
+ "name": "FINDRISC",
+ "version": "0.1-draft",
+ "status": "draft",
+ "source": "Lindström J, Tuomilehto J. The Diabetes Risk Score. Diabetes Care 2003;26:725-731; versione del questionario Finnish Diabetes Association. Da verificare dal board.",
+ "inputs": [
+  {
+   "id": "age",
+   "points": [
+    {
+     "max": 44,
+     "points": 0
+    },
+    {
+     "min": 45,
+     "max": 54,
+     "points": 2
+    },
+    {
+     "min": 55,
+     "max": 64,
+     "points": 3
+    },
+    {
+     "min": 65,
+     "points": 4
+    }
+   ]
+  },
+  {
+   "id": "bmi",
+   "unit": "kg/m2",
+   "source": "peso 29463-7 e altezza del profilo",
+   "points": [
+    {
+     "max": 24.99,
+     "points": 0
+    },
+    {
+     "min": 25,
+     "max": 30,
+     "points": 1
+    },
+    {
+     "min": 30.01,
+     "points": 3
+    }
+   ]
+  },
+  {
+   "id": "waist_cm",
+   "source": "questionario o observation",
+   "points_male": [
+    {
+     "max": 93.99,
+     "points": 0
+    },
+    {
+     "min": 94,
+     "max": 102,
+     "points": 3
+    },
+    {
+     "min": 102.01,
+     "points": 4
+    }
+   ],
+   "points_female": [
+    {
+     "max": 79.99,
+     "points": 0
+    },
+    {
+     "min": 80,
+     "max": 88,
+     "points": 3
+    },
+    {
+     "min": 88.01,
+     "points": 4
+    }
+   ]
+  },
+  {
+   "id": "physical_activity_30min_daily",
+   "type": "boolean",
+   "points": {
+    "true": 0,
+    "false": 2
+   }
+  },
+  {
+   "id": "vegetables_fruit_daily",
+   "type": "boolean",
+   "points": {
+    "true": 0,
+    "false": 1
+   }
+  },
+  {
+   "id": "antihypertensive_medication",
+   "type": "boolean",
+   "points": {
+    "true": 2,
+    "false": 0
+   }
+  },
+  {
+   "id": "history_high_glucose",
+   "type": "boolean",
+   "points": {
+    "true": 5,
+    "false": 0
+   }
+  },
+  {
+   "id": "family_diabetes",
+   "values": {
+    "none": 0,
+    "second_degree": 3,
+    "first_degree": 5
+   }
+  }
+ ],
+ "score_levels": [
+  {
+   "max": 6,
+   "level": "low",
+   "risk_10y": "1%"
+  },
+  {
+   "min": 7,
+   "max": 11,
+   "level": "slightly_elevated",
+   "risk_10y": "4%"
+  },
+  {
+   "min": 12,
+   "max": 14,
+   "level": "moderate",
+   "risk_10y": "17%"
+  },
+  {
+   "min": 15,
+   "max": 20,
+   "level": "high",
+   "risk_10y": "33%"
+  },
+  {
+   "min": 21,
+   "level": "very_high",
+   "risk_10y": "50%"
+  }
+ ],
+ "app_levels_map": {
+  "low": "low",
+  "slightly_elevated": "low",
+  "moderate": "medium",
+  "high": "high",
+  "very_high": "high"
+ },
+ "test_cases": [
+  {
+   "age": 40,
+   "bmi": 23,
+   "waist_cm": 85,
+   "sex": "male",
+   "physical_activity_30min_daily": true,
+   "vegetables_fruit_daily": true,
+   "antihypertensive_medication": false,
+   "history_high_glucose": false,
+   "family_diabetes": "none",
+   "expected_points": 0,
+   "expected_level": "low"
+  },
+  {
+   "age": 58,
+   "bmi": 31,
+   "waist_cm": 104,
+   "sex": "male",
+   "physical_activity_30min_daily": false,
+   "vegetables_fruit_daily": false,
+   "antihypertensive_medication": true,
+   "history_high_glucose": false,
+   "family_diabetes": "first_degree",
+   "expected_points": 20,
+   "expected_level": "high"
+  },
+  {
+   "age": 50,
+   "bmi": 27,
+   "waist_cm": 86,
+   "sex": "female",
+   "physical_activity_30min_daily": true,
+   "vegetables_fruit_daily": false,
+   "antihypertensive_medication": false,
+   "history_high_glucose": true,
+   "family_diabetes": "second_degree",
+   "expected_points": 15,
+   "expected_level": "high"
+  },
+  {
+   "age": 66,
+   "bmi": 26,
+   "waist_cm": 90,
+   "sex": "female",
+   "physical_activity_30min_daily": false,
+   "vegetables_fruit_daily": true,
+   "antihypertensive_medication": false,
+   "history_high_glucose": false,
+   "family_diabetes": "none",
+   "expected_points": 11,
+   "expected_level": "slightly_elevated"
+  }
+ ],
+ "disclaimer_it": "Punteggio di rischio di diabete di tipo 2 a 10 anni (FINDRISC). Non è una diagnosi: discutilo con il medico."
+}

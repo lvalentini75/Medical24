@@ -1,0 +1,48 @@
+import 'package:flutter/widgets.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+class M24Icons {
+  const M24Icons._();
+  static const IconData home = LucideIcons.house;
+  static const IconData health = LucideIcons.heart;
+  static const IconData archive = LucideIcons.fileText;
+  static const IconData treatments = LucideIcons.pill;
+  static const IconData doctor = LucideIcons.users;
+  static const IconData upload = LucideIcons.fileUp;
+  static const IconData review = LucideIcons.fileCheck;
+  static const IconData chart = LucideIcons.chartNoAxesColumn;
+  static const IconData alerts = LucideIcons.bell;
+  static const IconData symptoms = LucideIcons.activity;
+  static const IconData search = LucideIcons.search;
+  static const IconData bell = LucideIcons.bell;
+  static const IconData calendar = LucideIcons.calendar;
+  static const IconData clock = LucideIcons.clock;
+  static const IconData confirm = LucideIcons.circleCheck;
+  static const IconData discard = LucideIcons.circleX;
+  static const IconData chevronRight = LucideIcons.chevronRight;
+  static const IconData chevronLeft = LucideIcons.chevronLeft;
+  static const IconData chevronDown = LucideIcons.chevronDown;
+  static const IconData chevronUp = LucideIcons.chevronUp;
+  static const IconData prevention = LucideIcons.shield;
+  static const IconData download = LucideIcons.download;
+  static const IconData share = LucideIcons.share2;
+  static const IconData info = LucideIcons.info;
+  static const IconData plus = LucideIcons.plus;
+  static const IconData manualValue = LucideIcons.circlePlus;
+  static const IconData settings = LucideIcons.settings;
+  static const IconData help = LucideIcons.circleHelp;
+  static const IconData profile = LucideIcons.user;
+  static const IconData signOut = LucideIcons.logOut;
+  static const IconData back = LucideIcons.arrowLeft;
+  static const IconData eye = LucideIcons.eye;
+  static const IconData eyeOff = LucideIcons.eyeOff;
+  static const IconData error = LucideIcons.circleAlert;
+  static const IconData language = LucideIcons.languages;
+  static const IconData ruler = LucideIcons.ruler;
+  static const IconData fingerprint = LucideIcons.fingerprint;
+  static const IconData pin = LucideIcons.keyRound;
+  static const IconData consent = LucideIcons.fileCheck2;
+  static const IconData delete = LucideIcons.trash2;
+  static const IconData logout = LucideIcons.logOut;
+  static const IconData chevron = LucideIcons.chevronRight;
+}

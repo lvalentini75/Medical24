@@ -1,0 +1,183 @@
+{
+ "name": "Fattori di rischio di frattura (checklist, non FRAX)",
+ "version": "0.1-draft",
+ "status": "draft",
+ "decision": "FRAX è uno strumento proprietario dell'Università di Sheffield: l'algoritmo non è pubblicato e non può essere reimplementato. In v1 l'app usa una checklist trasparente dei fattori di rischio riconosciuti (gli stessi input di FRAX) con una regola del board, e offre il link al calcolatore ufficiale FRAX per il valore numerico, precompilando nulla (l'utente inserisce i dati sul sito). Decisione da confermare dal board.",
+ "inputs": [
+  {
+   "id": "age"
+  },
+  {
+   "id": "sex"
+  },
+  {
+   "id": "bmi"
+  },
+  {
+   "id": "previous_fracture",
+   "type": "boolean"
+  },
+  {
+   "id": "parent_hip_fracture",
+   "type": "boolean"
+  },
+  {
+   "id": "current_smoker",
+   "type": "boolean"
+  },
+  {
+   "id": "glucocorticoids",
+   "type": "boolean"
+  },
+  {
+   "id": "rheumatoid_arthritis",
+   "type": "boolean"
+  },
+  {
+   "id": "secondary_osteoporosis",
+   "type": "boolean"
+  },
+  {
+   "id": "alcohol_3_units_daily",
+   "type": "boolean"
+  },
+  {
+   "id": "bmd_t_score",
+   "optional": true
+  }
+ ],
+ "rule_draft": "punti: età ≥ 65 → 2 (≥ 75 → 3); sesso femminile → 1; bmi < 19 → 1; frattura pregressa → 2; frattura d'anca di un genitore → 1; fumo → 1; glucocorticoidi → 1; artrite reumatoide → 1; osteoporosi secondaria → 1; alcol ≥ 3 unità/die → 1; T-score ≤ -2.5 → 3, tra -1 e -2.5 → 1. Livelli: 0–2 basso, 3–5 medio, ≥ 6 alto. Bozza da ricalibrare dal board.",
+ "external_tool": {
+  "name": "FRAX (University of Sheffield)",
+  "url": "https://frax.shef.ac.uk/FRAX/tool.aspx?country=11",
+  "note": "Italia = country 11; nessun dato viene inviato dall'app"
+ },
+ "disclaimer_it": "Elenco dei fattori di rischio di frattura. Non è una diagnosi né un calcolo FRAX: discutilo con il medico.",
+ "points": {
+  "age_65_74": 2,
+  "age_75_plus": 3,
+  "sex_female": 1,
+  "bmi_below_19": 1,
+  "previous_fracture": 2,
+  "parent_hip_fracture": 1,
+  "current_smoker": 1,
+  "glucocorticoids": 1,
+  "rheumatoid_arthritis": 1,
+  "secondary_osteoporosis": 1,
+  "alcohol_3_units_daily": 1,
+  "bmd_t_score_le_minus_2_5": 3,
+  "bmd_t_score_between_minus_1_and_minus_2_5": 1
+ },
+ "levels": [
+  {
+   "max": 2,
+   "level": "low"
+  },
+  {
+   "min": 3,
+   "max": 5,
+   "level": "medium"
+  },
+  {
+   "min": 6,
+   "level": "high"
+  }
+ ],
+ "app_levels_map": {
+  "low": "low",
+  "medium": "medium",
+  "high": "high"
+ },
+ "test_cases": [
+  {
+   "previous_fracture": false,
+   "parent_hip_fracture": false,
+   "current_smoker": false,
+   "glucocorticoids": false,
+   "rheumatoid_arthritis": false,
+   "secondary_osteoporosis": false,
+   "alcohol_3_units_daily": false,
+   "bmd_t_score": null,
+   "age": 45,
+   "sex": "male",
+   "bmi": 24,
+   "expected_points": 0,
+   "expected_level": "low"
+  },
+  {
+   "previous_fracture": false,
+   "parent_hip_fracture": false,
+   "current_smoker": false,
+   "glucocorticoids": false,
+   "rheumatoid_arthritis": false,
+   "secondary_osteoporosis": false,
+   "alcohol_3_units_daily": false,
+   "bmd_t_score": null,
+   "age": 68,
+   "sex": "female",
+   "bmi": 22,
+   "expected_points": 3,
+   "expected_level": "medium"
+  },
+  {
+   "previous_fracture": true,
+   "parent_hip_fracture": false,
+   "current_smoker": false,
+   "glucocorticoids": false,
+   "rheumatoid_arthritis": false,
+   "secondary_osteoporosis": false,
+   "alcohol_3_units_daily": false,
+   "bmd_t_score": null,
+   "age": 72,
+   "sex": "female",
+   "bmi": 18.5,
+   "expected_points": 6,
+   "expected_level": "high"
+  },
+  {
+   "previous_fracture": false,
+   "parent_hip_fracture": true,
+   "current_smoker": true,
+   "glucocorticoids": false,
+   "rheumatoid_arthritis": false,
+   "secondary_osteoporosis": false,
+   "alcohol_3_units_daily": false,
+   "bmd_t_score": -2.7,
+   "age": 80,
+   "sex": "male",
+   "bmi": 23,
+   "expected_points": 8,
+   "expected_level": "high"
+  },
+  {
+   "previous_fracture": false,
+   "parent_hip_fracture": false,
+   "current_smoker": false,
+   "glucocorticoids": true,
+   "rheumatoid_arthritis": true,
+   "secondary_osteoporosis": false,
+   "alcohol_3_units_daily": false,
+   "bmd_t_score": -1.8,
+   "age": 58,
+   "sex": "female",
+   "bmi": 26,
+   "expected_points": 4,
+   "expected_level": "medium"
+  },
+  {
+   "previous_fracture": false,
+   "parent_hip_fracture": false,
+   "current_smoker": false,
+   "glucocorticoids": false,
+   "rheumatoid_arthritis": false,
+   "secondary_osteoporosis": true,
+   "alcohol_3_units_daily": true,
+   "bmd_t_score": null,
+   "age": 66,
+   "sex": "male",
+   "bmi": 27,
+   "expected_points": 4,
+   "expected_level": "medium"
+  }
+ ]
+}

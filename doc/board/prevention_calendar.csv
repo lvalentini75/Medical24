@@ -1,0 +1,20 @@
+id;name_it;sex;age_min;age_max;interval_months;notes;category;organ_id;status;board_version
+screening_mammografia;Mammografia;female;50;69;24;Programma di screening organizzato del SSN (alcune Regioni 45–74). Fonte: Ministero della Salute, screening oncologici.;Esami;breast;draft;0
+screening_cervice_pap;Pap test;female;25;29;36;Programma di screening organizzato del SSN.;Esami;reproductive_f;draft;0
+screening_cervice_hpv;Test HPV;female;30;64;60;Programma di screening organizzato del SSN.;Esami;reproductive_f;draft;0
+screening_colon;Ricerca del sangue occulto nelle feci;all;50;69;24;Programma di screening organizzato del SSN (alcune Regioni 50–74).;Esami;gut;draft;0
+pressione;Misurazione della pressione arteriosa;all;18;;24;"Dai 40 anni ogni 12 mesi; con valori elevati come indicato dal medico. Fonte: linee guida ESC/ESH.";Controlli;heart;draft;0
+lipidi;Profilo lipidico;all;20;;60;Più spesso con fattori di rischio o terapia, secondo il medico. Fonte: ESC 2021.;Esami;heart;draft;0
+glicemia;Glicemia a digiuno;all;45;;36;Prima e più spesso con FINDRISC ≥ 12 o fattori di rischio. Fonte: SID/AMD, ADA.;Esami;metabolism;draft;0
+peso_bmi;Peso e indice di massa corporea;all;18;;12;;Controlli;metabolism;draft;0
+vista;Visita oculistica;all;40;;24;Dai 65 anni ogni 12 mesi.;Visite;brain;draft;0
+udito;Controllo dell'udito;all;65;;24;;Visite;brain;draft;0
+dentista;Visita odontoiatrica;all;18;;12;;Visite;gut;draft;0
+dermatologo;Controllo dei nei;all;18;;12;Più spesso con familiarità o molti nei.;Visite;immune;draft;0
+vaccino_influenza;Vaccino antinfluenzale;all;60;;12;Ogni autunno dai 60 anni e per le categorie a rischio. Fonte: circolare annuale del Ministero della Salute.;Vaccini;immune;draft;0
+vaccino_pneumococco;Vaccino antipneumococcico;all;65;;0;Una volta (schema secondo il calendario vaccinale nazionale).;Vaccini;lung;draft;0
+vaccino_zoster;Vaccino contro l'herpes zoster;all;65;;0;Secondo il calendario vaccinale nazionale.;Vaccini;immune;draft;0
+vaccino_tetano;Richiamo difterite-tetano-pertosse;all;18;;120;Ogni 10 anni.;Vaccini;immune;draft;0
+psa;Valutazione del rischio prostatico con il medico;male;50;69;24;Non è uno screening di popolazione: decisione condivisa con il medico (dai 45 anni con familiarità).;Visite;prostate;draft;0
+densitometria;Densitometria ossea (MOC);female;65;;24;"Prima in presenza di fattori di rischio; uomini dai 70 anni. Fonte: LEA, nota 79 AIFA.";Esami;musculoskeletal;draft;0
+aaa;Ecografia dell'aorta addominale;male;65;75;0;"Una volta, se fumatore o ex fumatore (raccomandazione USPSTF; in Italia non è screening organizzato).";Esami;heart;draft;0

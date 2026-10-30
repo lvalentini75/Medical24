@@ -1,0 +1,291 @@
+{
+ "version": "0.3-draft",
+ "note": "Dodici aree del corpo per il modulo M5. anchor = posizione del punto sulla silhouette assets/body/silhouette.png in frazioni di larghezza e altezza (viewBox 200x440). catalog_keys = valori della colonna organs del catalogo biomarcatori che confluiscono nell'area. Bozza del 29 ottobre 2026, da validare dal board. v0.2: aree per sesso (sex: all | female | male | neutral). Il quadro mostra le aree all più quelle del genere del profilo; neutral quando il genere non è indicato. La vescica passa a Reni e vie urinarie. v0.3: silhouette realistiche body_male / body_female, anchor allineati ai tracciati di organ_paths.json v0.3.",
+ "organs": [
+  {
+   "id": "heart",
+   "order": 1,
+   "name_it": "Cuore e circolazione",
+   "name_en": "Heart and circulation",
+   "icon": "heart-pulse",
+   "anchor": [
+    0.53,
+    0.3318
+   ],
+   "catalog_keys": [
+    "heart"
+   ],
+   "description_it": "Lipidi, pressione, frequenza cardiaca e marcatori cardiaci",
+   "description_en": "Lipids, blood pressure, heart rate and cardiac markers",
+   "sex": "all"
+  },
+  {
+   "id": "lung",
+   "order": 2,
+   "name_it": "Polmoni e respiro",
+   "name_en": "Lungs and breathing",
+   "icon": "wind",
+   "anchor": [
+    0.37,
+    0.3182
+   ],
+   "catalog_keys": [
+    "lung"
+   ],
+   "description_it": "Saturazione e parametri respiratori",
+   "description_en": "Oxygen saturation and respiratory parameters",
+   "sex": "all"
+  },
+  {
+   "id": "liver",
+   "order": 3,
+   "name_it": "Fegato",
+   "name_en": "Liver",
+   "icon": "flask-conical",
+   "anchor": [
+    0.39,
+    0.4182
+   ],
+   "catalog_keys": [
+    "liver"
+   ],
+   "description_it": "Transaminasi, gamma GT, bilirubina, proteine",
+   "description_en": "Transaminases, gamma GT, bilirubin, proteins",
+   "sex": "all"
+  },
+  {
+   "id": "kidney",
+   "order": 4,
+   "name_it": "Reni e vie urinarie",
+   "name_en": "Kidneys and urinary tract",
+   "icon": "filter",
+   "anchor": [
+    0.35,
+    0.4727
+   ],
+   "catalog_keys": [
+    "kidney"
+   ],
+   "description_it": "Creatinina, filtrato, azotemia, elettroliti, esame urine, vescica",
+   "description_en": "Creatinine, eGFR, urea, electrolytes, urinalysis",
+   "sex": "all"
+  },
+  {
+   "id": "metabolism",
+   "order": 5,
+   "name_it": "Metabolismo e pancreas",
+   "name_en": "Metabolism and pancreas",
+   "icon": "flame",
+   "anchor": [
+    0.57,
+    0.4727
+   ],
+   "catalog_keys": [
+    "metabolism",
+    "pancreas"
+   ],
+   "description_it": "Glicemia, HbA1c, insulina, amilasi, lipasi, peso",
+   "description_en": "Glucose, HbA1c, insulin, amylase, lipase, weight",
+   "sex": "all"
+  },
+  {
+   "id": "gut",
+   "order": 6,
+   "name_it": "Stomaco e intestino",
+   "name_en": "Stomach and gut",
+   "icon": "utensils-crossed",
+   "anchor": [
+    0.63,
+    0.4182
+   ],
+   "catalog_keys": [
+    "gut"
+   ],
+   "description_it": "Area in attesa di biomarcatori del board",
+   "description_en": "Area awaiting board biomarkers",
+   "sex": "all"
+  },
+  {
+   "id": "blood",
+   "order": 7,
+   "name_it": "Sangue",
+   "name_en": "Blood",
+   "icon": "droplet",
+   "anchor": [
+    0.78,
+    0.4818
+   ],
+   "catalog_keys": [
+    "blood"
+   ],
+   "description_it": "Emocromo, ferro, coagulazione, vitamine",
+   "description_en": "Blood count, iron, coagulation, vitamins",
+   "sex": "all"
+  },
+  {
+   "id": "immune",
+   "order": 8,
+   "name_it": "Difese e infiammazione",
+   "name_en": "Immunity and inflammation",
+   "icon": "shield-check",
+   "anchor": [
+    0.71,
+    0.4136
+   ],
+   "catalog_keys": [
+    "immune"
+   ],
+   "description_it": "Leucociti, PCR, VES, immunoglobuline",
+   "description_en": "White cells, CRP, ESR, immunoglobulins",
+   "sex": "all"
+  },
+  {
+   "id": "thyroid",
+   "order": 9,
+   "name_it": "Tiroide e ormoni",
+   "name_en": "Thyroid and hormones",
+   "icon": "circle-dot",
+   "anchor": [
+    0.5,
+    0.1727
+   ],
+   "catalog_keys": [
+    "thyroid"
+   ],
+   "description_it": "TSH, FT3, FT4 e altri ormoni",
+   "description_en": "TSH, FT3, FT4 and other hormones",
+   "sex": "all"
+  },
+  {
+   "id": "brain",
+   "order": 10,
+   "name_it": "Cervello e nervi",
+   "name_en": "Brain and nerves",
+   "icon": "brain",
+   "anchor": [
+    0.5,
+    0.0682
+   ],
+   "catalog_keys": [
+    "brain"
+   ],
+   "description_it": "Area in attesa di biomarcatori del board",
+   "description_en": "Area awaiting board biomarkers",
+   "sex": "all"
+  },
+  {
+   "id": "musculoskeletal",
+   "order": 11,
+   "name_it": "Ossa e muscoli",
+   "name_en": "Bones and muscles",
+   "icon": "bone",
+   "anchor": [
+    0.64,
+    0.6591
+   ],
+   "catalog_keys": [
+    "bone",
+    "muscle"
+   ],
+   "description_it": "Calcio, vitamina D, fosfatasi alcalina, CK",
+   "description_en": "Calcium, vitamin D, alkaline phosphatase, CK",
+   "sex": "all"
+  },
+  {
+   "id": "reproductive",
+   "order": 12,
+   "name_it": "Apparato riproduttivo",
+   "name_en": "Reproductive system",
+   "icon": "venus-and-mars",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "catalog_keys": [
+    "reproductive",
+    "prostate"
+   ],
+   "description_it": "Ormoni sessuali, PSA",
+   "description_en": "Sex hormones, PSA",
+   "sex": "neutral"
+  },
+  {
+   "id": "breast",
+   "order": 13,
+   "sex": "female",
+   "name_it": "Seno",
+   "name_en": "Breast",
+   "icon": "circle",
+   "anchor": [
+    0.38,
+    0.3364
+   ],
+   "catalog_keys": [],
+   "description_it": "Area di prevenzione: screening e autopalpazione; biomarcatori in attesa del board",
+   "description_en": "Prevention area: screening and self-exam; biomarkers awaiting the board"
+  },
+  {
+   "id": "reproductive_f",
+   "order": 14,
+   "sex": "female",
+   "name_it": "Utero e ovaie",
+   "name_en": "Uterus and ovaries",
+   "icon": "venus",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "catalog_keys": [
+    "reproductive"
+   ],
+   "description_it": "Ormoni femminili, ciclo, screening ginecologici",
+   "description_en": "Female hormones, cycle, gynaecological screening"
+  },
+  {
+   "id": "prostate",
+   "order": 15,
+   "sex": "male",
+   "name_it": "Prostata",
+   "name_en": "Prostate",
+   "icon": "circle-dot",
+   "anchor": [
+    0.5,
+    0.5659
+   ],
+   "catalog_keys": [
+    "prostate"
+   ],
+   "description_it": "PSA e controlli urologici",
+   "description_en": "PSA and urological checks"
+  },
+  {
+   "id": "reproductive_m",
+   "order": 16,
+   "sex": "male",
+   "name_it": "Testicoli e ormoni",
+   "name_en": "Testicles and hormones",
+   "icon": "mars",
+   "anchor": [
+    0.5,
+    0.5886
+   ],
+   "catalog_keys": [
+    "reproductive"
+   ],
+   "description_it": "Testosterone, FSH, LH",
+   "description_en": "Testosterone, FSH, LH"
+  }
+ ],
+ "states": [
+  "ok",
+  "monitor",
+  "attention",
+  "missing"
+ ],
+ "state_colors": {
+  "ok": "success",
+  "monitor": "warning",
+  "attention": "danger",
+  "missing": "neutral"
+ }
+}

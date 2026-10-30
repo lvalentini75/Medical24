@@ -1,0 +1,524 @@
+{
+ "version": "0.3-draft",
+ "viewBox": "0 0 200 440",
+ "note": "Corpo e organi del modulo M5. Tutte le coordinate sono nel viewBox 200x440 delle immagini assets/body/body_*.png (female per genere femminile, male per maschile e per genere non indicato). Ordine di disegno: 1) immagine del corpo; 2) per ogni area visibile i tracciati \"back\" (tubi dietro gli organi: aorta, ureteri, cornice del colon) come linee di larghezza backWidth, con contorno scuro quando backWidth > 4; 3) per ogni area: \"paths\" riempiti con il colore dello stato e contorno scurito del 25%, \"extra\" con il proprio fill (cistifellea), \"strokes\" come linee di larghezza sw (se sw > 4 con contorno scuro), \"detail\" come linee bianche al 70% di larghezza 1 (per il seno nel colore dello stato); 4) area selezionata: contorno primary 2 pt e alone. Area senza dati: fill missing_fill, contorno missing_stroke tratteggiato 2/1.5. Il colore dello stato è l interpolazione lineare di color_scale su stress_score. Hit test: Path.contains sui \"paths\"; per le aree con soli \"strokes\" tolleranza di 8 pt dalla linea. anchor in frazioni del viewBox, anchor_px in unità.",
+ "bodies": {
+  "male": "assets/body/body_male.png",
+  "female": "assets/body/body_female.png",
+  "neutral": "assets/body/body_male.png"
+ },
+ "skin": {
+  "male": "#F2C9B4",
+  "female": "#F4CDC0"
+ },
+ "hair": {
+  "male": "#8C5A44",
+  "female": "#A8705C"
+ },
+ "colors": {
+  "color_scale": [
+   [
+    0,
+    "#1E9E6A"
+   ],
+   [
+    0.5,
+    "#E3B505"
+   ],
+   [
+    0.75,
+    "#E9700C"
+   ],
+   [
+    1,
+    "#DC2F1A"
+   ]
+  ],
+  "missing_fill": "#EBDCD6",
+  "missing_stroke": "#C4A79E",
+  "outline_darken": 0.75,
+  "detail_white_opacity": 0.7,
+  "breast_fill": "#FFFFFFB0"
+ },
+ "areas": [
+  {
+   "id": "brain",
+   "sex": "all",
+   "label_it": "Cervello e nervi",
+   "side": "L",
+   "anchor": [
+    0.5,
+    0.0682
+   ],
+   "anchor_px": [
+    100,
+    30
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M79 36 C79 20 88 12 100 12 C112 12 121 20 121 36 C121 44 117 49 110 51 C104 53 98 53 93 51 C84 49 79 44 79 36 Z",
+    "M104 50 C108 50 112 48 113 44 C116 46 117 52 112 54 L104 54 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [
+    "M100 13 L100 50",
+    "M84 28 C88 23 92 30 96 25",
+    "M104 25 C108 30 112 23 116 28",
+    "M83 38 C88 33 93 42 98 37",
+    "M102 37 C107 42 112 33 117 38",
+    "M86 46 C90 42 94 48 97 45",
+    "M103 45 C106 48 110 42 114 46"
+   ],
+   "breast": false
+  },
+  {
+   "id": "thyroid",
+   "sex": "all",
+   "label_it": "Tiroide e ormoni",
+   "side": "L",
+   "anchor": [
+    0.5,
+    0.1727
+   ],
+   "anchor_px": [
+    100,
+    76
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M94 68 C89 68 86 76 89 82 C91 86 96 85 97 80 L97 72 Z",
+    "M106 68 C111 68 114 76 111 82 C109 86 104 85 103 80 L103 72 Z",
+    "M97 74 H103 V79 H97 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [],
+   "breast": false
+  },
+  {
+   "id": "lung",
+   "sex": "all",
+   "label_it": "Polmoni e respiro",
+   "side": "L",
+   "anchor": [
+    0.37,
+    0.3182
+   ],
+   "anchor_px": [
+    74,
+    140
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M98 64 H102 V102 H98 Z",
+    "M90 104 C80 104 68 118 64 138 C61 152 63 164 70 171 C74 176 84 177 90 173 C94 170 95 166 95 160 L95 112 C95 107 94 104 90 104 Z",
+    "M110 104 C120 104 132 118 136 138 C139 152 137 164 130 171 C126 176 116 177 110 173 C106 170 105 166 105 160 L105 156 C116 150 120 140 112 130 L105 124 L105 112 C105 107 106 104 110 104 Z"
+   ],
+   "extra": [],
+   "strokes": [
+    "M100 102 L92 112",
+    "M100 102 L108 112",
+    "M92 112 L86 118",
+    "M108 112 L114 118"
+   ],
+   "sw": 3,
+   "detail": [
+    "M66 136 C76 138 86 142 94 150",
+    "M70 158 C78 156 86 160 92 166",
+    "M134 136 C126 138 118 142 112 150",
+    "M99 70 H101",
+    "M99 76 H101",
+    "M99 82 H101",
+    "M99 88 H101",
+    "M99 94 H101"
+   ],
+   "breast": false
+  },
+  {
+   "id": "heart",
+   "sex": "all",
+   "label_it": "Cuore e circolazione",
+   "side": "R",
+   "anchor": [
+    0.53,
+    0.3318
+   ],
+   "anchor_px": [
+    106,
+    146
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M97 132 C101 125 111 123 116 130 C123 137 121 149 114 158 L104 168 C95 159 88 151 90 141 C91 134 94 130 97 132 Z"
+   ],
+   "extra": [],
+   "strokes": [
+    "M104 130 C104 123 108 119 113 119 C118 119 120 123 118 128",
+    "M109 132 C111 126 115 124 118 126"
+   ],
+   "sw": 2.2,
+   "detail": [
+    "M99 140 C103 148 106 156 108 164",
+    "M111 138 C114 145 114 152 111 157"
+   ],
+   "breast": false
+  },
+  {
+   "id": "liver",
+   "sex": "all",
+   "label_it": "Fegato",
+   "side": "L",
+   "anchor": [
+    0.39,
+    0.4182
+   ],
+   "anchor_px": [
+    78,
+    184
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M60 186 C58 176 66 170 80 170 L114 176 C120 178 120 184 114 187 L92 198 C76 204 62 198 60 186 Z"
+   ],
+   "extra": [
+    {
+     "d": "M86 194 C90 192 94 196 93 202 C92 206 87 206 86 202 Z",
+     "fill": "#7BB661"
+    }
+   ],
+   "strokes": [],
+   "sw": 3,
+   "detail": [
+    "M86 172 C86 180 84 190 80 198"
+   ],
+   "breast": false
+  },
+  {
+   "id": "gut",
+   "sex": "all",
+   "label_it": "Stomaco e intestino",
+   "side": "R",
+   "anchor": [
+    0.63,
+    0.4182
+   ],
+   "anchor_px": [
+    126,
+    184
+   ],
+   "back": [
+    "M74 238 L74 212 C74 206 78 204 84 204 L120 204 C126 204 128 208 128 214 L128 238 C128 244 124 246 118 246 L100 246"
+   ],
+   "backWidth": 9,
+   "paths": [
+    "M118 166 C128 164 136 172 134 184 C132 196 122 204 112 204 C104 204 102 196 106 192 C112 188 112 178 118 166 Z"
+   ],
+   "extra": [],
+   "strokes": [
+    "M84 214 C90 210 96 218 102 214 C108 210 114 216 118 214",
+    "M84 222 C90 218 96 226 102 222 C108 218 114 224 118 222",
+    "M84 230 C90 226 96 234 102 230 C108 226 114 232 118 230",
+    "M86 238 C92 234 98 240 104 238 C108 236 112 238 116 238"
+   ],
+   "sw": 5.5,
+   "detail": [
+    "M84 214 C90 210 96 218 102 214 C108 210 114 216 118 214",
+    "M84 222 C90 218 96 226 102 222 C108 218 114 224 118 222",
+    "M84 230 C90 226 96 234 102 230 C108 226 114 232 118 230",
+    "M86 238 C92 234 98 240 104 238",
+    "M76 210 L80 210",
+    "M76 218 L80 218",
+    "M76 226 L80 226",
+    "M76 234 L80 234",
+    "M124 210 L120 210",
+    "M124 218 L120 218",
+    "M124 226 L120 226",
+    "M124 234 L120 234",
+    "M118 172 C124 170 130 176 130 184"
+   ],
+   "breast": false
+  },
+  {
+   "id": "immune",
+   "sex": "all",
+   "label_it": "Difese e infiammazione",
+   "side": "R",
+   "anchor": [
+    0.71,
+    0.4136
+   ],
+   "anchor_px": [
+    142,
+    182
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M136 170 C144 168 150 176 148 188 C146 196 140 200 136 196 C131 190 130 178 136 170 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [
+    "M139 176 C142 182 142 188 140 192"
+   ],
+   "breast": false
+  },
+  {
+   "id": "metabolism",
+   "sex": "all",
+   "label_it": "Metabolismo e pancreas",
+   "side": "R",
+   "anchor": [
+    0.57,
+    0.4727
+   ],
+   "anchor_px": [
+    114,
+    208
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M88 206 C102 200 124 202 136 208 C132 216 116 218 102 216 C94 215 88 210 88 206 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [
+    "M94 210 C106 208 120 209 130 211"
+   ],
+   "breast": false
+  },
+  {
+   "id": "kidney",
+   "sex": "all",
+   "label_it": "Reni e vie urinarie",
+   "side": "L",
+   "anchor": [
+    0.35,
+    0.4727
+   ],
+   "anchor_px": [
+    70,
+    208
+   ],
+   "back": [
+    "M77 220 C82 228 92 232 96 234",
+    "M123 216 C118 226 108 232 104 234"
+   ],
+   "backWidth": 1.6,
+   "paths": [
+    "M68 196 C75 194 79 201 79 209 C79 217 75 223 68 221 C64 219 63 215 64 211 C63 205 63 198 68 196 Z",
+    "M132 192 C125 190 121 197 121 205 C121 213 125 219 132 217 C136 215 137 211 136 207 C137 201 137 194 132 192 Z",
+    "M93 232 C93 226 107 226 107 232 C107 240 104 244 100 244 C96 244 93 240 93 232 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [
+    "M69 202 C71 207 71 213 69 216",
+    "M131 198 C129 203 129 209 131 212"
+   ],
+   "breast": false
+  },
+  {
+   "id": "blood",
+   "sex": "all",
+   "label_it": "Sangue",
+   "side": "R",
+   "anchor": [
+    0.78,
+    0.4818
+   ],
+   "anchor_px": [
+    156,
+    212
+   ],
+   "back": [
+    "M104 128 C102 150 100 180 100 210 L100 226",
+    "M100 226 C96 234 92 240 90 246",
+    "M100 226 C104 234 108 240 110 246"
+   ],
+   "backWidth": 2.6,
+   "paths": [],
+   "extra": [],
+   "strokes": [
+    "M154 186 C152 198 156 208 154 218 C152 226 155 230 154 234",
+    "M159 188 C160 200 156 210 159 220 C160 228 158 232 159 236",
+    "M155 200 L160 207",
+    "M154 222 L159 229"
+   ],
+   "sw": 2,
+   "detail": [],
+   "breast": false
+  },
+  {
+   "id": "musculoskeletal",
+   "sex": "all",
+   "label_it": "Ossa e muscoli",
+   "side": "R",
+   "anchor": [
+    0.64,
+    0.6591
+   ],
+   "anchor_px": [
+    128,
+    290
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M118 254 C116 246 132 246 132 254 L132 258 L129 324 C138 324 140 338 130 340 C120 342 116 332 121 326 L123 262 Z",
+    "M64 250 C76 244 88 258 86 282 C84 304 78 318 70 314 C62 308 58 272 64 250 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [
+    "M126 262 L125 322",
+    "M70 262 C74 272 76 290 74 304",
+    "M76 258 C78 268 80 284 78 300"
+   ],
+   "breast": false
+  },
+  {
+   "id": "breast",
+   "sex": "female",
+   "label_it": "Seno",
+   "side": "L",
+   "anchor": [
+    0.38,
+    0.3364
+   ],
+   "anchor_px": [
+    76,
+    148
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M62 148 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z",
+    "M110 148 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [
+    "M72 148 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z",
+    "M120 148 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z"
+   ],
+   "breast": true
+  },
+  {
+   "id": "reproductive_f",
+   "sex": "female",
+   "label_it": "Utero e ovaie",
+   "side": "R",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "anchor_px": [
+    100,
+    220
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M93 216 C91 210 109 210 107 216 C108 224 104 229 100 230 C96 229 92 224 93 216 Z",
+    "M83 217 a3.5 3.5 0 1 0 0.01 0 Z",
+    "M117 217 a3.5 3.5 0 1 0 0.01 0 Z"
+   ],
+   "extra": [],
+   "strokes": [
+    "M86 217 C88 213 92 213 94 217",
+    "M114 217 C112 213 108 213 106 217"
+   ],
+   "sw": 1.4,
+   "detail": [],
+   "breast": false
+  },
+  {
+   "id": "prostate",
+   "sex": "male",
+   "label_it": "Prostata",
+   "side": "R",
+   "anchor": [
+    0.5,
+    0.5659
+   ],
+   "anchor_px": [
+    100,
+    249
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M95 246 C95 242 105 242 105 246 C105 251 103 253 100 253 C97 253 95 251 95 246 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [],
+   "breast": false
+  },
+  {
+   "id": "reproductive_m",
+   "sex": "male",
+   "label_it": "Testicoli e ormoni",
+   "side": "R",
+   "anchor": [
+    0.5,
+    0.5886
+   ],
+   "anchor_px": [
+    100,
+    259
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M94.5 258 a3.8 3.8 0 1 0 0.01 0 Z",
+    "M105.5 258 a3.8 3.8 0 1 0 0.01 0 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [],
+   "breast": false
+  },
+  {
+   "id": "reproductive",
+   "sex": "neutral",
+   "label_it": "Apparato riproduttivo",
+   "side": "R",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "anchor_px": [
+    100,
+    220
+   ],
+   "back": [],
+   "backWidth": 0,
+   "paths": [
+    "M93 216 C91 210 109 210 107 216 C108 224 104 229 100 230 C96 229 92 224 93 216 Z"
+   ],
+   "extra": [],
+   "strokes": [],
+   "sw": 3,
+   "detail": [],
+   "breast": false
+  }
+ ]
+}

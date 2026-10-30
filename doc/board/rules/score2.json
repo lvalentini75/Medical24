@@ -1,0 +1,223 @@
+{
+ "name": "SCORE2",
+ "version": "0.1-draft",
+ "status": "draft",
+ "source": "SCORE2 working group and ESC Cardiovascular risk collaboration. SCORE2 risk prediction algorithms. Eur Heart J 2021;42:2439-2454 (coefficienti nel materiale supplementare). Da verificare dal board sul testo originale e sul calcolatore ESC (HeartScore) prima dell'attivazione.",
+ "applies_to": {
+  "age_min": 40,
+  "age_max": 69,
+  "note": "Dai 70 anni si usa SCORE2-OP (non incluso in questa bozza): sopra i 69 anni il punteggio non si calcola e l'app lo dice."
+ },
+ "region": "moderate",
+ "region_note": "L'Italia è nella regione a rischio moderato (ESC 2021). Le scale delle altre regioni sono incluse per il board.",
+ "inputs": [
+  {
+   "id": "age",
+   "unit": "years",
+   "source": "profiles.data_di_nascita"
+  },
+  {
+   "id": "sex",
+   "values": [
+    "male",
+    "female"
+   ],
+   "source": "profiles.genere"
+  },
+  {
+   "id": "smoker",
+   "type": "boolean",
+   "source": "questionnaire: fumatore attuale"
+  },
+  {
+   "id": "sbp",
+   "unit": "mm[Hg]",
+   "loinc": "8480-6",
+   "source": "observations (ultima pressione sistolica)"
+  },
+  {
+   "id": "tc",
+   "unit": "mmol/L",
+   "loinc": "2093-3",
+   "source": "observations (colesterolo totale; mg/dL / 38.67)"
+  },
+  {
+   "id": "hdl",
+   "unit": "mmol/L",
+   "loinc": "2085-9",
+   "source": "observations (HDL; mg/dL / 38.67)"
+  }
+ ],
+ "transform": {
+  "cage": "(age-60)/5",
+  "csbp": "(sbp-120)/20",
+  "ctc": "tc-6",
+  "chdl": "(hdl-1.3)/0.5",
+  "smoke": "1 se fumatore, 0 altrimenti"
+ },
+ "coefficients": {
+  "male": {
+   "cage": 0.3742,
+   "smoke": 0.6012,
+   "csbp": 0.2777,
+   "ctc": 0.1458,
+   "chdl": -0.2698,
+   "smoke_x_cage": -0.0755,
+   "csbp_x_cage": -0.0255,
+   "ctc_x_cage": -0.0281,
+   "chdl_x_cage": 0.0426,
+   "baseline_survival": 0.9605
+  },
+  "female": {
+   "cage": 0.4648,
+   "smoke": 0.7744,
+   "csbp": 0.3131,
+   "ctc": 0.1002,
+   "chdl": -0.2606,
+   "smoke_x_cage": -0.1088,
+   "csbp_x_cage": -0.0277,
+   "ctc_x_cage": -0.0226,
+   "chdl_x_cage": 0.0613,
+   "baseline_survival": 0.9776
+  }
+ },
+ "calibration": {
+  "low": {
+   "male": {
+    "scale1": -0.5699,
+    "scale2": 0.7476
+   },
+   "female": {
+    "scale1": -0.738,
+    "scale2": 0.7019
+   }
+  },
+  "moderate": {
+   "male": {
+    "scale1": -0.1565,
+    "scale2": 0.8009
+   },
+   "female": {
+    "scale1": -0.3143,
+    "scale2": 0.7761
+   }
+  },
+  "high": {
+   "male": {
+    "scale1": 0.3207,
+    "scale2": 0.936
+   },
+   "female": {
+    "scale1": 0.571,
+    "scale2": 0.9369
+   }
+  },
+  "very_high": {
+   "male": {
+    "scale1": 0.5836,
+    "scale2": 0.8294
+   },
+   "female": {
+    "scale1": 0.9412,
+    "scale2": 0.8329
+   }
+  }
+ },
+ "formula": "x = somma(beta_i * input_i) + somma(beta_interazione * input * cage); uncalibrated = 1 - baseline_survival ^ exp(x); risk10y = 1 - exp(-exp(scale1 + scale2 * ln(-ln(1 - uncalibrated))))",
+ "levels": {
+  "note": "ESC 2021 per età",
+  "under_50": {
+   "low_to_moderate": "<2.5%",
+   "high": "2.5% a <7.5%",
+   "very_high": ">=7.5%"
+  },
+  "50_to_69": {
+   "low_to_moderate": "<5%",
+   "high": "5% a <10%",
+   "very_high": ">=10%"
+  }
+ },
+ "app_levels_map": {
+  "low_to_moderate": "low",
+  "high": "medium",
+  "very_high": "high"
+ },
+ "disclaimer_it": "Stima statistica del rischio cardiovascolare a 10 anni basata su un algoritmo pubblico (SCORE2, ESC 2021). Non è una diagnosi: discutila con il medico.",
+ "test_cases_internal": {
+  "note": "Calcolati con la formula di questo file, servono a verificare l'implementazione, NON la correttezza clinica: il board deve confrontare almeno 10 casi con il calcolatore ESC.",
+  "cases": [
+   {
+    "age": 50,
+    "sex": "male",
+    "smoker": false,
+    "sbp": 120,
+    "tc_mmol": 5.0,
+    "hdl_mmol": 1.3,
+    "risk10y_percent": 3.01
+   },
+   {
+    "age": 50,
+    "sex": "male",
+    "smoker": true,
+    "sbp": 140,
+    "tc_mmol": 6.5,
+    "hdl_mmol": 1.0,
+    "risk10y_percent": 10.38
+   },
+   {
+    "age": 60,
+    "sex": "female",
+    "smoker": false,
+    "sbp": 130,
+    "tc_mmol": 5.5,
+    "hdl_mmol": 1.6,
+    "risk10y_percent": 3.65
+   },
+   {
+    "age": 65,
+    "sex": "male",
+    "smoker": true,
+    "sbp": 160,
+    "tc_mmol": 7.0,
+    "hdl_mmol": 0.9,
+    "risk10y_percent": 22.56
+   },
+   {
+    "age": 45,
+    "sex": "female",
+    "smoker": true,
+    "sbp": 125,
+    "tc_mmol": 6.0,
+    "hdl_mmol": 1.2,
+    "risk10y_percent": 3.5
+   },
+   {
+    "age": 69,
+    "sex": "female",
+    "smoker": false,
+    "sbp": 150,
+    "tc_mmol": 6.8,
+    "hdl_mmol": 1.1,
+    "risk10y_percent": 10.35
+   },
+   {
+    "age": 40,
+    "sex": "male",
+    "smoker": false,
+    "sbp": 110,
+    "tc_mmol": 4.5,
+    "hdl_mmol": 1.5,
+    "risk10y_percent": 1.07
+   },
+   {
+    "age": 55,
+    "sex": "male",
+    "smoker": false,
+    "sbp": 135,
+    "tc_mmol": 5.8,
+    "hdl_mmol": 1.2,
+    "risk10y_percent": 5.76
+   }
+  ]
+ }
+}

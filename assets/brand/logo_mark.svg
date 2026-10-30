@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Medical 24">
+  <path d="M50 8L84 21V48C84 69 69 84 50 93C31 84 16 69 16 48V21Z" fill="#FFFFFF" stroke="#0B1B33" stroke-width="7" stroke-linejoin="round"/>
+  <circle cx="50" cy="30" r="7" fill="#0B1B33"/>
+  <path d="M34 56C34 41 66 41 66 56Z" fill="#0B1B33"/>
+  <path d="M41 49V56" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M59 49V56" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M41 56V65H45L49 58L54 77L58 65H59V56" fill="none" stroke="#007F88" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

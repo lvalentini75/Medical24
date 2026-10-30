@@ -1,0 +1,1 @@
+Future<void> saveHealthCsv(String content, String filename) => throw UnsupportedError('CSV export is not supported on this platform');
