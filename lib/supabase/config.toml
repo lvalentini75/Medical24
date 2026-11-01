@@ -21,6 +21,12 @@ entrypoint = "./functions/document-ingest/index.ts"
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/document-ingest/*.html" ]
 
+[functions.explain]
+enabled = true
+verify_jwt = true
+import_map = "./functions/explain/deno.json"
+entrypoint = "./functions/explain/index.ts"
+
 [functions.extract]
 enabled = true
 verify_jwt = true

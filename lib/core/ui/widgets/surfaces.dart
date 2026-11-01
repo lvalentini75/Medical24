@@ -46,13 +46,14 @@ class M24IconTile extends StatelessWidget {
 enum M24StatusPillVariant { info, success, warning, danger, neutral }
 
 class M24StatusPill extends StatelessWidget {
-  const M24StatusPill({super.key, required this.label, required this.variant});
+  const M24StatusPill({super.key, required this.label, required this.variant, this.strikethrough = false});
   final String label;
   final M24StatusPillVariant variant;
+  final bool strikethrough;
   @override
   Widget build(BuildContext context) {
     final M24Colors c = context.m24.colors;
     final (Color, Color) palette = switch (variant) { M24StatusPillVariant.info => (c.infoTint, c.info), M24StatusPillVariant.success => (c.successTint, c.success), M24StatusPillVariant.warning => (c.warningTint, c.warning), M24StatusPillVariant.danger => (c.dangerTint, c.danger), M24StatusPillVariant.neutral => (c.neutralTint, c.neutral) };
-    return Container(height: 28, padding: const EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(color: palette.$1, borderRadius: BorderRadius.circular(999)), child: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[Container(width: 8, height: 8, decoration: BoxDecoration(color: palette.$2, shape: BoxShape.circle)), const SizedBox(width: 7), Flexible(child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.m24.text.label.copyWith(color: palette.$2)))]));
+    return Container(height: 28, padding: const EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(color: palette.$1, borderRadius: BorderRadius.circular(999)), child: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[Container(width: 8, height: 8, decoration: BoxDecoration(color: palette.$2, shape: BoxShape.circle)), const SizedBox(width: 7), Flexible(child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.m24.text.label.copyWith(color: palette.$2, decoration: strikethrough ? TextDecoration.lineThrough : null)))]));
   }
 }

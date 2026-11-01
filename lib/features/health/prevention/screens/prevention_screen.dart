@@ -158,7 +158,10 @@ class PreventionRisks extends StatelessWidget {
   Widget build(BuildContext context) {
     final double width = MediaQuery.sizeOf(context).width;
     final int columns = width >= 1200 ? 3 : width >= 600 ? 2 : 1;
-    return GridView.count(crossAxisCount: columns, crossAxisSpacing: 16, mainAxisSpacing: 16, childAspectRatio: columns == 1 ? .82 : .72, padding: const EdgeInsets.only(bottom: 24), children: <Widget>[for (final RiskFamily family in RiskFamily.values) RiskCard(family: family, score: snapshot.scoreFor(family), history: snapshot.riskHistory, names: snapshot.biomarkerNames, onHistory: () => showDialog<void>(context: context, builder: (_) => RiskHistoryDialog(family: family, points: snapshot.riskHistory)), onCompleteData: () => family == RiskFamily.kidney ? context.go(AppRoutes.archive) : context.push(AppRoutes.preventionQuestionnaire))]);
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+      final double cardWidth = (constraints.maxWidth - (columns - 1) * 16) / columns;
+      return ListView(padding: const EdgeInsets.only(bottom: 24), children: <Widget>[Wrap(crossAxisAlignment: WrapCrossAlignment.start, spacing: 16, runSpacing: 16, children: <Widget>[for (final RiskFamily family in RiskFamily.values) SizedBox(width: cardWidth, child: RiskCard(family: family, score: snapshot.scoreFor(family), history: snapshot.riskHistory, names: snapshot.biomarkerNames, onHistory: () => showDialog<void>(context: context, builder: (_) => RiskHistoryDialog(family: family, points: snapshot.riskHistory)), onCompleteData: () => family == RiskFamily.kidney ? context.go(AppRoutes.archive) : context.push(AppRoutes.preventionQuestionnaire)))])]);
+    });
   }
 }
 

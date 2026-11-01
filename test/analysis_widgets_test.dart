@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,8 +25,8 @@ const Biomarker _glucose = Biomarker(
   boardVersion: 0,
 );
 
-Observation _observation({bool review = false}) => Observation(
-      id: 'observation-test',
+Observation _observation({String id = 'observation-test', bool review = false, ObservationReviewStatus reviewStatus = ObservationReviewStatus.pending, String? confirmedBy, ObservationFlag flag = ObservationFlag.above}) => Observation(
+      id: id,
       subjectId: 'subject-test',
       code: '2345-7',
       displayName: 'Glucose',
@@ -37,6 +39,10 @@ Observation _observation({bool review = false}) => Observation(
       effectiveAt: DateTime(2026),
       needsReview: review,
       confidence: review ? 0.54 : null,
+      reviewStatus: reviewStatus,
+      confirmedAt: reviewStatus == ObservationReviewStatus.pending ? null : DateTime(2026),
+      confirmedBy: confirmedBy,
+      flag: flag,
     );
 
 MedicalDocument _document() => const MedicalDocument(
@@ -48,11 +54,11 @@ MedicalDocument _document() => const MedicalDocument(
       status: DocumentStatus.uploaded,
     );
 
-Widget _localized(Widget child) => MaterialApp(
+Widget _localized(Widget child) => ProviderScope(child: MaterialApp(
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[AppLocalizations.delegate],
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(body: child),
-    );
+    ));
 
 const List<Size> _breakpoints = <Size>[
   Size(390, 844),
@@ -97,6 +103,66 @@ void main() {
     await tester.pumpWidget(_localized(AnalysisValuesTable(observations: <Observation>[_observation()], catalog: <String, Biomarker>{_glucose.code: _glucose})));
     expect(find.text('Above the range'), findsOneWidget);
     expect(find.text('180 mg/dL'), findsOneWidget);
+  });
+
+  testWidgets('values table renders confirmed, review, and pending pills', (WidgetTester tester) async {
+    await tester.pumpWidget(_localized(AnalysisValuesTable(
+      observations: <Observation>[
+        _observation(id: 'confirmed', reviewStatus: ObservationReviewStatus.confirmed),
+        _observation(id: 'review', review: true),
+        _observation(id: 'pending'),
+      ],
+      catalog: <String, Biomarker>{_glucose.code: _glucose},
+    )));
+    expect(find.text('Confirmed'), findsOneWidget);
+    expect(find.text('by the engine'), findsOneWidget);
+    expect(find.text('Needs review'), findsOneWidget);
+    expect(find.text('Pending'), findsOneWidget);
+  });
+
+  testWidgets('approve acts on one pending row', (WidgetTester tester) async {
+    Observation? approved;
+    await tester.pumpWidget(_localized(AnalysisValuesTable(
+      observations: <Observation>[_observation()],
+      catalog: <String, Biomarker>{_glucose.code: _glucose},
+      onApprove: (Observation value) async { approved = value; return true; },
+    )));
+    await tester.tap(find.byKey(const Key('approve-observation-test')));
+    await tester.pump();
+    expect(approved?.id, 'observation-test');
+  });
+
+  testWidgets('discard asks for confirmation before acting', (WidgetTester tester) async {
+    bool discarded = false;
+    await tester.pumpWidget(_localized(AnalysisValuesTable(
+      observations: <Observation>[_observation(reviewStatus: ObservationReviewStatus.confirmed)],
+      catalog: <String, Biomarker>{_glucose.code: _glucose},
+      onDiscard: (_) async { discarded = true; return true; },
+    )));
+    await tester.tap(find.byKey(const Key('discard-observation-test')));
+    await tester.pumpAndSettle();
+    expect(find.text('Discard this value?'), findsOneWidget);
+    expect(discarded, isFalse);
+    await tester.tap(find.text('Discard'));
+    await tester.pumpAndSettle();
+    expect(discarded, isTrue);
+  });
+
+  testWidgets('confirm all displays progress and final result', (WidgetTester tester) async {
+    final Completer<bool> first = Completer<bool>();
+    int calls = 0;
+    await tester.pumpWidget(_localized(AnalysisValuesTable(
+      observations: <Observation>[_observation(id: 'one'), _observation(id: 'two', review: true)],
+      catalog: <String, Biomarker>{_glucose.code: _glucose},
+      onApprove: (_) { calls++; return calls == 1 ? first.future : Future<bool>.value(true); },
+    )));
+    await tester.tap(find.byKey(const Key('analysis-confirm-all')));
+    await tester.pump();
+    expect(find.byKey(const Key('analysis-confirm-all-progress')), findsOneWidget);
+    expect(find.text('0 of 2 values processed'), findsOneWidget);
+    first.complete(true);
+    await tester.pumpAndSettle();
+    expect(find.text('2 confirmed, 0 errors'), findsOneWidget);
   });
 
   testWidgets('analysis status badge renders the list state', (WidgetTester tester) async {

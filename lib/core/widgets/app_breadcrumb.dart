@@ -40,6 +40,14 @@ class AppBreadcrumb extends ConsumerWidget {
         final document = ref.watch(archiveDocumentProvider(id)).value;
         items.add(AppBreadcrumbItem(document == null || document.title.isEmpty ? context.l10n.t('archiveDocumentDetail') : document.title, null));
       }
+    } else if (path.startsWith('/admin')) {
+      items.add(AppBreadcrumbItem(context.l10n.adminGovernment, AppRoutes.adminOverview));
+      final String section = path.startsWith(AppRoutes.adminAi)
+          ? context.l10n.adminAiTasks
+          : path.startsWith(AppRoutes.adminSettings)
+              ? context.l10n.adminSettings
+              : context.l10n.adminOverview;
+      items.add(AppBreadcrumbItem(section, null));
     } else {
       items.add(AppBreadcrumbItem(context.l10n.t(path == '/' ? 'navHome' : 'appTitle'), null));
     }

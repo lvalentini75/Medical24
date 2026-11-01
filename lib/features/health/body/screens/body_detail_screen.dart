@@ -9,11 +9,14 @@ import 'package:medical24/core/ui/tokens.dart';
 import 'package:medical24/core/ui/widgets/widgets.dart';
 import 'package:medical24/core/widgets/app_state_views.dart';
 import 'package:medical24/features/archive/widgets/add_document_sheet.dart';
+import 'package:medical24/features/archive/providers/archive_providers.dart';
 import 'package:medical24/features/health/body/data/body_models.dart';
 import 'package:medical24/features/health/body/providers/body_providers.dart';
 import 'package:medical24/features/health/body/widgets/body_widgets.dart';
 import 'package:medical24/features/health/data/health_models.dart';
 import 'package:medical24/features/health/providers/health_providers.dart';
+import 'package:medical24/features/health/explanations/data/explanation_repository.dart';
+import 'package:medical24/features/health/explanations/widgets/m24_explanation_card.dart';
 import 'package:medical24/features/health/widgets/biomarker_chart.dart';
 import 'package:medical24/features/health/widgets/biomarker_list.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
@@ -38,6 +41,7 @@ class BodyDetailContent extends ConsumerWidget {
     final AsyncValue<List<OrganBiomarker>> biomarkers = ref.watch(organBiomarkersProvider(organ.id));
     final OrganRuleVersion? rule = ref.watch(organRuleProvider).value;
     final bool loading = ref.watch(organComputeProvider).isLoading;
+    final String? subjectId = ref.watch(archiveSubjectIdProvider);
     return Padding(padding: EdgeInsets.all(MediaQuery.sizeOf(context).width >= 600 ? 24 : 16), child: biomarkers.when(loading: () => const AppLoadingView(), error: (_, __) => AppErrorView(message: context.l10n.bodyValuesError, onRetry: () => ref.invalidate(organBiomarkersProvider(organ.id))), data: (List<OrganBiomarker> values) => ListView(children: <Widget>[
       M24Card(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[M24IconTile(icon: organIcon(organ.icon), variant: organTileVariant(organ.state)), const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[Text(organ.name(Localizations.localeOf(context).languageCode), style: context.m24.text.h2), Text(organ.description(Localizations.localeOf(context).languageCode), style: context.m24.text.bodySmall)]))]),
@@ -48,6 +52,7 @@ class BodyDetailContent extends ConsumerWidget {
       for (final OrganBiomarker value in values.where((OrganBiomarker item) => item.isPresent)) ...<Widget>[OrganBiomarkerCard(biomarker: value), const SizedBox(height: 12)],
       for (final OrganBiomarker value in values.where((OrganBiomarker item) => !item.isPresent)) ...<Widget>[MissingBiomarkerRow(biomarker: value), const SizedBox(height: 8)],
       if (values.isEmpty) M24EmptyState(icon: LucideIcons.chartNoAxesColumn, title: context.l10n.bodyNoMappedValues, message: context.l10n.bodyEmptyMessage, actionLabel: context.l10n.healthValuesUploadReport, onAction: () => AddDocumentSheet.show(context)),
+      if (subjectId != null) ...<Widget>[const SizedBox(height: 12), M24ExplanationCard(subjectId: subjectId, targetType: ExplanationTargetType.organ, targetId: organ.id)],
       const SizedBox(height: 24), M24Disclaimer(phoneText: context.l10n.disclaimerPhone, desktopText: context.l10n.disclaimerDesktop), const SizedBox(height: 12), OrganRuleNote(rule: rule), const SizedBox(height: 40)
     ])));
   }

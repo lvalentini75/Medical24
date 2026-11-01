@@ -9,7 +9,6 @@ import 'package:medical24/core/widgets/app_state_views.dart';
 import 'package:medical24/features/analysis/providers/analysis_providers.dart';
 import 'package:medical24/features/analysis/widgets/analysis_values_table.dart';
 import 'package:medical24/features/analysis/widgets/document_analysis_panel.dart';
-import 'package:medical24/features/analysis/widgets/observation_review.dart';
 import 'package:medical24/features/archive/providers/archive_providers.dart';
 import 'package:medical24/features/archive/widgets/document_detail_panel.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
@@ -81,7 +80,7 @@ class AnalysisWorkspaceContent extends ConsumerWidget {
     if (!reviewOnly) {
       return SingleChildScrollView(child: DocumentAnalysisPanel(document: document));
     }
-    final AsyncValue<List<Observation>> values = ref.watch(documentObservationsStreamProvider(document.id));
+    final AsyncValue<List<Observation>> values = ref.watch(documentAllObservationsStreamProvider(document.id));
     final AsyncValue<Map<String, Biomarker>> catalog = ref.watch(biomarkerByCodeProvider);
     return values.when(
       loading: () => const AppLoadingView(),
@@ -89,16 +88,11 @@ class AnalysisWorkspaceContent extends ConsumerWidget {
       data: (List<Observation> observations) => catalog.when(
         loading: () => const AppLoadingView(),
         error: (_, __) => AppErrorView(message: context.l10n.t('commonErrorTitle')),
-        data: (Map<String, Biomarker> biomarkers) {
-          final List<Observation> pending = observations.where((Observation value) => value.needsReview).toList(growable: false);
-          if (pending.isEmpty) {
-            return ListView(children: <Widget>[
-              AppEmptyView(icon: Icons.check_circle_outline, body: context.l10n.t('analysisReviewComplete')),
-              AnalysisValuesTable(observations: observations, catalog: biomarkers),
-            ]);
-          }
-          return ObservationReview(observations: pending, catalog: biomarkers);
-        },
+        data: (Map<String, Biomarker> biomarkers) => ListView(children: <Widget>[
+          if (!observations.any((Observation value) => value.isPending))
+            AppEmptyView(icon: Icons.check_circle_outline, body: context.l10n.t('analysisReviewComplete')),
+          AnalysisValuesTable(observations: observations, catalog: biomarkers),
+        ]),
       ),
     );
   }

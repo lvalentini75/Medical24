@@ -416,6 +416,30 @@ abstract class AppLocalizations {
   /// **'I dati sanitari sono trattati come categoria particolare (art. 9 GDPR) e restano in Europa.'**
   String get authPrivacyNote;
 
+  /// No description provided for @authDevShortcutsTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Accesso rapido (sviluppo)'**
+  String get authDevShortcutsTitle;
+
+  /// No description provided for @authDevShortcutAdmin.
+  ///
+  /// In it, this message translates to:
+  /// **'Amministratore'**
+  String get authDevShortcutAdmin;
+
+  /// No description provided for @authDevShortcutAlice.
+  ///
+  /// In it, this message translates to:
+  /// **'Alice'**
+  String get authDevShortcutAlice;
+
+  /// No description provided for @authDevShortcutBob.
+  ///
+  /// In it, this message translates to:
+  /// **'Bob'**
+  String get authDevShortcutBob;
+
   /// No description provided for @onboardingConsentTitle.
   ///
   /// In it, this message translates to:
@@ -2287,6 +2311,144 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Tutti i valori sono stati verificati.'**
   String get analysisReviewComplete;
+
+  /// No description provided for @analysisOutcomeColumn.
+  ///
+  /// In it, this message translates to:
+  /// **'Esito'**
+  String get analysisOutcomeColumn;
+
+  /// No description provided for @analysisActionsColumn.
+  ///
+  /// In it, this message translates to:
+  /// **'Azioni'**
+  String get analysisActionsColumn;
+
+  /// No description provided for @analysisApproveAction.
+  ///
+  /// In it, this message translates to:
+  /// **'Approva'**
+  String get analysisApproveAction;
+
+  /// No description provided for @analysisReviewConfirmed.
+  ///
+  /// In it, this message translates to:
+  /// **'Confermato'**
+  String get analysisReviewConfirmed;
+
+  /// No description provided for @analysisReviewNeeded.
+  ///
+  /// In it, this message translates to:
+  /// **'Da verificare'**
+  String get analysisReviewNeeded;
+
+  /// No description provided for @analysisReviewPending.
+  ///
+  /// In it, this message translates to:
+  /// **'In attesa'**
+  String get analysisReviewPending;
+
+  /// No description provided for @analysisReviewDiscarded.
+  ///
+  /// In it, this message translates to:
+  /// **'Scartato'**
+  String get analysisReviewDiscarded;
+
+  /// No description provided for @analysisConfirmedByEngine.
+  ///
+  /// In it, this message translates to:
+  /// **'dal motore'**
+  String get analysisConfirmedByEngine;
+
+  /// No description provided for @analysisConfirmedByYou.
+  ///
+  /// In it, this message translates to:
+  /// **'da te'**
+  String get analysisConfirmedByYou;
+
+  /// No description provided for @analysisShowDiscarded.
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra scartati'**
+  String get analysisShowDiscarded;
+
+  /// No description provided for @analysisDiscardConfirmTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Scartare questo valore?'**
+  String get analysisDiscardConfirmTitle;
+
+  /// No description provided for @analysisDiscardConfirmBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Non verrà usato per organi, rischi e spiegazioni.'**
+  String get analysisDiscardConfirmBody;
+
+  /// No description provided for @analysisConfirmAll.
+  ///
+  /// In it, this message translates to:
+  /// **'Conferma tutti i valori in attesa ({count})'**
+  String analysisConfirmAll(String count);
+
+  /// No description provided for @analysisConfirmAllProgress.
+  ///
+  /// In it, this message translates to:
+  /// **'{current} di {total} valori elaborati'**
+  String analysisConfirmAllProgress(String current, String total);
+
+  /// No description provided for @analysisConfirmAllResult.
+  ///
+  /// In it, this message translates to:
+  /// **'{confirmed} confermati, {errors} errori'**
+  String analysisConfirmAllResult(String confirmed, String errors);
+
+  /// No description provided for @analysisReviewSummary.
+  ///
+  /// In it, this message translates to:
+  /// **'{confirmed} valori confermati · {pending} da verificare'**
+  String analysisReviewSummary(String confirmed, String pending);
+
+  /// No description provided for @analysisVerifyValuesAction.
+  ///
+  /// In it, this message translates to:
+  /// **'Verifica i valori ({count})'**
+  String analysisVerifyValuesAction(String count);
+
+  /// No description provided for @analysisFlagShort_below.
+  ///
+  /// In it, this message translates to:
+  /// **'Sotto'**
+  String get analysisFlagShort_below;
+
+  /// No description provided for @analysisFlagShort_within.
+  ///
+  /// In it, this message translates to:
+  /// **'Nell\'intervallo'**
+  String get analysisFlagShort_within;
+
+  /// No description provided for @analysisFlagShort_above.
+  ///
+  /// In it, this message translates to:
+  /// **'Sopra'**
+  String get analysisFlagShort_above;
+
+  /// No description provided for @analysisFlagShort_critical_low.
+  ///
+  /// In it, this message translates to:
+  /// **'Molto sotto'**
+  String get analysisFlagShort_critical_low;
+
+  /// No description provided for @analysisFlagShort_critical_high.
+  ///
+  /// In it, this message translates to:
+  /// **'Molto sopra'**
+  String get analysisFlagShort_critical_high;
+
+  /// No description provided for @analysisFlagShort_unknown.
+  ///
+  /// In it, this message translates to:
+  /// **'Da valutare'**
+  String get analysisFlagShort_unknown;
 
   /// No description provided for @analysisDiscardAction.
   ///
@@ -4419,6 +4581,972 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Consigliata perché il rischio di frattura è medio o alto'**
   String get recommendationDensitometriaFratturaReason;
+
+  /// No description provided for @explanationTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Spiegazione'**
+  String get explanationTitle;
+
+  /// No description provided for @explanationSimple.
+  ///
+  /// In it, this message translates to:
+  /// **'Semplice'**
+  String get explanationSimple;
+
+  /// No description provided for @explanationClinical.
+  ///
+  /// In it, this message translates to:
+  /// **'Clinico'**
+  String get explanationClinical;
+
+  /// No description provided for @explanationMore.
+  ///
+  /// In it, this message translates to:
+  /// **'Altre azioni'**
+  String get explanationMore;
+
+  /// No description provided for @explanationExplainValue.
+  ///
+  /// In it, this message translates to:
+  /// **'Spiegami questo valore'**
+  String get explanationExplainValue;
+
+  /// No description provided for @explanationExplainOrgan.
+  ///
+  /// In it, this message translates to:
+  /// **'Spiegami questo organo'**
+  String get explanationExplainOrgan;
+
+  /// No description provided for @explanationExplainRisk.
+  ///
+  /// In it, this message translates to:
+  /// **'Spiegami questo rischio'**
+  String get explanationExplainRisk;
+
+  /// No description provided for @explanationExplainDocument.
+  ///
+  /// In it, this message translates to:
+  /// **'Spiegami questo referto'**
+  String get explanationExplainDocument;
+
+  /// No description provided for @explanationReportCta.
+  ///
+  /// In it, this message translates to:
+  /// **'Spiegami questo referto'**
+  String get explanationReportCta;
+
+  /// No description provided for @explanationReportCtaReread.
+  ///
+  /// In it, this message translates to:
+  /// **'Rileggi la spiegazione'**
+  String get explanationReportCtaReread;
+
+  /// No description provided for @explanationReportCtaDisabled.
+  ///
+  /// In it, this message translates to:
+  /// **'Conferma almeno un valore'**
+  String get explanationReportCtaDisabled;
+
+  /// No description provided for @explanationUsageNote.
+  ///
+  /// In it, this message translates to:
+  /// **'Conta tra le {count} spiegazioni disponibili oggi'**
+  String explanationUsageNote(int count);
+
+  /// No description provided for @explanationWriting.
+  ///
+  /// In it, this message translates to:
+  /// **'Sto scrivendo la spiegazione…'**
+  String get explanationWriting;
+
+  /// No description provided for @explanationGeneratedMeta.
+  ///
+  /// In it, this message translates to:
+  /// **'Testo generato dall\'IA · {model} · {date}'**
+  String explanationGeneratedMeta(String model, String date);
+
+  /// No description provided for @explanationUpdatedAt.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiornata al {date}'**
+  String explanationUpdatedAt(String date);
+
+  /// No description provided for @explanationRequiredClosing.
+  ///
+  /// In it, this message translates to:
+  /// **'Le informazioni non sostituiscono il parere del medico.'**
+  String get explanationRequiredClosing;
+
+  /// No description provided for @explanationUnavailable.
+  ///
+  /// In it, this message translates to:
+  /// **'Per questo dato non riusciamo a dare una spiegazione affidabile'**
+  String get explanationUnavailable;
+
+  /// No description provided for @explanationUnavailableAdvice.
+  ///
+  /// In it, this message translates to:
+  /// **'Parlane con il medico.'**
+  String get explanationUnavailableAdvice;
+
+  /// No description provided for @explanationLimitReached.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai raggiunto le 30 spiegazioni di oggi'**
+  String get explanationLimitReached;
+
+  /// No description provided for @explanationLimitTomorrow.
+  ///
+  /// In it, this message translates to:
+  /// **'Potrai chiedere nuove spiegazioni domani.'**
+  String get explanationLimitTomorrow;
+
+  /// No description provided for @explanationError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a creare la spiegazione'**
+  String get explanationError;
+
+  /// No description provided for @explanationErrorAdvice.
+  ///
+  /// In it, this message translates to:
+  /// **'Controlla la connessione e riprova.'**
+  String get explanationErrorAdvice;
+
+  /// No description provided for @explanationConfirmValues.
+  ///
+  /// In it, this message translates to:
+  /// **'Conferma i valori per avere la spiegazione.'**
+  String get explanationConfirmValues;
+
+  /// No description provided for @explanationRegenerate.
+  ///
+  /// In it, this message translates to:
+  /// **'Rigenera'**
+  String get explanationRegenerate;
+
+  /// No description provided for @explanationRegenerateTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Rigenerare la spiegazione?'**
+  String get explanationRegenerateTitle;
+
+  /// No description provided for @explanationRegenerateConfirm.
+  ///
+  /// In it, this message translates to:
+  /// **'La rigenerazione conta nel limite giornaliero e sostituisce la versione mostrata.'**
+  String get explanationRegenerateConfirm;
+
+  /// No description provided for @aiTaskPaused.
+  ///
+  /// In it, this message translates to:
+  /// **'Il servizio IA è temporaneamente in pausa.'**
+  String get aiTaskPaused;
+
+  /// No description provided for @maintenanceMessage.
+  ///
+  /// In it, this message translates to:
+  /// **'Medical 24 è in manutenzione. Riprova tra poco.'**
+  String get maintenanceMessage;
+
+  /// No description provided for @adminGovernment.
+  ///
+  /// In it, this message translates to:
+  /// **'Governo'**
+  String get adminGovernment;
+
+  /// No description provided for @adminOverview.
+  ///
+  /// In it, this message translates to:
+  /// **'Panoramica'**
+  String get adminOverview;
+
+  /// No description provided for @adminAiTasks.
+  ///
+  /// In it, this message translates to:
+  /// **'Compiti AI'**
+  String get adminAiTasks;
+
+  /// No description provided for @adminSettings.
+  ///
+  /// In it, this message translates to:
+  /// **'Impostazioni'**
+  String get adminSettings;
+
+  /// No description provided for @adminPrompts.
+  ///
+  /// In it, this message translates to:
+  /// **'Prompt'**
+  String get adminPrompts;
+
+  /// No description provided for @adminUsage.
+  ///
+  /// In it, this message translates to:
+  /// **'Consumi'**
+  String get adminUsage;
+
+  /// No description provided for @adminEvents.
+  ///
+  /// In it, this message translates to:
+  /// **'Eventi'**
+  String get adminEvents;
+
+  /// No description provided for @adminAudit.
+  ///
+  /// In it, this message translates to:
+  /// **'Audit'**
+  String get adminAudit;
+
+  /// No description provided for @adminRules.
+  ///
+  /// In it, this message translates to:
+  /// **'Regole'**
+  String get adminRules;
+
+  /// No description provided for @adminSoon.
+  ///
+  /// In it, this message translates to:
+  /// **'Presto'**
+  String get adminSoon;
+
+  /// No description provided for @adminDesktopOnly.
+  ///
+  /// In it, this message translates to:
+  /// **'Il pannello di governo è disponibile su desktop'**
+  String get adminDesktopOnly;
+
+  /// No description provided for @adminDesktopOnlyBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Apri Medical 24 su uno schermo largo almeno 1200 pt.'**
+  String get adminDesktopOnlyBody;
+
+  /// No description provided for @adminForbiddenTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'403 · Accesso non consentito'**
+  String get adminForbiddenTitle;
+
+  /// No description provided for @adminForbiddenBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Questa area è riservata agli amministratori.'**
+  String get adminForbiddenBody;
+
+  /// No description provided for @adminAccessError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a verificare i permessi.'**
+  String get adminAccessError;
+
+  /// No description provided for @adminBackHome.
+  ///
+  /// In it, this message translates to:
+  /// **'Torna alla home'**
+  String get adminBackHome;
+
+  /// No description provided for @adminBackToApp.
+  ///
+  /// In it, this message translates to:
+  /// **'Torna all\'app'**
+  String get adminBackToApp;
+
+  /// No description provided for @adminRefresh.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiorna'**
+  String get adminRefresh;
+
+  /// No description provided for @adminUsersTotal.
+  ///
+  /// In it, this message translates to:
+  /// **'Utenti totali'**
+  String get adminUsersTotal;
+
+  /// No description provided for @adminUsersActive7d.
+  ///
+  /// In it, this message translates to:
+  /// **'Attivi 7 giorni'**
+  String get adminUsersActive7d;
+
+  /// No description provided for @adminUsersActive30d.
+  ///
+  /// In it, this message translates to:
+  /// **'Attivi 30 giorni'**
+  String get adminUsersActive30d;
+
+  /// No description provided for @adminDocuments.
+  ///
+  /// In it, this message translates to:
+  /// **'Documenti'**
+  String get adminDocuments;
+
+  /// No description provided for @adminExtractionsOk.
+  ///
+  /// In it, this message translates to:
+  /// **'Estrazioni riuscite · 7 gg'**
+  String get adminExtractionsOk;
+
+  /// No description provided for @adminExtractionsFailed.
+  ///
+  /// In it, this message translates to:
+  /// **'Estrazioni fallite · 7 gg'**
+  String get adminExtractionsFailed;
+
+  /// No description provided for @adminExtractionsReview.
+  ///
+  /// In it, this message translates to:
+  /// **'Da verificare · 7 gg'**
+  String get adminExtractionsReview;
+
+  /// No description provided for @adminCostToday.
+  ///
+  /// In it, this message translates to:
+  /// **'Costo oggi per compito'**
+  String get adminCostToday;
+
+  /// No description provided for @adminCostMonth.
+  ///
+  /// In it, this message translates to:
+  /// **'Costo mese per compito'**
+  String get adminCostMonth;
+
+  /// No description provided for @adminErrors24h.
+  ///
+  /// In it, this message translates to:
+  /// **'Errori 24 ore per codice'**
+  String get adminErrors24h;
+
+  /// No description provided for @adminTaskStatus.
+  ///
+  /// In it, this message translates to:
+  /// **'Stato dei compiti'**
+  String get adminTaskStatus;
+
+  /// No description provided for @adminLastHealth.
+  ///
+  /// In it, this message translates to:
+  /// **'Ultimo health'**
+  String get adminLastHealth;
+
+  /// No description provided for @adminActive.
+  ///
+  /// In it, this message translates to:
+  /// **'Attivo'**
+  String get adminActive;
+
+  /// No description provided for @adminDisabled.
+  ///
+  /// In it, this message translates to:
+  /// **'Disabilitato'**
+  String get adminDisabled;
+
+  /// No description provided for @adminPaused.
+  ///
+  /// In it, this message translates to:
+  /// **'In pausa'**
+  String get adminPaused;
+
+  /// No description provided for @adminPausedUntil.
+  ///
+  /// In it, this message translates to:
+  /// **'In pausa fino a {date}'**
+  String adminPausedUntil(String date);
+
+  /// No description provided for @adminAiTasksModels.
+  ///
+  /// In it, this message translates to:
+  /// **'Compiti AI e modelli'**
+  String get adminAiTasksModels;
+
+  /// No description provided for @adminTask.
+  ///
+  /// In it, this message translates to:
+  /// **'Compito'**
+  String get adminTask;
+
+  /// No description provided for @adminModel.
+  ///
+  /// In it, this message translates to:
+  /// **'Modello'**
+  String get adminModel;
+
+  /// No description provided for @adminFallback.
+  ///
+  /// In it, this message translates to:
+  /// **'Fallback'**
+  String get adminFallback;
+
+  /// No description provided for @adminPrompt.
+  ///
+  /// In it, this message translates to:
+  /// **'Prompt attivo'**
+  String get adminPrompt;
+
+  /// No description provided for @adminBudgetProgress.
+  ///
+  /// In it, this message translates to:
+  /// **'Budget / speso oggi'**
+  String get adminBudgetProgress;
+
+  /// No description provided for @adminStatus.
+  ///
+  /// In it, this message translates to:
+  /// **'Stato'**
+  String get adminStatus;
+
+  /// No description provided for @adminEdit.
+  ///
+  /// In it, this message translates to:
+  /// **'Modifica'**
+  String get adminEdit;
+
+  /// No description provided for @adminModels.
+  ///
+  /// In it, this message translates to:
+  /// **'Modelli'**
+  String get adminModels;
+
+  /// No description provided for @adminNewModel.
+  ///
+  /// In it, this message translates to:
+  /// **'Nuovo modello'**
+  String get adminNewModel;
+
+  /// No description provided for @adminEditModel.
+  ///
+  /// In it, this message translates to:
+  /// **'Modifica modello'**
+  String get adminEditModel;
+
+  /// No description provided for @adminId.
+  ///
+  /// In it, this message translates to:
+  /// **'ID'**
+  String get adminId;
+
+  /// No description provided for @adminProvider.
+  ///
+  /// In it, this message translates to:
+  /// **'Provider'**
+  String get adminProvider;
+
+  /// No description provided for @adminName.
+  ///
+  /// In it, this message translates to:
+  /// **'Nome'**
+  String get adminName;
+
+  /// No description provided for @adminPriceInput.
+  ///
+  /// In it, this message translates to:
+  /// **'Input \$/MTok'**
+  String get adminPriceInput;
+
+  /// No description provided for @adminPriceOutput.
+  ///
+  /// In it, this message translates to:
+  /// **'Output \$/MTok'**
+  String get adminPriceOutput;
+
+  /// No description provided for @adminPriceCache.
+  ///
+  /// In it, this message translates to:
+  /// **'Cache letta \$/MTok'**
+  String get adminPriceCache;
+
+  /// No description provided for @adminPriceInputMicro.
+  ///
+  /// In it, this message translates to:
+  /// **'Prezzo input in micro-USD/MTok'**
+  String get adminPriceInputMicro;
+
+  /// No description provided for @adminPriceOutputMicro.
+  ///
+  /// In it, this message translates to:
+  /// **'Prezzo output in micro-USD/MTok'**
+  String get adminPriceOutputMicro;
+
+  /// No description provided for @adminPriceCacheMicro.
+  ///
+  /// In it, this message translates to:
+  /// **'Prezzo cache letta in micro-USD/MTok'**
+  String get adminPriceCacheMicro;
+
+  /// No description provided for @adminContextWindow.
+  ///
+  /// In it, this message translates to:
+  /// **'Finestra di contesto'**
+  String get adminContextWindow;
+
+  /// No description provided for @adminFallbackEnabled.
+  ///
+  /// In it, this message translates to:
+  /// **'Fallback abilitato'**
+  String get adminFallbackEnabled;
+
+  /// No description provided for @adminMaxOutputTokens.
+  ///
+  /// In it, this message translates to:
+  /// **'Token massimi in uscita'**
+  String get adminMaxOutputTokens;
+
+  /// No description provided for @adminEnabled.
+  ///
+  /// In it, this message translates to:
+  /// **'Abilitato'**
+  String get adminEnabled;
+
+  /// No description provided for @adminDailyBudgetUsd.
+  ///
+  /// In it, this message translates to:
+  /// **'Budget giornaliero in dollari'**
+  String get adminDailyBudgetUsd;
+
+  /// No description provided for @adminBudgetAction.
+  ///
+  /// In it, this message translates to:
+  /// **'Azione sul budget'**
+  String get adminBudgetAction;
+
+  /// No description provided for @adminBudgetAlert.
+  ///
+  /// In it, this message translates to:
+  /// **'Avvisa'**
+  String get adminBudgetAlert;
+
+  /// No description provided for @adminBudgetPause.
+  ///
+  /// In it, this message translates to:
+  /// **'Metti in pausa'**
+  String get adminBudgetPause;
+
+  /// No description provided for @adminUserDailyLimit.
+  ///
+  /// In it, this message translates to:
+  /// **'Limite giornaliero per utente'**
+  String get adminUserDailyLimit;
+
+  /// No description provided for @adminSecondApproval.
+  ///
+  /// In it, this message translates to:
+  /// **'Seconda approvazione richiesta'**
+  String get adminSecondApproval;
+
+  /// No description provided for @adminRequestPreset.
+  ///
+  /// In it, this message translates to:
+  /// **'Preimpostazione'**
+  String get adminRequestPreset;
+
+  /// No description provided for @adminEffort.
+  ///
+  /// In it, this message translates to:
+  /// **'Senza ragionamento, sforzo {effort}'**
+  String adminEffort(String effort);
+
+  /// No description provided for @adminAdaptiveThinking.
+  ///
+  /// In it, this message translates to:
+  /// **'Ragionamento adattivo'**
+  String get adminAdaptiveThinking;
+
+  /// No description provided for @adminRequestOptions.
+  ///
+  /// In it, this message translates to:
+  /// **'Opzioni richiesta (JSON)'**
+  String get adminRequestOptions;
+
+  /// No description provided for @adminPositiveNumberError.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserisci un numero maggiore di zero.'**
+  String get adminPositiveNumberError;
+
+  /// No description provided for @adminJsonObjectError.
+  ///
+  /// In it, this message translates to:
+  /// **'Il JSON deve essere un oggetto.'**
+  String get adminJsonObjectError;
+
+  /// No description provided for @adminJsonInvalid.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserisci un JSON valido.'**
+  String get adminJsonInvalid;
+
+  /// No description provided for @adminResume.
+  ///
+  /// In it, this message translates to:
+  /// **'Riprendi'**
+  String get adminResume;
+
+  /// No description provided for @adminPauseTomorrow.
+  ///
+  /// In it, this message translates to:
+  /// **'Metti in pausa fino a domani'**
+  String get adminPauseTomorrow;
+
+  /// No description provided for @adminModelInUse.
+  ///
+  /// In it, this message translates to:
+  /// **'Il modello è in uso: cambia prima il modello del compito.'**
+  String get adminModelInUse;
+
+  /// No description provided for @adminKey.
+  ///
+  /// In it, this message translates to:
+  /// **'Chiave'**
+  String get adminKey;
+
+  /// No description provided for @adminValue.
+  ///
+  /// In it, this message translates to:
+  /// **'Valore'**
+  String get adminValue;
+
+  /// No description provided for @adminPublic.
+  ///
+  /// In it, this message translates to:
+  /// **'Pubblica'**
+  String get adminPublic;
+
+  /// No description provided for @adminDescription.
+  ///
+  /// In it, this message translates to:
+  /// **'Descrizione'**
+  String get adminDescription;
+
+  /// No description provided for @adminVersion.
+  ///
+  /// In it, this message translates to:
+  /// **'Versione'**
+  String get adminVersion;
+
+  /// No description provided for @adminUpdatedAt.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiornata il'**
+  String get adminUpdatedAt;
+
+  /// No description provided for @adminHistory.
+  ///
+  /// In it, this message translates to:
+  /// **'Storico'**
+  String get adminHistory;
+
+  /// No description provided for @adminValueJson.
+  ///
+  /// In it, this message translates to:
+  /// **'Valore JSON'**
+  String get adminValueJson;
+
+  /// No description provided for @adminMaintenance.
+  ///
+  /// In it, this message translates to:
+  /// **'Modalità manutenzione'**
+  String get adminMaintenance;
+
+  /// No description provided for @adminMaintenanceBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Sospende le funzioni operative della piattaforma.'**
+  String get adminMaintenanceBody;
+
+  /// No description provided for @adminMaintenanceConfirmTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Cambiare la modalità manutenzione?'**
+  String get adminMaintenanceConfirmTitle;
+
+  /// No description provided for @adminMaintenanceConfirmBody.
+  ///
+  /// In it, this message translates to:
+  /// **'La modifica ha effetto immediato per tutti gli utenti.'**
+  String get adminMaintenanceConfirmBody;
+
+  /// No description provided for @adminCompare.
+  ///
+  /// In it, this message translates to:
+  /// **'Confronta'**
+  String get adminCompare;
+
+  /// No description provided for @adminRestore.
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristina'**
+  String get adminRestore;
+
+  /// No description provided for @adminApprove.
+  ///
+  /// In it, this message translates to:
+  /// **'Approva'**
+  String get adminApprove;
+
+  /// No description provided for @adminRunTest.
+  ///
+  /// In it, this message translates to:
+  /// **'Esegui test'**
+  String get adminRunTest;
+
+  /// No description provided for @adminActivate.
+  ///
+  /// In it, this message translates to:
+  /// **'Attiva'**
+  String get adminActivate;
+
+  /// No description provided for @adminFilterPassed.
+  ///
+  /// In it, this message translates to:
+  /// **'Filtro superato'**
+  String get adminFilterPassed;
+
+  /// No description provided for @adminClosingPresent.
+  ///
+  /// In it, this message translates to:
+  /// **'Chiusura presente'**
+  String get adminClosingPresent;
+
+  /// No description provided for @adminPrevious.
+  ///
+  /// In it, this message translates to:
+  /// **'Precedente'**
+  String get adminPrevious;
+
+  /// No description provided for @adminNext.
+  ///
+  /// In it, this message translates to:
+  /// **'Successiva'**
+  String get adminNext;
+
+  /// No description provided for @adminNewVersion.
+  ///
+  /// In it, this message translates to:
+  /// **'Nuova versione'**
+  String get adminNewVersion;
+
+  /// No description provided for @adminCreatedBy.
+  ///
+  /// In it, this message translates to:
+  /// **'Creato da'**
+  String get adminCreatedBy;
+
+  /// No description provided for @adminApprovedBy.
+  ///
+  /// In it, this message translates to:
+  /// **'Approvato da'**
+  String get adminApprovedBy;
+
+  /// No description provided for @adminActivatedAt.
+  ///
+  /// In it, this message translates to:
+  /// **'Attivato il'**
+  String get adminActivatedAt;
+
+  /// No description provided for @adminLastTest.
+  ///
+  /// In it, this message translates to:
+  /// **'Ultimo test'**
+  String get adminLastTest;
+
+  /// No description provided for @adminPassed.
+  ///
+  /// In it, this message translates to:
+  /// **'Superato'**
+  String get adminPassed;
+
+  /// No description provided for @adminFailed.
+  ///
+  /// In it, this message translates to:
+  /// **'Fallito'**
+  String get adminFailed;
+
+  /// No description provided for @adminDraft.
+  ///
+  /// In it, this message translates to:
+  /// **'Bozza'**
+  String get adminDraft;
+
+  /// No description provided for @adminRetired.
+  ///
+  /// In it, this message translates to:
+  /// **'Ritirato'**
+  String get adminRetired;
+
+  /// No description provided for @adminTestResults.
+  ///
+  /// In it, this message translates to:
+  /// **'Risultati del test'**
+  String get adminTestResults;
+
+  /// No description provided for @adminSecondApproverRequired.
+  ///
+  /// In it, this message translates to:
+  /// **'Serve l\'approvazione di un secondo admin'**
+  String get adminSecondApproverRequired;
+
+  /// No description provided for @adminApprovalRequired.
+  ///
+  /// In it, this message translates to:
+  /// **'Il prompt deve essere approvato prima dell\'attivazione.'**
+  String get adminApprovalRequired;
+
+  /// No description provided for @adminPassingTestRequired.
+  ///
+  /// In it, this message translates to:
+  /// **'Serve un test superato prima dell\'attivazione.'**
+  String get adminPassingTestRequired;
+
+  /// No description provided for @adminRestoreConfirm.
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristinare la versione precedente per questo compito?'**
+  String get adminRestoreConfirm;
+
+  /// No description provided for @adminSaved.
+  ///
+  /// In it, this message translates to:
+  /// **'Modifica salvata'**
+  String get adminSaved;
+
+  /// No description provided for @adminSystemPrompt.
+  ///
+  /// In it, this message translates to:
+  /// **'System prompt'**
+  String get adminSystemPrompt;
+
+  /// No description provided for @adminUserTemplate.
+  ///
+  /// In it, this message translates to:
+  /// **'Template utente'**
+  String get adminUserTemplate;
+
+  /// No description provided for @adminToolSchema.
+  ///
+  /// In it, this message translates to:
+  /// **'Schema dello strumento (JSON)'**
+  String get adminToolSchema;
+
+  /// No description provided for @adminNotes.
+  ///
+  /// In it, this message translates to:
+  /// **'Note'**
+  String get adminNotes;
+
+  /// No description provided for @adminAll.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutti'**
+  String get adminAll;
+
+  /// No description provided for @adminRecentCalls.
+  ///
+  /// In it, this message translates to:
+  /// **'Chiamate recenti'**
+  String get adminRecentCalls;
+
+  /// No description provided for @adminDay.
+  ///
+  /// In it, this message translates to:
+  /// **'Giorno'**
+  String get adminDay;
+
+  /// No description provided for @adminCalls.
+  ///
+  /// In it, this message translates to:
+  /// **'Chiamate'**
+  String get adminCalls;
+
+  /// No description provided for @adminOk.
+  ///
+  /// In it, this message translates to:
+  /// **'OK'**
+  String get adminOk;
+
+  /// No description provided for @adminErrors.
+  ///
+  /// In it, this message translates to:
+  /// **'Errori'**
+  String get adminErrors;
+
+  /// No description provided for @adminCache.
+  ///
+  /// In it, this message translates to:
+  /// **'Cache'**
+  String get adminCache;
+
+  /// No description provided for @adminTokensIn.
+  ///
+  /// In it, this message translates to:
+  /// **'Token in'**
+  String get adminTokensIn;
+
+  /// No description provided for @adminTokensCache.
+  ///
+  /// In it, this message translates to:
+  /// **'Token cache'**
+  String get adminTokensCache;
+
+  /// No description provided for @adminTokensOut.
+  ///
+  /// In it, this message translates to:
+  /// **'Token out'**
+  String get adminTokensOut;
+
+  /// No description provided for @adminCostUsd.
+  ///
+  /// In it, this message translates to:
+  /// **'Costo in dollari'**
+  String get adminCostUsd;
+
+  /// No description provided for @adminLatencyAvg.
+  ///
+  /// In it, this message translates to:
+  /// **'Latenza media'**
+  String get adminLatencyAvg;
+
+  /// No description provided for @adminLatencyP95.
+  ///
+  /// In it, this message translates to:
+  /// **'Latenza p95'**
+  String get adminLatencyP95;
+
+  /// No description provided for @adminType.
+  ///
+  /// In it, this message translates to:
+  /// **'Tipo'**
+  String get adminType;
+
+  /// No description provided for @adminAction.
+  ///
+  /// In it, this message translates to:
+  /// **'Azione'**
+  String get adminAction;
+
+  /// No description provided for @adminActorUuid.
+  ///
+  /// In it, this message translates to:
+  /// **'Attore (UUID)'**
+  String get adminActorUuid;
+
+  /// No description provided for @adminDetails.
+  ///
+  /// In it, this message translates to:
+  /// **'Dettagli'**
+  String get adminDetails;
+
+  /// No description provided for @adminDefinition.
+  ///
+  /// In it, this message translates to:
+  /// **'Definizione'**
+  String get adminDefinition;
+
+  /// No description provided for @adminRuleStatusConfirm.
+  ///
+  /// In it, this message translates to:
+  /// **'Confermare il cambio di stato della regola?'**
+  String get adminRuleStatusConfirm;
 }
 
 class _AppLocalizationsDelegate

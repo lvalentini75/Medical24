@@ -48,7 +48,7 @@ class AppAddFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) => Tooltip(message: context.l10n.t('commonAdd'), child: Container(
     width: 56,
     height: 56,
-    decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: <BoxShadow>[BoxShadow(color: context.m24.colors.primary.withValues(alpha: .30), blurRadius: 24, offset: const Offset(0, 8))]),
+    decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: <BoxShadow>[BoxShadow(color: context.m24.colors.accent.withValues(alpha: .30), blurRadius: 24, offset: const Offset(0, 8))]),
     child: FilledButton(
       onPressed: () => openAppAddAction(context),
       style: ButtonStyle(
@@ -56,12 +56,11 @@ class AppAddFloatingButton extends StatelessWidget {
         minimumSize: const WidgetStatePropertyAll<Size>(Size(56, 56)),
         shape: const WidgetStatePropertyAll<OutlinedBorder>(CircleBorder()),
         backgroundColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-          if (states.contains(WidgetState.pressed)) return context.m24.colors.primaryPressed;
-          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return context.m24.colors.primaryHover;
-          return context.m24.colors.primary;
+          if (states.contains(WidgetState.pressed)) return Color.lerp(context.m24.colors.accent, Colors.black, .08)!;
+          return context.m24.colors.accent;
         }),
       ),
-      child: const Icon(M24Icons.plus, size: 28, color: M24Colors.white),
+      child: Icon(M24Icons.plus, size: 28, color: context.m24.colors.onAccent),
     ),
   ));
 }

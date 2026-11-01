@@ -14,6 +14,7 @@ import 'package:medical24/core/ui/widgets/headers.dart';
 import 'package:medical24/core/widgets/app_add_action.dart';
 import 'package:medical24/core/widgets/app_breadcrumb.dart';
 import 'package:medical24/features/health/providers/health_providers.dart';
+import 'package:medical24/features/admin/providers/admin_providers.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
 
 class AppShellDestination {
@@ -229,14 +230,14 @@ class GoToSectionIntent extends Intent {
   final int index;
 }
 
-class M24Sidebar extends StatelessWidget {
+class M24Sidebar extends ConsumerWidget {
   const M24Sidebar({super.key, required this.currentIndex, required this.path, required this.onDestinationSelected});
   final int currentIndex;
   final String path;
   final ValueChanged<int> onDestinationSelected;
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context, WidgetRef ref) => Container(
     width: 220,
     decoration: BoxDecoration(color: context.m24.colors.surface, border: Border(right: BorderSide(color: context.m24.colors.border))),
     child: SafeArea(child: Padding(padding: const EdgeInsets.fromLTRB(20, 20, 20, 16), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
@@ -248,6 +249,7 @@ class M24Sidebar extends StatelessWidget {
         M24SidebarItem(icon: kAppShellDestinations[i].icon, label: context.l10n.t(kAppShellDestinations[i].desktopLabelKey), selected: i == currentIndex && (i != 1 || !path.startsWith(AppRoutes.prevention)), onTap: () => onDestinationSelected(i)),
         if (i == 1) M24SidebarItem(icon: M24Icons.prevention, label: context.l10n.preventionNav, selected: path.startsWith(AppRoutes.prevention), indent: 24, onTap: () => context.go(AppRoutes.prevention)),
       ],
+      if (ref.watch(isAdminProvider).value == true) M24SidebarItem(icon: M24Icons.government, label: context.l10n.adminGovernment, onTap: () => context.go(AppRoutes.adminOverview)),
       const Spacer(),
       Divider(color: context.m24.colors.divider),
       M24SidebarItem(icon: M24Icons.help, label: context.l10n.t('navHelp'), onTap: () => context.push(AppRoutes.settings)),

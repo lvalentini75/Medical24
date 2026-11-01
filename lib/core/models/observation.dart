@@ -65,6 +65,21 @@ enum ObservationFlag {
   bool get isOutOfRange => this != within && this != unknown;
 }
 
+/// User/engine review state stored in `observations.review_status`.
+enum ObservationReviewStatus {
+  pending('pending'),
+  confirmed('confirmed'),
+  discarded('discarded');
+
+  const ObservationReviewStatus(this.value);
+  final String value;
+
+  static ObservationReviewStatus fromValue(String? value, {DateTime? confirmedAt}) {
+    if (value == null && confirmedAt != null) return ObservationReviewStatus.confirmed;
+    return ObservationReviewStatus.values.firstWhere((ObservationReviewStatus status) => status.value == value, orElse: () => ObservationReviewStatus.pending);
+  }
+}
+
 DateTime? _date(Object? v) =>
     v == null ? null : DateTime.tryParse(v.toString());
 
@@ -93,6 +108,7 @@ class Observation {
     this.extractionId,
     this.confidence,
     this.needsReview = false,
+    this.reviewStatus = ObservationReviewStatus.pending,
     this.confirmedAt,
     this.confirmedBy,
     this.supersedesId,
@@ -134,6 +150,7 @@ class Observation {
 
   /// True while the user has not confirmed a low-confidence value.
   final bool needsReview;
+  final ObservationReviewStatus reviewStatus;
   final DateTime? confirmedAt;
   final String? confirmedBy;
 
@@ -146,7 +163,9 @@ class Observation {
   final DateTime? createdAt;
 
   bool get isCurrent => supersededAt == null;
-  bool get isConfirmed => confirmedAt != null;
+  bool get isConfirmed => reviewStatus == ObservationReviewStatus.confirmed;
+  bool get isDiscarded => reviewStatus == ObservationReviewStatus.discarded;
+  bool get isPending => reviewStatus == ObservationReviewStatus.pending;
   bool get hasLabRange => labLow != null || labHigh != null;
   bool get hasBoardRange => refLow != null || refHigh != null;
 
@@ -162,7 +181,9 @@ class Observation {
     return valueText ?? '—';
   }
 
-  factory Observation.fromJson(Map<String, dynamic> json) => Observation(
+  factory Observation.fromJson(Map<String, dynamic> json) {
+    final DateTime? confirmedAt = _date(json['confirmed_at']);
+    return Observation(
         id: json['id'].toString(),
         subjectId: json['subject_id'].toString(),
         code: json['code'].toString(),
@@ -184,7 +205,8 @@ class Observation {
         extractionId: json['extraction_id']?.toString(),
         confidence: _num(json['confidence']),
         needsReview: json['needs_review'] == true,
-        confirmedAt: _date(json['confirmed_at']),
+        reviewStatus: ObservationReviewStatus.fromValue(json['review_status'] as String?, confirmedAt: confirmedAt),
+        confirmedAt: confirmedAt,
         confirmedBy: json['confirmed_by']?.toString(),
         supersedesId: json['supersedes_id']?.toString(),
         supersededAt: _date(json['superseded_at']),
@@ -193,6 +215,7 @@ class Observation {
         labName: json['lab_name'] as String?,
         createdAt: _date(json['created_at']),
       );
+  }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
@@ -215,6 +238,9 @@ class Observation {
         'extraction_id': extractionId,
         'confidence': confidence,
         'needs_review': needsReview,
+        'review_status': reviewStatus.value,
+        'confirmed_at': confirmedAt?.toIso8601String(),
+        'confirmed_by': confirmedBy,
         'catalog_version': catalogVersion,
         'rule_version': ruleVersion,
         'lab_name': labName,
@@ -227,6 +253,7 @@ class Observation {
     ObservationFlag? flag,
     DateTime? effectiveAt,
     bool? needsReview,
+    ObservationReviewStatus? reviewStatus,
     DateTime? confirmedAt,
     DateTime? supersededAt,
   }) =>
@@ -251,6 +278,7 @@ class Observation {
         extractionId: extractionId,
         confidence: confidence,
         needsReview: needsReview ?? this.needsReview,
+        reviewStatus: reviewStatus ?? this.reviewStatus,
         confirmedAt: confirmedAt ?? this.confirmedAt,
         confirmedBy: confirmedBy,
         supersedesId: supersedesId,

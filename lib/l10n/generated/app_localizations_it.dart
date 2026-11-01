@@ -174,6 +174,18 @@ class AppLocalizationsIt extends AppLocalizations {
       'I dati sanitari sono trattati come categoria particolare (art. 9 GDPR) e restano in Europa.';
 
   @override
+  String get authDevShortcutsTitle => 'Accesso rapido (sviluppo)';
+
+  @override
+  String get authDevShortcutAdmin => 'Amministratore';
+
+  @override
+  String get authDevShortcutAlice => 'Alice';
+
+  @override
+  String get authDevShortcutBob => 'Bob';
+
+  @override
   String get onboardingConsentTitle => 'I tuoi consensi';
 
   @override
@@ -1199,6 +1211,86 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get analysisReviewComplete => 'Tutti i valori sono stati verificati.';
+
+  @override
+  String get analysisOutcomeColumn => 'Esito';
+
+  @override
+  String get analysisActionsColumn => 'Azioni';
+
+  @override
+  String get analysisApproveAction => 'Approva';
+
+  @override
+  String get analysisReviewConfirmed => 'Confermato';
+
+  @override
+  String get analysisReviewNeeded => 'Da verificare';
+
+  @override
+  String get analysisReviewPending => 'In attesa';
+
+  @override
+  String get analysisReviewDiscarded => 'Scartato';
+
+  @override
+  String get analysisConfirmedByEngine => 'dal motore';
+
+  @override
+  String get analysisConfirmedByYou => 'da te';
+
+  @override
+  String get analysisShowDiscarded => 'Mostra scartati';
+
+  @override
+  String get analysisDiscardConfirmTitle => 'Scartare questo valore?';
+
+  @override
+  String get analysisDiscardConfirmBody =>
+      'Non verrà usato per organi, rischi e spiegazioni.';
+
+  @override
+  String analysisConfirmAll(String count) {
+    return 'Conferma tutti i valori in attesa ($count)';
+  }
+
+  @override
+  String analysisConfirmAllProgress(String current, String total) {
+    return '$current di $total valori elaborati';
+  }
+
+  @override
+  String analysisConfirmAllResult(String confirmed, String errors) {
+    return '$confirmed confermati, $errors errori';
+  }
+
+  @override
+  String analysisReviewSummary(String confirmed, String pending) {
+    return '$confirmed valori confermati · $pending da verificare';
+  }
+
+  @override
+  String analysisVerifyValuesAction(String count) {
+    return 'Verifica i valori ($count)';
+  }
+
+  @override
+  String get analysisFlagShort_below => 'Sotto';
+
+  @override
+  String get analysisFlagShort_within => 'Nell\'intervallo';
+
+  @override
+  String get analysisFlagShort_above => 'Sopra';
+
+  @override
+  String get analysisFlagShort_critical_low => 'Molto sotto';
+
+  @override
+  String get analysisFlagShort_critical_high => 'Molto sopra';
+
+  @override
+  String get analysisFlagShort_unknown => 'Da valutare';
 
   @override
   String get analysisDiscardAction => 'Scarta';
@@ -2391,4 +2483,517 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get recommendationDensitometriaFratturaReason =>
       'Consigliata perché il rischio di frattura è medio o alto';
+
+  @override
+  String get explanationTitle => 'Spiegazione';
+
+  @override
+  String get explanationSimple => 'Semplice';
+
+  @override
+  String get explanationClinical => 'Clinico';
+
+  @override
+  String get explanationMore => 'Altre azioni';
+
+  @override
+  String get explanationExplainValue => 'Spiegami questo valore';
+
+  @override
+  String get explanationExplainOrgan => 'Spiegami questo organo';
+
+  @override
+  String get explanationExplainRisk => 'Spiegami questo rischio';
+
+  @override
+  String get explanationExplainDocument => 'Spiegami questo referto';
+
+  @override
+  String get explanationReportCta => 'Spiegami questo referto';
+
+  @override
+  String get explanationReportCtaReread => 'Rileggi la spiegazione';
+
+  @override
+  String get explanationReportCtaDisabled => 'Conferma almeno un valore';
+
+  @override
+  String explanationUsageNote(int count) {
+    return 'Conta tra le $count spiegazioni disponibili oggi';
+  }
+
+  @override
+  String get explanationWriting => 'Sto scrivendo la spiegazione…';
+
+  @override
+  String explanationGeneratedMeta(String model, String date) {
+    return 'Testo generato dall\'IA · $model · $date';
+  }
+
+  @override
+  String explanationUpdatedAt(String date) {
+    return 'Aggiornata al $date';
+  }
+
+  @override
+  String get explanationRequiredClosing =>
+      'Le informazioni non sostituiscono il parere del medico.';
+
+  @override
+  String get explanationUnavailable =>
+      'Per questo dato non riusciamo a dare una spiegazione affidabile';
+
+  @override
+  String get explanationUnavailableAdvice => 'Parlane con il medico.';
+
+  @override
+  String get explanationLimitReached =>
+      'Hai raggiunto le 30 spiegazioni di oggi';
+
+  @override
+  String get explanationLimitTomorrow =>
+      'Potrai chiedere nuove spiegazioni domani.';
+
+  @override
+  String get explanationError => 'Non siamo riusciti a creare la spiegazione';
+
+  @override
+  String get explanationErrorAdvice => 'Controlla la connessione e riprova.';
+
+  @override
+  String get explanationConfirmValues =>
+      'Conferma i valori per avere la spiegazione.';
+
+  @override
+  String get explanationRegenerate => 'Rigenera';
+
+  @override
+  String get explanationRegenerateTitle => 'Rigenerare la spiegazione?';
+
+  @override
+  String get explanationRegenerateConfirm =>
+      'La rigenerazione conta nel limite giornaliero e sostituisce la versione mostrata.';
+
+  @override
+  String get aiTaskPaused => 'Il servizio IA è temporaneamente in pausa.';
+
+  @override
+  String get maintenanceMessage =>
+      'Medical 24 è in manutenzione. Riprova tra poco.';
+
+  @override
+  String get adminGovernment => 'Governo';
+
+  @override
+  String get adminOverview => 'Panoramica';
+
+  @override
+  String get adminAiTasks => 'Compiti AI';
+
+  @override
+  String get adminSettings => 'Impostazioni';
+
+  @override
+  String get adminPrompts => 'Prompt';
+
+  @override
+  String get adminUsage => 'Consumi';
+
+  @override
+  String get adminEvents => 'Eventi';
+
+  @override
+  String get adminAudit => 'Audit';
+
+  @override
+  String get adminRules => 'Regole';
+
+  @override
+  String get adminSoon => 'Presto';
+
+  @override
+  String get adminDesktopOnly =>
+      'Il pannello di governo è disponibile su desktop';
+
+  @override
+  String get adminDesktopOnlyBody =>
+      'Apri Medical 24 su uno schermo largo almeno 1200 pt.';
+
+  @override
+  String get adminForbiddenTitle => '403 · Accesso non consentito';
+
+  @override
+  String get adminForbiddenBody =>
+      'Questa area è riservata agli amministratori.';
+
+  @override
+  String get adminAccessError => 'Non siamo riusciti a verificare i permessi.';
+
+  @override
+  String get adminBackHome => 'Torna alla home';
+
+  @override
+  String get adminBackToApp => 'Torna all\'app';
+
+  @override
+  String get adminRefresh => 'Aggiorna';
+
+  @override
+  String get adminUsersTotal => 'Utenti totali';
+
+  @override
+  String get adminUsersActive7d => 'Attivi 7 giorni';
+
+  @override
+  String get adminUsersActive30d => 'Attivi 30 giorni';
+
+  @override
+  String get adminDocuments => 'Documenti';
+
+  @override
+  String get adminExtractionsOk => 'Estrazioni riuscite · 7 gg';
+
+  @override
+  String get adminExtractionsFailed => 'Estrazioni fallite · 7 gg';
+
+  @override
+  String get adminExtractionsReview => 'Da verificare · 7 gg';
+
+  @override
+  String get adminCostToday => 'Costo oggi per compito';
+
+  @override
+  String get adminCostMonth => 'Costo mese per compito';
+
+  @override
+  String get adminErrors24h => 'Errori 24 ore per codice';
+
+  @override
+  String get adminTaskStatus => 'Stato dei compiti';
+
+  @override
+  String get adminLastHealth => 'Ultimo health';
+
+  @override
+  String get adminActive => 'Attivo';
+
+  @override
+  String get adminDisabled => 'Disabilitato';
+
+  @override
+  String get adminPaused => 'In pausa';
+
+  @override
+  String adminPausedUntil(String date) {
+    return 'In pausa fino a $date';
+  }
+
+  @override
+  String get adminAiTasksModels => 'Compiti AI e modelli';
+
+  @override
+  String get adminTask => 'Compito';
+
+  @override
+  String get adminModel => 'Modello';
+
+  @override
+  String get adminFallback => 'Fallback';
+
+  @override
+  String get adminPrompt => 'Prompt attivo';
+
+  @override
+  String get adminBudgetProgress => 'Budget / speso oggi';
+
+  @override
+  String get adminStatus => 'Stato';
+
+  @override
+  String get adminEdit => 'Modifica';
+
+  @override
+  String get adminModels => 'Modelli';
+
+  @override
+  String get adminNewModel => 'Nuovo modello';
+
+  @override
+  String get adminEditModel => 'Modifica modello';
+
+  @override
+  String get adminId => 'ID';
+
+  @override
+  String get adminProvider => 'Provider';
+
+  @override
+  String get adminName => 'Nome';
+
+  @override
+  String get adminPriceInput => 'Input \$/MTok';
+
+  @override
+  String get adminPriceOutput => 'Output \$/MTok';
+
+  @override
+  String get adminPriceCache => 'Cache letta \$/MTok';
+
+  @override
+  String get adminPriceInputMicro => 'Prezzo input in micro-USD/MTok';
+
+  @override
+  String get adminPriceOutputMicro => 'Prezzo output in micro-USD/MTok';
+
+  @override
+  String get adminPriceCacheMicro => 'Prezzo cache letta in micro-USD/MTok';
+
+  @override
+  String get adminContextWindow => 'Finestra di contesto';
+
+  @override
+  String get adminFallbackEnabled => 'Fallback abilitato';
+
+  @override
+  String get adminMaxOutputTokens => 'Token massimi in uscita';
+
+  @override
+  String get adminEnabled => 'Abilitato';
+
+  @override
+  String get adminDailyBudgetUsd => 'Budget giornaliero in dollari';
+
+  @override
+  String get adminBudgetAction => 'Azione sul budget';
+
+  @override
+  String get adminBudgetAlert => 'Avvisa';
+
+  @override
+  String get adminBudgetPause => 'Metti in pausa';
+
+  @override
+  String get adminUserDailyLimit => 'Limite giornaliero per utente';
+
+  @override
+  String get adminSecondApproval => 'Seconda approvazione richiesta';
+
+  @override
+  String get adminRequestPreset => 'Preimpostazione';
+
+  @override
+  String adminEffort(String effort) {
+    return 'Senza ragionamento, sforzo $effort';
+  }
+
+  @override
+  String get adminAdaptiveThinking => 'Ragionamento adattivo';
+
+  @override
+  String get adminRequestOptions => 'Opzioni richiesta (JSON)';
+
+  @override
+  String get adminPositiveNumberError =>
+      'Inserisci un numero maggiore di zero.';
+
+  @override
+  String get adminJsonObjectError => 'Il JSON deve essere un oggetto.';
+
+  @override
+  String get adminJsonInvalid => 'Inserisci un JSON valido.';
+
+  @override
+  String get adminResume => 'Riprendi';
+
+  @override
+  String get adminPauseTomorrow => 'Metti in pausa fino a domani';
+
+  @override
+  String get adminModelInUse =>
+      'Il modello è in uso: cambia prima il modello del compito.';
+
+  @override
+  String get adminKey => 'Chiave';
+
+  @override
+  String get adminValue => 'Valore';
+
+  @override
+  String get adminPublic => 'Pubblica';
+
+  @override
+  String get adminDescription => 'Descrizione';
+
+  @override
+  String get adminVersion => 'Versione';
+
+  @override
+  String get adminUpdatedAt => 'Aggiornata il';
+
+  @override
+  String get adminHistory => 'Storico';
+
+  @override
+  String get adminValueJson => 'Valore JSON';
+
+  @override
+  String get adminMaintenance => 'Modalità manutenzione';
+
+  @override
+  String get adminMaintenanceBody =>
+      'Sospende le funzioni operative della piattaforma.';
+
+  @override
+  String get adminMaintenanceConfirmTitle =>
+      'Cambiare la modalità manutenzione?';
+
+  @override
+  String get adminMaintenanceConfirmBody =>
+      'La modifica ha effetto immediato per tutti gli utenti.';
+
+  @override
+  String get adminCompare => 'Confronta';
+
+  @override
+  String get adminRestore => 'Ripristina';
+
+  @override
+  String get adminApprove => 'Approva';
+
+  @override
+  String get adminRunTest => 'Esegui test';
+
+  @override
+  String get adminActivate => 'Attiva';
+
+  @override
+  String get adminFilterPassed => 'Filtro superato';
+
+  @override
+  String get adminClosingPresent => 'Chiusura presente';
+
+  @override
+  String get adminPrevious => 'Precedente';
+
+  @override
+  String get adminNext => 'Successiva';
+
+  @override
+  String get adminNewVersion => 'Nuova versione';
+
+  @override
+  String get adminCreatedBy => 'Creato da';
+
+  @override
+  String get adminApprovedBy => 'Approvato da';
+
+  @override
+  String get adminActivatedAt => 'Attivato il';
+
+  @override
+  String get adminLastTest => 'Ultimo test';
+
+  @override
+  String get adminPassed => 'Superato';
+
+  @override
+  String get adminFailed => 'Fallito';
+
+  @override
+  String get adminDraft => 'Bozza';
+
+  @override
+  String get adminRetired => 'Ritirato';
+
+  @override
+  String get adminTestResults => 'Risultati del test';
+
+  @override
+  String get adminSecondApproverRequired =>
+      'Serve l\'approvazione di un secondo admin';
+
+  @override
+  String get adminApprovalRequired =>
+      'Il prompt deve essere approvato prima dell\'attivazione.';
+
+  @override
+  String get adminPassingTestRequired =>
+      'Serve un test superato prima dell\'attivazione.';
+
+  @override
+  String get adminRestoreConfirm =>
+      'Ripristinare la versione precedente per questo compito?';
+
+  @override
+  String get adminSaved => 'Modifica salvata';
+
+  @override
+  String get adminSystemPrompt => 'System prompt';
+
+  @override
+  String get adminUserTemplate => 'Template utente';
+
+  @override
+  String get adminToolSchema => 'Schema dello strumento (JSON)';
+
+  @override
+  String get adminNotes => 'Note';
+
+  @override
+  String get adminAll => 'Tutti';
+
+  @override
+  String get adminRecentCalls => 'Chiamate recenti';
+
+  @override
+  String get adminDay => 'Giorno';
+
+  @override
+  String get adminCalls => 'Chiamate';
+
+  @override
+  String get adminOk => 'OK';
+
+  @override
+  String get adminErrors => 'Errori';
+
+  @override
+  String get adminCache => 'Cache';
+
+  @override
+  String get adminTokensIn => 'Token in';
+
+  @override
+  String get adminTokensCache => 'Token cache';
+
+  @override
+  String get adminTokensOut => 'Token out';
+
+  @override
+  String get adminCostUsd => 'Costo in dollari';
+
+  @override
+  String get adminLatencyAvg => 'Latenza media';
+
+  @override
+  String get adminLatencyP95 => 'Latenza p95';
+
+  @override
+  String get adminType => 'Tipo';
+
+  @override
+  String get adminAction => 'Azione';
+
+  @override
+  String get adminActorUuid => 'Attore (UUID)';
+
+  @override
+  String get adminDetails => 'Dettagli';
+
+  @override
+  String get adminDefinition => 'Definizione';
+
+  @override
+  String get adminRuleStatusConfirm =>
+      'Confermare il cambio di stato della regola?';
 }

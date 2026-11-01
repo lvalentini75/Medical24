@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/models/biomarker.dart';
 import '../../../core/models/observation.dart';
 import '../../archive/providers/archive_providers.dart';
+import '../../health/body/providers/body_providers.dart';
+import '../../health/explanations/providers/explanation_providers.dart';
+import '../../health/prevention/providers/prevention_providers.dart';
+import '../../health/providers/health_providers.dart';
 import '../data/analysis_repository.dart';
 import '../data/catalog_repository.dart';
 
@@ -102,6 +106,12 @@ final documentObservationsStreamProvider =
             .watch(analysisRepositoryProvider)
             .watchDocumentObservations(documentId));
 
+/// Current values including discarded rows, used only by the explicit UI toggle.
+final documentAllObservationsStreamProvider =
+    StreamProvider.family<List<Observation>, String>((Ref ref, String documentId) => ref
+        .watch(analysisRepositoryProvider)
+        .watchDocumentObservations(documentId, includeDiscarded: true));
+
 /// Values waiting for confirmation across the whole subject.
 final FutureProvider<List<Observation>> pendingReviewProvider =
     FutureProvider<List<Observation>>((Ref ref) {
@@ -181,11 +191,12 @@ class AnalysisController extends AsyncNotifier<void> {
   }
 
   /// Step 5: the user confirms the value as read.
-  Future<void> confirm(Observation observation) async {
+  Future<bool> confirm(Observation observation) async {
     state = const AsyncValue<void>.loading();
     state = await AsyncValue.guard<void>(
         () => _repository.confirmObservation(observation.id));
     _invalidate(observation.documentId);
+    return !state.hasError;
   }
 
   /// Step 5: the user corrects the value, the unit or the date.
@@ -208,10 +219,11 @@ class AnalysisController extends AsyncNotifier<void> {
   }
 
   /// Removes a review candidate from current clinical series without deleting history.
-  Future<void> discard(Observation observation) async {
+  Future<bool> discard(Observation observation) async {
     state = const AsyncValue<void>.loading();
     state = await AsyncValue.guard<void>(() => _repository.discardObservation(observation.id));
     _invalidate(observation.documentId);
+    return !state.hasError;
   }
 
   void _invalidate(String? documentId) {
@@ -219,10 +231,22 @@ class AnalysisController extends AsyncNotifier<void> {
       ref.invalidate(documentExtractionProvider(documentId));
       ref.invalidate(documentExtractionHistoryProvider(documentId));
       ref.invalidate(documentObservationsProvider(documentId));
+      ref.invalidate(documentObservationsStreamProvider(documentId));
+      ref.invalidate(documentAllObservationsStreamProvider(documentId));
       ref.invalidate(archiveDocumentProvider(documentId));
     }
     ref.invalidate(pendingReviewProvider);
     ref.invalidate(latestObservationsProvider);
+    ref.invalidate(observationHistoryProvider);
+    ref.invalidate(healthCatalogProvider);
+    ref.invalidate(healthHistoryProvider);
+    ref.invalidate(organOverviewProvider);
+    ref.invalidate(organBiomarkersProvider);
+    ref.invalidate(organHistoryProvider);
+    ref.invalidate(organComparisonProvider);
+    ref.invalidate(organEpisodesProvider);
+    ref.invalidate(preventionSnapshotProvider);
+    ref.read(explanationRefreshProvider.notifier).refresh();
     ref.invalidate(analysisUsageProvider);
   }
 }

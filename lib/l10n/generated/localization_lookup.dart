@@ -73,6 +73,10 @@ class LocalizationLookup {
       'authSignOut': 'Esci',
       'authPrivacyNote':
           'I dati sanitari sono trattati come categoria particolare (art. 9 GDPR) e restano in Europa.',
+      'authDevShortcutsTitle': 'Accesso rapido (sviluppo)',
+      'authDevShortcutAdmin': 'Amministratore',
+      'authDevShortcutAlice': 'Alice',
+      'authDevShortcutBob': 'Bob',
       'onboardingConsentTitle': 'I tuoi consensi',
       'onboardingConsentSubtitle':
           'Separati e revocabili in ogni momento dalle impostazioni.',
@@ -421,6 +425,31 @@ class LocalizationLookup {
       'analysisValueColumn': 'Valore',
       'analysisOriginalUnit': 'Nel referto: {unit}',
       'analysisReviewComplete': 'Tutti i valori sono stati verificati.',
+      'analysisOutcomeColumn': 'Esito',
+      'analysisActionsColumn': 'Azioni',
+      'analysisApproveAction': 'Approva',
+      'analysisReviewConfirmed': 'Confermato',
+      'analysisReviewNeeded': 'Da verificare',
+      'analysisReviewPending': 'In attesa',
+      'analysisReviewDiscarded': 'Scartato',
+      'analysisConfirmedByEngine': 'dal motore',
+      'analysisConfirmedByYou': 'da te',
+      'analysisShowDiscarded': 'Mostra scartati',
+      'analysisDiscardConfirmTitle': 'Scartare questo valore?',
+      'analysisDiscardConfirmBody':
+          'Non verrà usato per organi, rischi e spiegazioni.',
+      'analysisConfirmAll': 'Conferma tutti i valori in attesa ({count})',
+      'analysisConfirmAllProgress': '{current} di {total} valori elaborati',
+      'analysisConfirmAllResult': '{confirmed} confermati, {errors} errori',
+      'analysisReviewSummary':
+          '{confirmed} valori confermati · {pending} da verificare',
+      'analysisVerifyValuesAction': 'Verifica i valori ({count})',
+      'analysisFlagShort_below': 'Sotto',
+      'analysisFlagShort_within': 'Nell\'intervallo',
+      'analysisFlagShort_above': 'Sopra',
+      'analysisFlagShort_critical_low': 'Molto sotto',
+      'analysisFlagShort_critical_high': 'Molto sopra',
+      'analysisFlagShort_unknown': 'Da valutare',
       'analysisDiscardAction': 'Scarta',
       'analysisDiscardUnavailable':
           'Lo scarto non è ancora supportato dal repository.',
@@ -515,6 +544,10 @@ class LocalizationLookup {
       'authSignOut': 'Sign out',
       'authPrivacyNote':
           'Health data is handled as a special category (GDPR art. 9) and stays in Europe.',
+      'authDevShortcutsTitle': 'Quick access (development)',
+      'authDevShortcutAdmin': 'Administrator',
+      'authDevShortcutAlice': 'Alice',
+      'authDevShortcutBob': 'Bob',
       'onboardingConsentTitle': 'Your consents',
       'onboardingConsentSubtitle':
           'Separate, and revocable at any time from settings.',
@@ -860,6 +893,31 @@ class LocalizationLookup {
       'analysisValueColumn': 'Value',
       'analysisOriginalUnit': 'On the report: {unit}',
       'analysisReviewComplete': 'All values have been reviewed.',
+      'analysisOutcomeColumn': 'Outcome',
+      'analysisActionsColumn': 'Actions',
+      'analysisApproveAction': 'Approve',
+      'analysisReviewConfirmed': 'Confirmed',
+      'analysisReviewNeeded': 'Needs review',
+      'analysisReviewPending': 'Pending',
+      'analysisReviewDiscarded': 'Discarded',
+      'analysisConfirmedByEngine': 'by the engine',
+      'analysisConfirmedByYou': 'by you',
+      'analysisShowDiscarded': 'Show discarded',
+      'analysisDiscardConfirmTitle': 'Discard this value?',
+      'analysisDiscardConfirmBody':
+          'It will not be used for organs, risks, or explanations.',
+      'analysisConfirmAll': 'Confirm all pending values ({count})',
+      'analysisConfirmAllProgress': '{current} of {total} values processed',
+      'analysisConfirmAllResult': '{confirmed} confirmed, {errors} errors',
+      'analysisReviewSummary':
+          '{confirmed} values confirmed · {pending} to review',
+      'analysisVerifyValuesAction': 'Review values ({count})',
+      'analysisFlagShort_below': 'Below',
+      'analysisFlagShort_within': 'Within range',
+      'analysisFlagShort_above': 'Above',
+      'analysisFlagShort_critical_low': 'Far below',
+      'analysisFlagShort_critical_high': 'Far above',
+      'analysisFlagShort_unknown': 'To assess',
       'analysisDiscardAction': 'Discard',
       'analysisDiscardUnavailable':
           'Discard is not supported by the repository yet.',
@@ -942,6 +1000,102 @@ extension PreventionAppLocalizations on AppLocalizations {
 
 extension AppLocalizationsLookup on AppLocalizations {
   String t(String key, {Map<String, String>? args}) => LocalizationLookup(Locale(localeName)).t(key, args: args);
+}
+
+/// Typed admin strings mirrored in the ARB sources.
+extension AdminAppLocalizations on AppLocalizations {
+  String _a(String it, String en) => localeName.startsWith('en') ? en : it;
+  String get adminGovernment => _a('Governo', 'Government');
+  String get adminOverview => _a('Panoramica', 'Overview');
+  String get adminAiTasks => _a('Compiti AI', 'AI tasks');
+  String get adminSettings => _a('Impostazioni', 'Settings');
+  String get adminPrompts => 'Prompt';
+  String get adminUsage => _a('Consumi', 'Usage');
+  String get adminEvents => _a('Eventi', 'Events');
+  String get adminAudit => 'Audit';
+  String get adminRules => _a('Regole', 'Rules');
+  String get adminSoon => _a('Presto', 'Soon');
+  String get adminDesktopOnly => _a('Il pannello di governo è disponibile su desktop', 'The government panel is available on desktop');
+  String get adminDesktopOnlyBody => _a('Apri Medical 24 su uno schermo largo almeno 1200 pt.', 'Open Medical 24 on a screen at least 1200 pt wide.');
+  String get adminForbiddenTitle => _a('403 · Accesso non consentito', '403 · Access denied');
+  String get adminForbiddenBody => _a('Questa area è riservata agli amministratori.', 'This area is reserved for administrators.');
+  String get adminAccessError => _a('Non siamo riusciti a verificare i permessi.', 'We could not verify your permissions.');
+  String get adminBackHome => _a('Torna alla home', 'Back to home');
+  String get adminBackToApp => _a("Torna all'app", 'Back to the app');
+  String get adminRefresh => _a('Aggiorna', 'Refresh');
+  String get adminUsersTotal => _a('Utenti totali', 'Total users');
+  String get adminUsersActive7d => _a('Attivi 7 giorni', 'Active in 7 days');
+  String get adminUsersActive30d => _a('Attivi 30 giorni', 'Active in 30 days');
+  String get adminDocuments => _a('Documenti', 'Documents');
+  String get adminExtractionsOk => _a('Estrazioni riuscite · 7 gg', 'Successful extractions · 7 days');
+  String get adminExtractionsFailed => _a('Estrazioni fallite · 7 gg', 'Failed extractions · 7 days');
+  String get adminExtractionsReview => _a('Da verificare · 7 gg', 'To review · 7 days');
+  String get adminCostToday => _a('Costo oggi per compito', "Today's cost by task");
+  String get adminCostMonth => _a('Costo mese per compito', 'Monthly cost by task');
+  String get adminErrors24h => _a('Errori 24 ore per codice', '24-hour errors by code');
+  String get adminTaskStatus => _a('Stato dei compiti', 'Task status');
+  String get adminLastHealth => _a('Ultimo health', 'Latest health');
+  String get adminActive => _a('Attivo', 'Active');
+  String get adminDisabled => _a('Disabilitato', 'Disabled');
+  String get adminPaused => _a('In pausa', 'Paused');
+  String adminPausedUntil(String date) => _a('In pausa fino a $date', 'Paused until $date');
+  String get adminAiTasksModels => _a('Compiti AI e modelli', 'AI tasks and models');
+  String get adminTask => _a('Compito', 'Task');
+  String get adminModel => _a('Modello', 'Model');
+  String get adminFallback => 'Fallback';
+  String get adminPrompt => _a('Prompt attivo', 'Active prompt');
+  String get adminBudgetProgress => _a('Budget / speso oggi', 'Budget / spent today');
+  String get adminStatus => _a('Stato', 'Status');
+  String get adminEdit => _a('Modifica', 'Edit');
+  String get adminModels => _a('Modelli', 'Models');
+  String get adminNewModel => _a('Nuovo modello', 'New model');
+  String get adminEditModel => _a('Modifica modello', 'Edit model');
+  String get adminId => 'ID';
+  String get adminProvider => 'Provider';
+  String get adminName => _a('Nome', 'Name');
+  String get adminPriceInput => 'Input \$/MTok';
+  String get adminPriceOutput => 'Output \$/MTok';
+  String get adminPriceCache => _a('Cache letta \$/MTok', 'Read cache \$/MTok');
+  String get adminPriceInputMicro => _a('Prezzo input in micro-USD/MTok', 'Input price in micro-USD/MTok');
+  String get adminPriceOutputMicro => _a('Prezzo output in micro-USD/MTok', 'Output price in micro-USD/MTok');
+  String get adminPriceCacheMicro => _a('Prezzo cache letta in micro-USD/MTok', 'Read cache price in micro-USD/MTok');
+  String get adminContextWindow => _a('Finestra di contesto', 'Context window');
+  String get adminFallbackEnabled => _a('Fallback abilitato', 'Fallback enabled');
+  String get adminMaxOutputTokens => _a('Token massimi in uscita', 'Maximum output tokens');
+  String get adminEnabled => _a('Abilitato', 'Enabled');
+  String get adminDailyBudgetUsd => _a('Budget giornaliero in dollari', 'Daily budget in dollars');
+  String get adminBudgetAction => _a('Azione sul budget', 'Budget action');
+  String get adminBudgetAlert => _a('Avvisa', 'Alert');
+  String get adminBudgetPause => _a('Metti in pausa', 'Pause');
+  String get adminUserDailyLimit => _a('Limite giornaliero per utente', 'Daily limit per user');
+  String get adminSecondApproval => _a('Seconda approvazione richiesta', 'Second approval required');
+  String get adminRequestPreset => _a('Preimpostazione', 'Preset');
+  String adminEffort(String effort) => _a('Senza ragionamento, sforzo $effort', 'No reasoning, $effort effort');
+  String get adminAdaptiveThinking => _a('Ragionamento adattivo', 'Adaptive reasoning');
+  String get adminRequestOptions => _a('Opzioni richiesta (JSON)', 'Request options (JSON)');
+  String get adminPositiveNumberError => _a('Inserisci un numero maggiore di zero.', 'Enter a number greater than zero.');
+  String get adminJsonObjectError => _a('Il JSON deve essere un oggetto.', 'JSON must be an object.');
+  String get adminJsonInvalid => _a('Inserisci un JSON valido.', 'Enter valid JSON.');
+  String get adminResume => _a('Riprendi', 'Resume');
+  String get adminPauseTomorrow => _a('Metti in pausa fino a domani', 'Pause until tomorrow');
+  String get adminModelInUse => _a('Il modello è in uso: cambia prima il modello del compito.', 'The model is in use: change the task model first.');
+  String get adminKey => _a('Chiave', 'Key');
+  String get adminValue => _a('Valore', 'Value');
+  String get adminPublic => _a('Pubblica', 'Public');
+  String get adminDescription => _a('Descrizione', 'Description');
+  String get adminVersion => _a('Versione', 'Version');
+  String get adminUpdatedAt => _a('Aggiornata il', 'Updated');
+  String get adminHistory => _a('Storico', 'History');
+  String get adminValueJson => _a('Valore JSON', 'JSON value');
+  String get adminMaintenance => _a('Modalità manutenzione', 'Maintenance mode');
+  String get adminMaintenanceBody => _a('Sospende le funzioni operative della piattaforma.', "Pauses the platform's operational functions.");
+  String get adminMaintenanceConfirmTitle => _a('Cambiare la modalità manutenzione?', 'Change maintenance mode?');
+  String get adminMaintenanceConfirmBody => _a('La modifica ha effetto immediato per tutti gli utenti.', 'The change takes effect immediately for all users.');
+  String get adminCompare => _a('Confronta', 'Compare'); String get adminRestore => _a('Ripristina', 'Restore'); String get adminApprove => _a('Approva', 'Approve'); String get adminRunTest => _a('Esegui test', 'Run test'); String get adminActivate => _a('Attiva', 'Activate');
+  String get adminFilterPassed => _a('Filtro superato', 'Filter passed'); String get adminClosingPresent => _a('Chiusura presente', 'Closing present'); String get adminPrevious => _a('Precedente', 'Previous'); String get adminNext => _a('Successiva', 'Next');
+  String get adminNewVersion => _a('Nuova versione', 'New version'); String get adminCreatedBy => _a('Creato da', 'Created by'); String get adminApprovedBy => _a('Approvato da', 'Approved by'); String get adminActivatedAt => _a('Attivato il', 'Activated'); String get adminLastTest => _a('Ultimo test', 'Latest test'); String get adminPassed => _a('Superato', 'Passed'); String get adminFailed => _a('Fallito', 'Failed'); String get adminDraft => _a('Bozza', 'Draft'); String get adminRetired => _a('Ritirato', 'Retired'); String get adminTestResults => _a('Risultati del test', 'Test results');
+  String get adminSecondApproverRequired => _a("Serve l'approvazione di un secondo admin", "A second administrator's approval is required"); String get adminApprovalRequired => _a("Il prompt deve essere approvato prima dell'attivazione.", 'The prompt must be approved before activation.'); String get adminPassingTestRequired => _a("Serve un test superato prima dell'attivazione.", 'A passing test is required before activation.'); String get adminRestoreConfirm => _a('Ripristinare la versione precedente per questo compito?', 'Restore the previous version for this task?'); String get adminSaved => _a('Modifica salvata', 'Changes saved');
+  String get adminSystemPrompt => _a('System prompt', 'System prompt'); String get adminUserTemplate => _a('Template utente', 'User template'); String get adminToolSchema => _a('Schema dello strumento (JSON)', 'Tool schema (JSON)'); String get adminNotes => _a('Note', 'Notes'); String get adminAll => _a('Tutti', 'All'); String get adminRecentCalls => _a('Chiamate recenti', 'Recent calls'); String get adminDay => _a('Giorno', 'Day'); String get adminCalls => _a('Chiamate', 'Calls'); String get adminOk => 'OK'; String get adminErrors => _a('Errori', 'Errors'); String get adminCache => 'Cache'; String get adminTokensIn => _a('Token in', 'Input tokens'); String get adminTokensCache => _a('Token cache', 'Cache tokens'); String get adminTokensOut => _a('Token out', 'Output tokens'); String get adminCostUsd => _a('Costo in dollari', 'Cost in dollars'); String get adminLatencyAvg => _a('Latenza media', 'Average latency'); String get adminLatencyP95 => _a('Latenza p95', 'p95 latency'); String get adminType => _a('Tipo', 'Type'); String get adminAction => _a('Azione', 'Action'); String get adminActorUuid => _a('Attore (UUID)', 'Actor (UUID)'); String get adminDetails => _a('Dettagli', 'Details'); String get adminDefinition => _a('Definizione', 'Definition'); String get adminRuleStatusConfirm => _a('Confermare il cambio di stato della regola?', 'Confirm the rule status change?');
 }
 
 /// Shorthand: `context.l10n.t('navHome')`.

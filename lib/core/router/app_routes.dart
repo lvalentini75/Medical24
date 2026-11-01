@@ -35,6 +35,15 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String settingsProfile = '/settings/profile';
   static const String settingsConsents = '/settings/consents';
+  static const String admin = '/admin';
+  static const String adminOverview = '/admin/overview';
+  static const String adminAi = '/admin/ai';
+  static const String adminSettings = '/admin/settings';
+  static const String adminPrompts = '/admin/prompts';
+  static const String adminUsage = '/admin/usage';
+  static const String adminEvents = '/admin/events';
+  static const String adminAudit = '/admin/audit';
+  static const String adminRules = '/admin/rules';
   static const String devKit = '/dev/kit';
 
   static const List<String> publicRoutes = <String>[

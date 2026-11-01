@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medical24/core/ui/tokens.dart';
 
-enum M24ButtonVariant { primary, secondary, outline, outlinePrimary, tertiary, destructiveOutline, warning }
+enum M24ButtonVariant { primary, accent, accentOutline, secondary, outline, outlinePrimary, tertiary, destructiveOutline, warning }
 enum M24ButtonSize { small, medium, large }
 
 class M24Button extends StatelessWidget {
@@ -19,18 +19,18 @@ class M24Button extends StatelessWidget {
     final bool desktop = MediaQuery.sizeOf(context).width >= 1200;
     final double height = size == M24ButtonSize.small ? 36 : size == M24ButtonSize.large ? 56 : desktop ? 44 : 48;
     final Widget content = Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      if (loading) SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: variant == M24ButtonVariant.primary || variant == M24ButtonVariant.warning ? M24Colors.white : c.primary)) else if (icon != null) Icon(icon, size: 20),
+      if (loading) SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: variant == M24ButtonVariant.primary || variant == M24ButtonVariant.accent || variant == M24ButtonVariant.warning ? M24Colors.white : c.primary)) else if (icon != null) Icon(icon, size: 20),
       if (loading || icon != null) const SizedBox(width: 8), Text(label),
     ]);
-    final ButtonStyle style = ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(size == M24ButtonSize.large ? double.infinity : 44, height)), padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 18)), shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), textStyle: MaterialStatePropertyAll(context.m24.text.button), foregroundColor: MaterialStateProperty.resolveWith((s) => onPressed == null ? c.ink.withValues(alpha: .4) : _foreground(c)), backgroundColor: MaterialStateProperty.resolveWith((s) => onPressed == null ? _background(c).withValues(alpha: .4) : s.contains(MaterialState.pressed) ? _pressed(c) : s.contains(MaterialState.hovered) || s.contains(MaterialState.focused) ? _hover(c) : _background(c)), side: MaterialStatePropertyAll(_side(c)));
+    final ButtonStyle style = ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(size == M24ButtonSize.large ? double.infinity : 44, height)), padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 18)), shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), textStyle: MaterialStatePropertyAll(context.m24.text.button), foregroundColor: MaterialStateProperty.resolveWith((s) => onPressed == null ? c.ink.withValues(alpha: .4) : _foreground(c)), backgroundColor: MaterialStateProperty.resolveWith((s) => onPressed == null ? _background(c).withValues(alpha: .4) : s.contains(MaterialState.pressed) ? _pressed(c) : s.contains(MaterialState.hovered) || s.contains(MaterialState.focused) ? _hover(c) : _background(c)), side: MaterialStatePropertyAll(_side(c)), elevation: MaterialStatePropertyAll(variant == M24ButtonVariant.accent && onPressed != null ? 3 : 0), shadowColor: MaterialStatePropertyAll(variant == M24ButtonVariant.accent ? c.accent.withValues(alpha: .25) : Colors.transparent));
     return TextButton(onPressed: loading ? null : onPressed, style: style, child: content);
   }
 
-  Color _foreground(M24Colors c) => switch (variant) { M24ButtonVariant.primary || M24ButtonVariant.warning => M24Colors.white, M24ButtonVariant.secondary => c.primaryInk, M24ButtonVariant.outline => c.ink, M24ButtonVariant.outlinePrimary || M24ButtonVariant.tertiary => c.primary, M24ButtonVariant.destructiveOutline => c.danger };
-  Color _background(M24Colors c) => switch (variant) { M24ButtonVariant.primary => c.primary, M24ButtonVariant.secondary => c.primaryTint, M24ButtonVariant.destructiveOutline => c.dangerTint, M24ButtonVariant.warning => c.warning, _ => c.surface.withValues(alpha: variant == M24ButtonVariant.tertiary ? 0 : 1) };
-  Color _hover(M24Colors c) => switch (variant) { M24ButtonVariant.primary => c.primaryHover, M24ButtonVariant.warning => c.warningInk, M24ButtonVariant.secondary || M24ButtonVariant.outlinePrimary || M24ButtonVariant.tertiary => c.primarySoft, M24ButtonVariant.destructiveOutline => c.dangerTint, _ => c.surfaceAlt };
-  Color _pressed(M24Colors c) => variant == M24ButtonVariant.primary ? c.primaryPressed : _hover(c);
-  BorderSide _side(M24Colors c) => switch (variant) { M24ButtonVariant.outline => BorderSide(color: c.border), M24ButtonVariant.outlinePrimary => BorderSide(color: c.primary), M24ButtonVariant.destructiveOutline => BorderSide(color: c.danger), _ => BorderSide.none };
+  Color _foreground(M24Colors c) => switch (variant) { M24ButtonVariant.primary || M24ButtonVariant.warning => M24Colors.white, M24ButtonVariant.accent => c.onAccent, M24ButtonVariant.accentOutline => c.accent, M24ButtonVariant.secondary => c.primaryInk, M24ButtonVariant.outline => c.ink, M24ButtonVariant.outlinePrimary || M24ButtonVariant.tertiary => c.primary, M24ButtonVariant.destructiveOutline => c.danger };
+  Color _background(M24Colors c) => switch (variant) { M24ButtonVariant.primary => c.primary, M24ButtonVariant.accent => c.accent, M24ButtonVariant.secondary => c.primaryTint, M24ButtonVariant.destructiveOutline => c.dangerTint, M24ButtonVariant.warning => c.warning, _ => c.surface.withValues(alpha: variant == M24ButtonVariant.tertiary ? 0 : 1) };
+  Color _hover(M24Colors c) => switch (variant) { M24ButtonVariant.primary => c.primaryHover, M24ButtonVariant.accent => Color.lerp(c.accent, Colors.black, .04)!, M24ButtonVariant.accentOutline => c.accent.withValues(alpha: .08), M24ButtonVariant.warning => c.warningInk, M24ButtonVariant.secondary || M24ButtonVariant.outlinePrimary || M24ButtonVariant.tertiary => c.primarySoft, M24ButtonVariant.destructiveOutline => c.dangerTint, _ => c.surfaceAlt };
+  Color _pressed(M24Colors c) => switch (variant) { M24ButtonVariant.primary => c.primaryPressed, M24ButtonVariant.accent => Color.lerp(c.accent, Colors.black, .08)!, _ => _hover(c) };
+  BorderSide _side(M24Colors c) => switch (variant) { M24ButtonVariant.outline => BorderSide(color: c.border), M24ButtonVariant.outlinePrimary => BorderSide(color: c.primary), M24ButtonVariant.accentOutline => BorderSide(color: c.accent), M24ButtonVariant.destructiveOutline => BorderSide(color: c.danger), _ => BorderSide.none };
 }
 
 enum M24IconButtonVariant { plain, tinted }

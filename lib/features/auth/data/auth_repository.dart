@@ -16,6 +16,18 @@ class AuthRepository {
   User? get currentUser => _auth.currentUser;
   Stream<AuthState> get authStateChanges => _auth.onAuthStateChange;
 
+  Future<bool> devShortcutsEnabled() async {
+    try {
+      final dynamic value = await SupabaseConfig.client.rpc(
+        'platform_setting',
+        params: <String, dynamic>{'p_key': 'features.dev_shortcuts'},
+      );
+      return value == true || value == 'true';
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> signUpWithEmail({
     required String email,
     required String password,

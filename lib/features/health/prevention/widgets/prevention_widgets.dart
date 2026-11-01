@@ -7,6 +7,10 @@ import 'package:medical24/core/ui/icons.dart';
 import 'package:medical24/core/ui/tokens.dart';
 import 'package:medical24/core/ui/widgets/widgets.dart';
 import 'package:medical24/features/health/prevention/data/prevention_models.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medical24/features/archive/providers/archive_providers.dart';
+import 'package:medical24/features/health/explanations/data/explanation_repository.dart';
+import 'package:medical24/features/health/explanations/widgets/m24_explanation_card.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
 
 class PreventionRecommendationRow extends StatelessWidget {
@@ -44,7 +48,7 @@ class PreventionDate extends StatelessWidget {
   }
 }
 
-class RiskCard extends StatefulWidget {
+class RiskCard extends ConsumerStatefulWidget {
   const RiskCard({super.key, required this.family, required this.score, required this.history, required this.names, required this.onHistory, required this.onCompleteData});
   final RiskFamily family;
   final RiskScore? score;
@@ -53,10 +57,10 @@ class RiskCard extends StatefulWidget {
   final VoidCallback onHistory;
   final VoidCallback onCompleteData;
   @override
-  State<RiskCard> createState() => _RiskCardState();
+  ConsumerState<RiskCard> createState() => _RiskCardState();
 }
 
-class _RiskCardState extends State<RiskCard> {
+class _RiskCardState extends ConsumerState<RiskCard> {
   bool expanded = false;
   @override
   Widget build(BuildContext context) {
@@ -73,6 +77,7 @@ class _RiskCardState extends State<RiskCard> {
         if (score.ruleVersion.contains('-draft')) Padding(padding: const EdgeInsets.only(top: 8), child: Align(alignment: Alignment.centerLeft, child: M24StatusPill(label: context.l10n.preventionRuleDraft, variant: M24StatusPillVariant.neutral))),
         const SizedBox(height: 8), InkWell(onTap: () => setState(() => expanded = !expanded), child: Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Row(children: <Widget>[Expanded(child: Text(context.l10n.preventionWhy, style: context.m24.text.label.copyWith(color: context.m24.colors.primary))), Icon(expanded ? M24Icons.chevronUp : M24Icons.chevronDown, color: context.m24.colors.primary)]))),
         if (expanded) ...score.factors.map((String factor) => PreventionFactorRow(factor: factor, value: score.inputs[factor], names: widget.names)),
+        if (ref.watch(archiveSubjectIdProvider) case final String subjectId) ...<Widget>[const SizedBox(height: 10), M24ExplanationCard(subjectId: subjectId, targetType: ExplanationTargetType.risk, targetId: widget.family.name)],
         M24Button(label: context.l10n.preventionOpenHistory, icon: M24Icons.chart, variant: M24ButtonVariant.tertiary, onPressed: widget.onHistory),
       ],
       if (widget.family == RiskFamily.fracture) ...<Widget>[const SizedBox(height: 8), SelectableText(context.l10n.preventionFraxLink, style: context.m24.text.label.copyWith(color: context.m24.colors.info)), Text(context.l10n.preventionFraxPrivacy, style: context.m24.text.caption)],

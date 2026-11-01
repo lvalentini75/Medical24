@@ -23,6 +23,7 @@ import 'package:medical24/features/health/body/screens/body_screen.dart';
 import 'package:medical24/features/health/prevention/screens/prevention_questionnaire_screen.dart';
 import 'package:medical24/features/health/prevention/screens/prevention_screen.dart';
 import 'package:medical24/features/home/providers/home_providers.dart';
+import 'package:medical24/features/admin/screens/admin_screen.dart';
 import 'package:medical24/core/ui/kit_screen.dart';
 import '../../features/onboarding/screens/onboarding_screen.dart';
 import '../../features/settings/screens/consents_log_screen.dart';
@@ -144,6 +145,26 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
             parentNavigatorKey: _rootNavigatorKey,
             builder: (BuildContext context, GoRouterState state) =>
                 const ConsentsLogScreen(),
+          ),
+        ],
+      ),
+      ShellRoute(
+        builder: (BuildContext context, GoRouterState state, Widget child) => child,
+        routes: <RouteBase>[
+          GoRoute(
+            path: AppRoutes.admin,
+            redirect: (BuildContext context, GoRouterState state) => state.matchedLocation == AppRoutes.admin ? AppRoutes.adminOverview : null,
+            builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.overview),
+            routes: <RouteBase>[
+              GoRoute(path: 'overview', name: 'adminOverview', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.overview)),
+              GoRoute(path: 'ai', name: 'adminAi', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.ai)),
+              GoRoute(path: 'settings', name: 'adminSettings', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.settings)),
+              GoRoute(path: 'prompts', name: 'adminPrompts', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.prompts)),
+              GoRoute(path: 'usage', name: 'adminUsage', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.usage)),
+              GoRoute(path: 'events', name: 'adminEvents', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.events)),
+              GoRoute(path: 'audit', name: 'adminAudit', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.audit)),
+              GoRoute(path: 'rules', name: 'adminRules', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.rules)),
+            ],
           ),
         ],
       ),

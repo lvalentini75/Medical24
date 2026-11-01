@@ -9,6 +9,9 @@ import 'package:medical24/core/ui/tokens.dart';
 import 'package:medical24/core/ui/widgets/widgets.dart';
 import 'package:medical24/core/widgets/app_state_views.dart';
 import 'package:medical24/features/health/data/health_models.dart';
+import 'package:medical24/features/archive/providers/archive_providers.dart';
+import 'package:medical24/features/health/explanations/data/explanation_repository.dart';
+import 'package:medical24/features/health/explanations/widgets/m24_explanation_card.dart';
 import 'package:medical24/features/health/providers/health_providers.dart';
 import 'package:medical24/features/health/widgets/biomarker_chart.dart';
 import 'package:medical24/features/health/widgets/biomarker_list.dart';
@@ -51,7 +54,7 @@ class _BiomarkerHistoryState extends ConsumerState<BiomarkerHistory> {
 }
 
 /// Presentational history content shared by phone, tablet, and desktop.
-class BiomarkerHistoryContent extends StatelessWidget {
+class BiomarkerHistoryContent extends ConsumerWidget {
   const BiomarkerHistoryContent({super.key, required this.summary, required this.data, required this.period, required this.comparisonCode, required this.comparisonData, required this.catalog, required this.selectedEpisode, required this.desktopWorkspace, required this.onPeriod, required this.onComparison, required this.onEpisode});
   final BiomarkerSummary? summary;
   final BiomarkerHistoryData data;
@@ -66,10 +69,11 @@ class BiomarkerHistoryContent extends StatelessWidget {
   final ValueChanged<BiomarkerEpisode> onEpisode;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final String language = Localizations.localeOf(context).languageCode;
     final BiomarkerStats stats = data.stats;
     final String unit = summary?.unit ?? data.points.firstOrNull?.unit ?? '';
+    final String? subjectId = ref.watch(archiveSubjectIdProvider);
     return SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
       if (!desktopWorkspace) Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[Text(summary?.name(language) ?? data.points.firstOrNull?.code ?? '', style: context.m24.text.h2), const SizedBox(height: 4), Text(stats.latestValue == null ? context.l10n.t('healthValuesNoValue') : formatMeasurement(stats.latestValue!, unit, locale: language), style: context.m24.text.display), if (stats.latestAt != null) Text(DateFormat.yMMMd(language).format(stats.latestAt!.toLocal()), style: context.m24.text.bodySmall)])),
@@ -86,6 +90,10 @@ class BiomarkerHistoryContent extends StatelessWidget {
       M24Card(child: SizedBox(height: desktopWorkspace ? 280 : 300, child: BiomarkerChart(primary: data.points, comparison: comparisonData?.points, selectedEpisode: selectedEpisode))),
       const SizedBox(height: 12),
       StatisticsGrid(stats: stats, unit: unit),
+      if (subjectId != null && summary != null) ...<Widget>[
+        const SizedBox(height: 12),
+        M24ExplanationCard(subjectId: subjectId, targetType: ExplanationTargetType.biomarker, targetId: summary!.code),
+      ],
       if (!desktopWorkspace) ...<Widget>[
         const SizedBox(height: 16),
         Align(alignment: Alignment.centerLeft, child: PopupMenuButton<String>(onSelected: (String value) => onComparison(value), itemBuilder: (_) => catalog.where((BiomarkerSummary item) => item.code != summary?.code && item.valueCount > 0).map((BiomarkerSummary item) => PopupMenuItem<String>(value: item.code, child: Text(item.name(language)))).toList(growable: false), child: M24FilterChip(label: comparisonCode == null ? context.l10n.t('healthCompareWith') : catalog.where((BiomarkerSummary item) => item.code == comparisonCode).firstOrNull?.name(language) ?? comparisonCode!, selected: comparisonCode != null, hasMenu: true))),

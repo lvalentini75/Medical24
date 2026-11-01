@@ -153,7 +153,7 @@ class AnalysisRepository {
   // -------------------------------------------------------------------------
 
   /// Current values of a document (superseded rows excluded).
-  Future<List<Observation>> observationsForDocument(String documentId) async {
+  Future<List<Observation>> observationsForDocument(String documentId, {bool includeDiscarded = false}) async {
     try {
       final List<Map<String, dynamic>> rows = await _db
           .from(_observations)
@@ -164,6 +164,7 @@ class AnalysisRepository {
           .order('display_name');
       return rows
           .map((Map<String, dynamic> r) => Observation.fromJson(r))
+          .where((Observation observation) => includeDiscarded || !observation.isDiscarded)
           .toList(growable: false);
     } catch (e) {
       throw _mapError(e, 'analysis.observationsForDocument');
@@ -293,13 +294,13 @@ class AnalysisRepository {
 
   /// Realtime values of a document, so confirmations and new readings show
   /// up without a manual refresh.
-  Stream<List<Observation>> watchDocumentObservations(String documentId) => _db
+  Stream<List<Observation>> watchDocumentObservations(String documentId, {bool includeDiscarded = false}) => _db
       .from(_observations)
       .stream(primaryKey: <String>['id'])
       .eq('document_id', documentId)
       .map((List<Map<String, dynamic>> rows) => rows
           .map((Map<String, dynamic> r) => Observation.fromJson(r))
-          .where((Observation o) => o.isCurrent)
+          .where((Observation o) => o.isCurrent && (includeDiscarded || !o.isDiscarded))
           .toList(growable: false));
 
   // -------------------------------------------------------------------------

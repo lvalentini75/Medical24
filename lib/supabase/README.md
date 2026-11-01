@@ -59,11 +59,19 @@ La migrazione crea `risk_scores`, `questionnaires`, `questionnaire_answers`, `pr
 
 La migrazione aggiunge `recommendations.code`, `dismissed_at` e `dismiss_reason` e le funzioni `dismiss_recommendation(p_id uuid, p_reason text default null)` e `reopen_recommendation(p_id uuid)`. Le regole cliniche sono in `rule_versions` e restano `status = draft` finché il board non le valida.
 
+## 0013 — Spiegazioni
+
+La migrazione crea `explanations` (cache per soggetto, bersaglio, livello, lingua e `inputs_hash`, con l'indice unico su quelle sei colonne) e le funzioni `normalize_for_filter(p_text text)`, `check_forbidden_phrases(p_text text)`, `explanation_context(p_subject uuid, p_target_type text, p_target_id text)`, `explanation_lookup(...)`, `explanation_usage(p_subject uuid)` ed `explanation_save(...)`. La regola `forbidden_phrases 0.1-draft` entra in `rule_versions` con `status = active`: è un filtro di sicurezza e non può restare in bozza, il board la amplia aggiungendo pattern alla stessa riga. `explanations` ha una sola policy, di lettura, con `can_access_subject(subject_id)`: la scrittura passa esclusivamente da `explanation_save`, eseguibile solo dalla service role, che registra `explanation.generated` in `audit_log` senza il testo. Il limite è di 30 generazioni nuove al giorno per soggetto.
+
+Nota tecnica: nelle espressioni regolari di PostgreSQL `\b` è il backspace, non il confine di parola; `check_forbidden_phrases` traduce i `\b` dei pattern del board in `\y` prima di applicarli con `~*`.
+
+Dopo la 0013 va deployata la Edge Function `explain` (verify_jwt attivo) e vanno impostati `CLAUDE_API_KEY` e `CLAUDE_MODEL_MEDIUM` in **Edge Functions > Secrets**.
+
 ## Edge Functions
 
 From **Edge Functions**, deploy `document-ingest`, `extract`,
-`extract-batch`, `extract-batch-poll` and `delete-account` using the function
-directories under `lib/supabase/functions/`. Keep JWT verification enabled for
+`extract-batch`, `extract-batch-poll`, `explain` and `delete-account` using the
+function directories under `lib/supabase/functions/`. Keep JWT verification enabled for
 authenticated endpoints. Configure required secrets in **Edge Functions >
 Secrets**; never place them in SQL, tests, or the Flutter client.
 

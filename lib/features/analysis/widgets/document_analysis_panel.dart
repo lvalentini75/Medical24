@@ -13,7 +13,8 @@ import 'package:medical24/features/analysis/data/analysis_repository.dart';
 import 'package:medical24/features/analysis/providers/analysis_providers.dart';
 import 'package:medical24/features/analysis/widgets/analysis_status_badge.dart';
 import 'package:medical24/features/analysis/widgets/analysis_values_table.dart';
-import 'package:medical24/features/analysis/widgets/observation_review.dart';
+import 'package:medical24/features/health/explanations/data/explanation_repository.dart';
+import 'package:medical24/features/health/explanations/widgets/m24_explanation_card.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
 import 'package:medical24/core/ui/icons.dart';
 import 'package:medical24/core/ui/widgets/buttons.dart';
@@ -94,7 +95,7 @@ class AnalysisNotStarted extends StatelessWidget {
 }
 
 /// The four real extraction states: running, review, complete and failed.
-class AnalysisPanelContent extends ConsumerWidget {
+class AnalysisPanelContent extends ConsumerStatefulWidget {
   const AnalysisPanelContent({super.key, required this.document, required this.extraction, required this.usage, required this.compact});
 
   final MedicalDocument document;
@@ -103,66 +104,75 @@ class AnalysisPanelContent extends ConsumerWidget {
   final bool compact;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AnalysisPanelContent> createState() => _AnalysisPanelContentState();
+}
+
+class _AnalysisPanelContentState extends ConsumerState<AnalysisPanelContent> {
+  final M24ExplanationController _explanationController = M24ExplanationController();
+
+  @override
+  void dispose() { _explanationController.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
     final AsyncValue<void> action = ref.watch(analysisControllerProvider);
-    if (extraction.isRunning) {
+    if (widget.extraction.isRunning) {
       return Card(child: Padding(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
-        AnalysisStatusBadge(extraction: extraction),
+        AnalysisStatusBadge(extraction: widget.extraction),
         const SizedBox(height: 16),
-        LinearProgressIndicator(value: extraction.progress, semanticsLabel: context.l10n.t('analysisReadingProgress')),
+        LinearProgressIndicator(value: widget.extraction.progress, semanticsLabel: context.l10n.t('analysisReadingProgress')),
         const SizedBox(height: 10),
         Text(context.l10n.t('analysisUsuallyUnderMinute')),
       ])));
     }
-    if (extraction.status == ExtractionStatus.failed) {
-      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[M24Banner(title: context.l10n.t('analysisStatus_failed'), subtitle: context.l10n.t(_failureMessageKey(extraction.failureReason)), variant: M24BannerVariant.warning), const SizedBox(height: 12), M24Button(label: context.l10n.t('analysisRetryAction'), icon: M24Icons.review, onPressed: action.isLoading ? null : () => ref.read(analysisControllerProvider.notifier).retry(document.id))]);
+    if (widget.extraction.status == ExtractionStatus.failed) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[M24Banner(title: context.l10n.t('analysisStatus_failed'), subtitle: context.l10n.t(_failureMessageKey(widget.extraction.failureReason)), variant: M24BannerVariant.warning), const SizedBox(height: 12), M24Button(label: context.l10n.t('analysisRetryAction'), icon: M24Icons.review, onPressed: action.isLoading ? null : () => ref.read(analysisControllerProvider.notifier).retry(widget.document.id))]);
     }
-    if (extraction.status == ExtractionStatus.done && extraction.valuesTotal == 0) {
-      final bool skipped = extraction.failureReason == 'skipped_not_lab';
-      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[M24Banner(title: context.l10n.t(skipped ? 'analysisStatusSkipped' : 'analysisStatusNoValues'), subtitle: context.l10n.t(skipped ? 'analysisSkippedNotLabBody' : 'analysisNoValuesBody'), variant: M24BannerVariant.info), if (!skipped) ...<Widget>[const SizedBox(height: 8), Text(context.l10n.t('analysisNoValuesAdvice'))], const SizedBox(height: 12), M24Button(label: context.l10n.t(skipped ? 'analysisReadAnywayAction' : 'analysisRetryAction'), onPressed: action.isLoading || (usage.hasValue && usage.requireValue.isLimitReached) ? null : skipped ? () => ref.read(analysisControllerProvider.notifier).run(extraction.id, document.id, force: true) : () => ref.read(analysisControllerProvider.notifier).retry(document.id))]);
+    if (widget.extraction.status == ExtractionStatus.done && widget.extraction.valuesTotal == 0) {
+      final bool skipped = widget.extraction.failureReason == 'skipped_not_lab';
+      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[M24Banner(title: context.l10n.t(skipped ? 'analysisStatusSkipped' : 'analysisStatusNoValues'), subtitle: context.l10n.t(skipped ? 'analysisSkippedNotLabBody' : 'analysisNoValuesBody'), variant: M24BannerVariant.info), if (!skipped) ...<Widget>[const SizedBox(height: 8), Text(context.l10n.t('analysisNoValuesAdvice'))], const SizedBox(height: 12), M24Button(label: context.l10n.t(skipped ? 'analysisReadAnywayAction' : 'analysisRetryAction'), onPressed: action.isLoading || (widget.usage.hasValue && widget.usage.requireValue.isLimitReached) ? null : skipped ? () => ref.read(analysisControllerProvider.notifier).run(widget.extraction.id, widget.document.id, force: true) : () => ref.read(analysisControllerProvider.notifier).retry(widget.document.id))]);
     }
-    final AsyncValue<List<Observation>> observations = ref.watch(documentObservationsStreamProvider(document.id));
+    final AsyncValue<List<Observation>> observations = ref.watch(documentAllObservationsStreamProvider(widget.document.id));
     final AsyncValue<Map<String, Biomarker>> catalog = ref.watch(biomarkerByCodeProvider);
+    final List<Observation> currentValues = observations.value ?? const <Observation>[];
+    final int pendingCount = currentValues.where((Observation value) => value.isPending).length;
+    final int confirmedCount = currentValues.where((Observation value) => value.isConfirmed).length;
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
       Card(child: Padding(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
-        AnalysisStatusBadge(extraction: extraction),
+        AnalysisStatusBadge(extraction: widget.extraction),
         const SizedBox(height: 12),
-        if (extraction.status == ExtractionStatus.done && extraction.finishedAt != null)
-          Text(context.l10n.t('analysisCompletedAt', args: <String, String>{'date': DateFormat.yMMMd(Localizations.localeOf(context).languageCode).add_Hm().format(extraction.finishedAt!.toLocal())})),
-        if (usage.hasValue) Text(context.l10n.t('analysisUsageCounter', args: <String, String>{'used': '${usage.requireValue.used}', 'max': '${usage.requireValue.max}'})),
+        if (widget.extraction.status == ExtractionStatus.done && widget.extraction.finishedAt != null)
+          Text(context.l10n.t('analysisCompletedAt', args: <String, String>{'date': DateFormat.yMMMd(Localizations.localeOf(context).languageCode).add_Hm().format(widget.extraction.finishedAt!.toLocal())})),
+        const SizedBox(height: 12),
+        ReportExplanationButton(controller: _explanationController, enabled: confirmedCount > 0),
+        if (observations.hasValue)
+          Text(context.l10n.t('analysisReviewSummary', args: <String, String>{'confirmed': '$confirmedCount', 'pending': '$pendingCount'})),
+        if (widget.usage.hasValue) Text(context.l10n.t('analysisUsageCounter', args: <String, String>{'used': '${widget.usage.requireValue.used}', 'max': '${widget.usage.requireValue.max}'})),
         const SizedBox(height: 16),
-        if (extraction.status == ExtractionStatus.needsReview)
-          FilledButton(
-            onPressed: observations.hasValue && catalog.hasValue ? () {
-              final List<Observation> pending = observations.requireValue.where((Observation value) => value.needsReview).toList(growable: false);
-              if (MediaQuery.sizeOf(context).width < 600) {
-                ObservationReview.showPhone(context, pending, catalog.requireValue);
-              } else {
-                context.push(AppRoutes.analysisReview(document.id));
-              }
-            } : null,
-            child: Text(context.l10n.t('analysisVerifyAction')),
-          )
-        else
-          FilledButton(
-            onPressed: action.isLoading || (usage.hasValue && usage.requireValue.isLimitReached) ? null : () => ref.read(analysisControllerProvider.notifier).start(document.id),
-            child: Text(context.l10n.t('analysisUpdateAction')),
-          ),
+        FilledButton(
+          onPressed: action.isLoading || (widget.usage.hasValue && widget.usage.requireValue.isLimitReached) ? null : () => ref.read(analysisControllerProvider.notifier).start(widget.document.id),
+          child: Text(context.l10n.t('analysisUpdateAction')),
+        ),
         const SizedBox(height: 8),
-        OutlinedButton(onPressed: () => context.push(AppRoutes.analysis(document.id)), child: Text(context.l10n.t('analysisViewAction'))),
+        OutlinedButton(
+          onPressed: () => context.push(pendingCount > 0 ? AppRoutes.analysisReview(widget.document.id) : AppRoutes.analysis(widget.document.id)),
+          child: Text(pendingCount > 0 ? context.l10n.t('analysisVerifyValuesAction', args: <String, String>{'count': '$pendingCount'}) : context.l10n.t('analysisViewAction')),
+        ),
       ]))),
-      if (!compact) ...<Widget>[
-        const SizedBox(height: 12),
-        observations.when(
+      const SizedBox(height: 12),
+      observations.when(
           loading: () => const AppLoadingView(),
           error: (_, __) => AppErrorView(message: context.l10n.t('commonErrorTitle')),
           data: (List<Observation> values) => catalog.when(
             loading: () => const AppLoadingView(),
             error: (_, __) => AppErrorView(message: context.l10n.t('commonErrorTitle')),
-            data: (Map<String, Biomarker> biomarkers) => AnalysisValuesTable(observations: values, catalog: biomarkers),
+            data: (Map<String, Biomarker> biomarkers) => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
+              AnalysisValuesTable(observations: values, catalog: biomarkers, compact: widget.compact),
+              const SizedBox(height: 12),
+              M24ExplanationCard(subjectId: widget.document.subjectId, targetType: ExplanationTargetType.document, targetId: widget.document.id, available: values.any((Observation value) => value.isConfirmed), controller: _explanationController),
+            ]),
           ),
-        ),
-      ],
+      ),
     ]);
   }
 
