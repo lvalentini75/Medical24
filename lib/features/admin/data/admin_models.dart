@@ -1,15 +1,95 @@
 class AdminOverviewData {
-  const AdminOverviewData({required this.usersTotal, required this.usersActive7d, required this.usersActive30d, required this.documents, required this.extractions, required this.costToday, required this.costMonth, required this.errors, required this.tasks, this.lastHealth});
+  const AdminOverviewData({required this.usersTotal, required this.usersActive7d, required this.usersActive30d, required this.documents, required this.extractions, required this.costToday, required this.costMonth, required this.errors, required this.tasks, this.lastHealth, this.pendingReviews = 0});
   final int usersTotal, usersActive7d, usersActive30d, documents;
   final Map<String, int> extractions, errors;
   final Map<String, int> costToday, costMonth;
   final List<AdminTaskState> tasks;
   final AdminHealth? lastHealth;
+  final int pendingReviews;
 
   factory AdminOverviewData.fromJson(Map<String, dynamic> json) => AdminOverviewData(
     usersTotal: _integer(json['users_total']), usersActive7d: _integer(json['users_active_7d']), usersActive30d: _integer(json['users_active_30d']), documents: _integer(json['documents']),
     extractions: _intMap(json['extractions_7d']), errors: _intMap(json['errors_24h']), costToday: _intMap(json['cost_today_by_task']), costMonth: _intMap(json['cost_month_by_task']),
-    tasks: _maps(json['tasks']).map(AdminTaskState.fromJson).toList(), lastHealth: json['last_health'] is Map ? AdminHealth.fromJson(Map<String, dynamic>.from(json['last_health'] as Map)) : null);
+    tasks: _maps(json['tasks']).map(AdminTaskState.fromJson).toList(), lastHealth: json['last_health'] is Map ? AdminHealth.fromJson(Map<String, dynamic>.from(json['last_health'] as Map)) : null, pendingReviews: _integer(json['pending_reviews']));
+}
+
+class AdminTreatment {
+  const AdminTreatment(this.data);
+  final Map<String, dynamic> data;
+  String? get id => data['id']?.toString();
+  String get title => '${data['title'] ?? ''}';
+  String get status => '${data['status'] ?? 'draft'}';
+  String get scope => '${data['scope'] ?? ''}';
+  String get family => '${data['family'] ?? ''}';
+  int get version => _integer(data['version'], fallback: 1);
+  bool get featured => data['is_featured'] == true;
+  bool get demo => data['is_demo'] == true;
+  DateTime? get updatedAt => _date(data['updated_at']);
+  DateTime? get publishedAt => _date(data['published_at']);
+  Map<String, dynamic> get doctor => _map(data['doctors']);
+  Map<String, dynamic> get facility => _map(data['facilities']);
+  Map<String, dynamic> get rating => _map(data['rating_summaries']);
+}
+
+class AdminDoctor {
+  const AdminDoctor(this.data);
+  final Map<String, dynamic> data;
+  String? get id => data['id']?.toString();
+  String get name => '${data['display_name'] ?? ''}';
+  String get role => '${data['role'] ?? ''}';
+  bool get verified => data['verified'] == true;
+  bool get demo => data['is_demo'] == true;
+  Map<String, dynamic> get facility => _map(data['facilities']);
+}
+
+class AdminFacility {
+  const AdminFacility(this.data);
+  final Map<String, dynamic> data;
+  String? get id => data['id']?.toString();
+  String get name => '${data['name'] ?? ''}';
+  bool get verified => data['verified'] == true;
+  bool get demo => data['is_demo'] == true;
+}
+
+class AdminTreatmentTag {
+  const AdminTreatmentTag(this.id, this.labelIt, this.labelEn, this.type);
+  final String id, labelIt, labelEn, type;
+  String label(bool english) => english ? labelEn : labelIt;
+  factory AdminTreatmentTag.fromJson(Map<String, dynamic> j) => AdminTreatmentTag('${j['tag']}', '${j['label_it'] ?? j['tag'] ?? ''}', '${j['label_en'] ?? j['tag'] ?? ''}', '${j['kind'] ?? 'categoria'}');
+}
+
+class AdminReview {
+  const AdminReview(this.data, {this.authorLabel = ''});
+  final Map<String, dynamic> data;
+  final String authorLabel;
+  String get id => '${data['id']}';
+  String get status => '${data['status'] ?? 'pending'}';
+  String get targetType => '${data['target_type'] ?? ''}';
+  String get targetId => '${data['target_id'] ?? ''}';
+  String get targetLabel => '${data['target_label'] ?? data['target_id'] ?? ''}';
+  String get title => '${data['title'] ?? ''}';
+  String get body => '${data['body'] ?? ''}';
+  int get rating => _integer(data['rating']);
+  Map<String, dynamic> get subRatings => _map(data['sub_ratings']);
+  DateTime? get createdAt => _date(data['created_at']);
+}
+
+class AdminTreatmentQuery {
+  const AdminTreatmentQuery({this.search = '', this.status, this.scope, this.family, this.demoOnly = false, this.featuredOnly = false, this.page = 0});
+  final String search;
+  final String? status, scope, family;
+  final bool demoOnly, featuredOnly;
+  final int page;
+  @override bool operator ==(Object other) => other is AdminTreatmentQuery && search == other.search && status == other.status && scope == other.scope && family == other.family && demoOnly == other.demoOnly && featuredOnly == other.featuredOnly && page == other.page;
+  @override int get hashCode => Object.hash(search, status, scope, family, demoOnly, featuredOnly, page);
+}
+
+class AdminReviewQuery {
+  const AdminReviewQuery({this.status = 'pending', this.targetType});
+  final String status;
+  final String? targetType;
+  @override bool operator ==(Object other) => other is AdminReviewQuery && status == other.status && targetType == other.targetType;
+  @override int get hashCode => Object.hash(status, targetType);
 }
 
 class AdminTaskState {

@@ -13,6 +13,10 @@ import 'package:medical24/features/analysis/screens/document_analysis_screen.dar
 import 'package:medical24/features/health/screens/manual_value_screen.dart';
 import 'package:medical24/features/home/screens/home_screen.dart';
 import 'package:medical24/features/home/screens/placeholder_sections.dart';
+import 'package:medical24/features/treatments/screens/treatment_compare_screen.dart';
+import 'package:medical24/features/treatments/screens/treatment_detail_screen.dart';
+import 'package:medical24/features/treatments/screens/treatment_favorites_screen.dart';
+import 'package:medical24/features/treatments/screens/treatments_screen.dart';
 import 'package:medical24/features/health/screens/health_values_screen.dart';
 import 'package:medical24/features/health/screens/alerts_screen.dart';
 import 'package:medical24/features/health/screens/symptom_form_screen.dart';
@@ -153,7 +157,7 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
         routes: <RouteBase>[
           GoRoute(
             path: AppRoutes.admin,
-            redirect: (BuildContext context, GoRouterState state) => state.matchedLocation == AppRoutes.admin ? AppRoutes.adminOverview : null,
+            redirect: (BuildContext context, GoRouterState state) => state.uri.path == AppRoutes.admin ? AppRoutes.adminOverview : null,
             builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.overview),
             routes: <RouteBase>[
               GoRoute(path: 'overview', name: 'adminOverview', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.overview)),
@@ -164,6 +168,12 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
               GoRoute(path: 'events', name: 'adminEvents', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.events)),
               GoRoute(path: 'audit', name: 'adminAudit', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.audit)),
               GoRoute(path: 'rules', name: 'adminRules', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.rules)),
+              GoRoute(path: 'treatments', name: 'adminTreatments', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.treatments), routes: <RouteBase>[
+                GoRoute(path: 'new', name: 'adminTreatmentNew', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.treatmentEditor)),
+                GoRoute(path: ':id', name: 'adminTreatmentEdit', builder: (BuildContext context, GoRouterState state) => AdminScreen(page: AdminPage.treatmentEditor, treatmentId: state.pathParameters['id'])),
+              ]),
+              GoRoute(path: 'providers', name: 'adminProviders', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.providers)),
+              GoRoute(path: 'reviews', name: 'adminReviews', builder: (BuildContext context, GoRouterState state) => const AdminScreen(page: AdminPage.reviews)),
             ],
           ),
         ],
@@ -256,8 +266,12 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
             GoRoute(
               path: AppRoutes.treatments,
               name: 'treatments',
-              builder: (BuildContext context, GoRouterState state) =>
-                  const TreatmentsSectionScreen(),
+              builder: (BuildContext context, GoRouterState state) => TreatmentsScreen(queryParameters: state.uri.queryParameters),
+              routes: <RouteBase>[
+                GoRoute(path: 'favorites', name: 'treatmentFavorites', builder: (BuildContext context, GoRouterState state) => const TreatmentFavoritesScreen()),
+                GoRoute(path: 'compare', name: 'treatmentCompare', builder: (BuildContext context, GoRouterState state) => TreatmentCompareScreen(ids: (state.uri.queryParameters['ids'] ?? '').split(',').where((id) => id.isNotEmpty).toList())),
+                GoRoute(path: ':id', name: 'treatmentDetail', builder: (BuildContext context, GoRouterState state) => TreatmentDetailScreen(id: state.pathParameters['id']!)),
+              ],
             ),
           ]),
           StatefulShellBranch(routes: <RouteBase>[

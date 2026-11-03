@@ -559,7 +559,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get treatmentsEmptyBody =>
-      'The treatment database arrives with its own module.';
+      'Try widening the filters or changing your search.';
 
   @override
   String get doctorTitle => 'Doctor';
@@ -2973,4 +2973,615 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminRuleStatusConfirm => 'Confirm the rule status change?';
+
+  @override
+  String get treatmentsTitleLong => 'Treatments and pathways';
+
+  @override
+  String get treatmentsSubtitle =>
+      'Find pathways, professionals and facilities and compare options.';
+
+  @override
+  String get treatmentsSearchHint => 'Search for a treatment or pathway';
+
+  @override
+  String get treatmentsFilters => 'Filters';
+
+  @override
+  String get treatmentsFiltersTitle => 'Search filters';
+
+  @override
+  String get treatmentsScope => 'Scope';
+
+  @override
+  String get treatmentsCity => 'Location';
+
+  @override
+  String get treatmentsModality => 'Modality';
+
+  @override
+  String get treatmentsDuration => 'Indicative duration';
+
+  @override
+  String get treatmentsFamily => 'Family';
+
+  @override
+  String get treatmentsEvidence => 'Evidence level';
+
+  @override
+  String get treatmentsMinRating => 'Minimum rating';
+
+  @override
+  String get treatmentsResetFilters => 'Reset filters';
+
+  @override
+  String get treatmentsAll => 'All';
+
+  @override
+  String get treatmentsSort => 'Sort by';
+
+  @override
+  String treatmentsCount(Object count) {
+    return '$count pathways';
+  }
+
+  @override
+  String get treatmentsEmptyTitle => 'No treatment found';
+
+  @override
+  String get treatmentsLoadError => 'We could not load treatments.';
+
+  @override
+  String get treatmentsDemo => 'Demo';
+
+  @override
+  String treatmentsMinutes(Object count) {
+    return '$count min';
+  }
+
+  @override
+  String treatmentsFromPrice(Object price) {
+    return 'from $price';
+  }
+
+  @override
+  String get treatmentsPriceOnRequest => 'On request';
+
+  @override
+  String get treatmentsNoReviews => 'No reviews';
+
+  @override
+  String treatmentsPatientExperience(Object count, Object rating) {
+    return 'Patient experience ★ $rating · $count reviews';
+  }
+
+  @override
+  String get treatmentsEvidenceLink => 'Evidence and limitations';
+
+  @override
+  String get treatmentsDetails => 'View details';
+
+  @override
+  String get treatmentsCompareLimit => 'You can compare up to 4 treatments.';
+
+  @override
+  String get treatmentsYourCompare => 'Your comparison';
+
+  @override
+  String get treatmentsCompareEmpty => 'Select up to four treatments.';
+
+  @override
+  String get treatmentsOpenCompare => 'Open full comparison';
+
+  @override
+  String treatmentsSelectedCompare(Object count) {
+    return '$count selected · Compare';
+  }
+
+  @override
+  String get treatmentsCompareTitle => 'Treatment comparison';
+
+  @override
+  String get treatmentsCompareNeedTwo => 'Select 2 to 4 treatments.';
+
+  @override
+  String get treatmentsClearCompare => 'Clear selection';
+
+  @override
+  String get treatmentsFavorite => 'Favorite';
+
+  @override
+  String get treatmentsFavoriteAdded => 'Added to favorites';
+
+  @override
+  String get treatmentsFavoriteRemoved => 'Removed from favorites';
+
+  @override
+  String get treatmentsAddCompare => 'Add to comparison';
+
+  @override
+  String get treatmentsSessions => 'Sessions';
+
+  @override
+  String get treatmentsWeeks => 'Weeks';
+
+  @override
+  String get treatmentsWaiting => 'Waiting time';
+
+  @override
+  String get treatmentsDays => 'days';
+
+  @override
+  String get treatmentsCost => 'Cost';
+
+  @override
+  String get treatmentsProfessional => 'Professional';
+
+  @override
+  String get treatmentsFacility => 'Facility';
+
+  @override
+  String get treatmentsContraindications => 'Contraindications';
+
+  @override
+  String get treatmentsRequirements => 'Requirements';
+
+  @override
+  String get treatmentsExpectedOutcome => 'Expected outcome';
+
+  @override
+  String get treatmentsRatings => 'Ratings';
+
+  @override
+  String get treatmentsReviews => 'Reviews';
+
+  @override
+  String get treatmentsVerifiedReview => 'Verified experience';
+
+  @override
+  String get treatmentsNotFound => 'Treatment unavailable';
+
+  @override
+  String get treatmentsWriteReview => 'Write a review';
+
+  @override
+  String get treatmentsReviewTitle => 'Title';
+
+  @override
+  String get treatmentsReviewBody => 'Tell us about your experience';
+
+  @override
+  String treatmentsReviewCounter(Object count) {
+    return '$count/2000 · minimum 20 characters';
+  }
+
+  @override
+  String get treatmentsSubmitReview => 'Submit review';
+
+  @override
+  String get treatmentsReviewThanks =>
+      'Thank you, the review will be published after moderation';
+
+  @override
+  String treatmentsReviewStatus(Object status) {
+    return 'Your review is $status';
+  }
+
+  @override
+  String get treatmentsWithdrawReview => 'Withdraw';
+
+  @override
+  String get treatmentsReviewError_review_exists =>
+      'You already submitted a review.';
+
+  @override
+  String get treatmentsReviewError_url_not_allowed =>
+      'Do not include links in the review.';
+
+  @override
+  String get treatmentsReviewError_forbidden_content =>
+      'The text contains disallowed content.';
+
+  @override
+  String get treatmentsReviewError_daily_limit_reached =>
+      'You reached the daily limit.';
+
+  @override
+  String get treatmentsReviewError_target_not_found =>
+      'This treatment is no longer available.';
+
+  @override
+  String get treatmentsReviewError_unknown => 'We could not submit the review.';
+
+  @override
+  String get treatmentsRelativeNow => 'Now';
+
+  @override
+  String treatmentsRelativeMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes ago',
+      one: '1 minute ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String treatmentsRelativeHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours ago',
+      one: '1 hour ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String treatmentsRelativeDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get treatmentsFavorites => 'Favorite treatments';
+
+  @override
+  String get treatmentsFavoritesEmpty => 'No favorite treatments';
+
+  @override
+  String get treatmentsFavoritesEmptyBody =>
+      'Favorite treatments you want to find again.';
+
+  @override
+  String get treatmentsRemoveFavorite => 'Remove from favorites';
+
+  @override
+  String get treatmentsFeatured => 'Featured treatments';
+
+  @override
+  String get treatmentsSeeAll => 'View all';
+
+  @override
+  String get treatmentsSection_per_chi => 'Who it is for';
+
+  @override
+  String get treatmentsSection_come_funziona => 'How it works';
+
+  @override
+  String get treatmentsSection_durata => 'Duration';
+
+  @override
+  String get treatmentsSection_rischi_e_controindicazioni =>
+      'Risks and contraindications';
+
+  @override
+  String get treatmentsSection_evidenze_e_limiti => 'Evidence and limitations';
+
+  @override
+  String get adminContents => 'Content';
+
+  @override
+  String get adminTreatments => 'Treatments';
+
+  @override
+  String get adminProviders => 'Professionals and facilities';
+
+  @override
+  String get adminReviews => 'Reviews';
+
+  @override
+  String get adminPendingReviews => 'Pending reviews';
+
+  @override
+  String get adminNewTreatment => 'New treatment';
+
+  @override
+  String get adminEditTreatment => 'Edit treatment';
+
+  @override
+  String get adminSearchTitle => 'Search by title';
+
+  @override
+  String get adminScope => 'Scope';
+
+  @override
+  String get adminFamily => 'Family';
+
+  @override
+  String get adminFeatured => 'Featured';
+
+  @override
+  String get adminDemo => 'Demo';
+
+  @override
+  String get adminDemoOnly => 'Demo only';
+
+  @override
+  String get adminFeaturedOnly => 'Featured only';
+
+  @override
+  String get adminTitle => 'Title';
+
+  @override
+  String get adminProfessional => 'Professional';
+
+  @override
+  String get adminFacility => 'Facility';
+
+  @override
+  String get adminRating => 'Rating';
+
+  @override
+  String get adminIdentity => 'Identity';
+
+  @override
+  String get adminSummary => 'Summary';
+
+  @override
+  String get adminSummaryTooLong => 'The summary cannot exceed 240 characters.';
+
+  @override
+  String get adminCategory => 'Category';
+
+  @override
+  String get adminEvidenceLevel => 'Evidence level';
+
+  @override
+  String get adminModality => 'Modality';
+
+  @override
+  String get adminEvidenceRequiredPublish => 'Required to publish';
+
+  @override
+  String get adminConditionsTags => 'Conditions and tags';
+
+  @override
+  String get adminConditions => 'Conditions';
+
+  @override
+  String get adminCommaSeparated => 'Comma separated';
+
+  @override
+  String get adminContraindications => 'Contraindications';
+
+  @override
+  String get adminContraindicationsHint =>
+      'Text and low, medium or high severity';
+
+  @override
+  String get adminCostsTimes => 'Costs and timing';
+
+  @override
+  String get adminPriceFrom => 'Price from (€)';
+
+  @override
+  String get adminPriceTo => 'Price to (€)';
+
+  @override
+  String get adminPriceNotes => 'Price notes';
+
+  @override
+  String get adminSsn => 'National health service';
+
+  @override
+  String get adminMinutes => 'Minutes';
+
+  @override
+  String get adminSessions => 'Sessions';
+
+  @override
+  String get adminWeeks => 'Weeks';
+
+  @override
+  String get adminWaitingDays => 'Waiting (days)';
+
+  @override
+  String get adminRequirementsOutcome => 'Requirements and expected outcome';
+
+  @override
+  String get adminRequirements => 'Requirements';
+
+  @override
+  String get adminExpectedOutcome => 'Expected outcome';
+
+  @override
+  String get adminMedia => 'Media';
+
+  @override
+  String get adminMediaHint => 'URL, image/video type and caption';
+
+  @override
+  String get adminProfessionalFacility => 'Professional and facility';
+
+  @override
+  String get adminJsonListError => 'JSON must be a list.';
+
+  @override
+  String get adminInvalidPriceRange =>
+      'The starting price cannot exceed the ending price.';
+
+  @override
+  String get adminMarkVerified => 'Mark verified';
+
+  @override
+  String get adminPublish => 'Publish';
+
+  @override
+  String get adminWithdraw => 'Withdraw';
+
+  @override
+  String get adminReturnToReview => 'Return to review';
+
+  @override
+  String get adminVerified => 'Verified';
+
+  @override
+  String get adminPublished => 'Published';
+
+  @override
+  String get adminApproved => 'Approved';
+
+  @override
+  String get adminRejected => 'Rejected';
+
+  @override
+  String get adminPublishedAt => 'Published';
+
+  @override
+  String get adminConfirmStatus => 'Confirm status change?';
+
+  @override
+  String get adminConfirmStatusBody =>
+      'The change is immediately visible according to publication rules.';
+
+  @override
+  String get adminPublishRequiresProvider =>
+      'Select a professional or facility before publishing.';
+
+  @override
+  String get adminPublishRequiresEvidence =>
+      'Complete Evidence and limitations before publishing.';
+
+  @override
+  String get adminUnknownTag => 'A selected tag no longer exists.';
+
+  @override
+  String get adminInvalidSections => 'Check the five content sections.';
+
+  @override
+  String get adminProfessionals => 'Professionals';
+
+  @override
+  String get adminFacilities => 'Facilities';
+
+  @override
+  String get adminNew => 'New';
+
+  @override
+  String get adminRole => 'Role';
+
+  @override
+  String get adminSpecialties => 'Specialties';
+
+  @override
+  String get adminVerifiedRequiresRegistry =>
+      'Registry name and number are required to verify a professional.';
+
+  @override
+  String get adminCity => 'City';
+
+  @override
+  String get adminReviewModeration => 'Review moderation';
+
+  @override
+  String get adminTargetType => 'Target type';
+
+  @override
+  String get adminDate => 'Date';
+
+  @override
+  String get adminAuthor => 'Author';
+
+  @override
+  String get adminTarget => 'Target';
+
+  @override
+  String get adminPreview => 'Preview';
+
+  @override
+  String get adminReject => 'Reject';
+
+  @override
+  String get adminModerationNote => 'Moderation note';
+
+  @override
+  String get adminRejectionNoteRequired => 'A note is required when rejecting.';
+
+  @override
+  String get adminContraindicationText => 'Text';
+
+  @override
+  String get adminSeverity => 'Severity';
+
+  @override
+  String get adminRemoveRow => 'Remove row';
+
+  @override
+  String get adminMediaType => 'Type';
+
+  @override
+  String get adminUrl => 'URL';
+
+  @override
+  String get adminCaption => 'Caption';
+
+  @override
+  String get adminInvalidUrl => 'Enter a valid http or https URL.';
+
+  @override
+  String get adminSearchTags => 'Search tags';
+
+  @override
+  String get adminDisplayName => 'Display name';
+
+  @override
+  String get adminLanguages => 'Languages';
+
+  @override
+  String get adminRegistryBody => 'Professional register';
+
+  @override
+  String get adminRegistryNumber => 'Registration number';
+
+  @override
+  String get adminBio => 'Biography';
+
+  @override
+  String get adminPhotoUrl => 'Photo URL';
+
+  @override
+  String get adminSsnAccredited => 'National health service accredited';
+
+  @override
+  String get adminAddress => 'Address';
+
+  @override
+  String get adminRegion => 'Region';
+
+  @override
+  String get adminCountry => 'Country';
+
+  @override
+  String get adminLatitude => 'Latitude';
+
+  @override
+  String get adminLongitude => 'Longitude';
+
+  @override
+  String get adminPhone => 'Phone';
+
+  @override
+  String get adminEmail => 'Email';
+
+  @override
+  String get adminWebsite => 'Website';
+
+  @override
+  String get adminServices => 'Services';
+
+  @override
+  String get adminOpeningHours => 'Opening hours';
+
+  @override
+  String get adminTimeRange => 'Time range';
+
+  @override
+  String get adminInvalidNumber => 'Enter a valid number.';
 }

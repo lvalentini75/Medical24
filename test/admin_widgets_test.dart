@@ -7,6 +7,8 @@ import 'package:medical24/features/admin/data/admin_models.dart';
 import 'package:medical24/features/admin/screens/admin_screen.dart';
 import 'package:medical24/features/admin/widgets/admin_widgets.dart';
 import 'package:medical24/features/admin/widgets/admin_governance_widgets.dart';
+import 'package:medical24/features/admin/widgets/admin_content_widgets.dart';
+import 'package:medical24/features/admin/widgets/admin_editor_fields.dart';
 import 'package:medical24/l10n/generated/app_localizations.dart';
 
 void main() {
@@ -86,6 +88,59 @@ void main() {
     await tester.pumpWidget(AdminTestApp(child: AdminPagination(page: 0, hasNext: true, onPageChanged: (value) => page = value)));
     await tester.tap(find.text('Successiva'));
     expect(page, 1);
+  });
+
+  testWidgets('treatment editor validates summary and price range', (WidgetTester tester) async {
+    int saves = 0;
+    await tester.binding.setSurfaceSize(const Size(1400, 1100));
+    await tester.pumpWidget(AdminTestApp(child: SingleChildScrollView(child: AdminTreatmentEditor(onSave: (patch) async => saves++))));
+    await tester.enterText(find.byKey(const Key('adminTreatmentSummary')), List<String>.filled(241, 'a').join());
+    await tester.enterText(find.byKey(const Key('adminPriceFrom')), '200');
+    await tester.enterText(find.byKey(const Key('adminPriceTo')), '100');
+    await tester.tap(find.byKey(const Key('adminTreatmentSave')));
+    await tester.pump();
+    expect(find.text('Il sommario non può superare 240 caratteri.'), findsOneWidget);
+    expect(find.text('Il prezzo iniziale non può superare quello finale.'), findsOneWidget);
+    expect(saves, 0);
+  });
+
+  testWidgets('treatment status bar exposes allowed transitions', (WidgetTester tester) async {
+    await tester.pumpWidget(const AdminTestApp(child: Column(children: <Widget>[AdminTreatmentStatusBar(status: 'draft'), AdminTreatmentStatusBar(status: 'verified'), AdminTreatmentStatusBar(status: 'published')])));
+    expect(find.text('Segna verificata'), findsOneWidget);
+    expect(find.text('Pubblica'), findsOneWidget);
+    expect(find.text('Ritira'), findsOneWidget);
+    expect(find.text('Riporta in revisione'), findsOneWidget);
+  });
+
+  testWidgets('contraindication rows can be added and removed', (WidgetTester tester) async {
+    List<Map<String, dynamic>> rows = <Map<String, dynamic>>[];
+    await tester.pumpWidget(AdminTestApp(child: StatefulBuilder(builder: (context, setState) => AdminContraindicationsEditor(rows: rows, onChanged: (value) => setState(() => rows = value)))));
+    await tester.tap(find.byKey(const Key('add-contraindication')));
+    await tester.pump();
+    expect(find.byKey(const ValueKey<String>('contraindication-0')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey<String>('remove-contraindication-0')));
+    await tester.pump();
+    expect(find.byKey(const ValueKey<String>('contraindication-0')), findsNothing);
+  });
+
+  testWidgets('tag selection is grouped and multi-select', (WidgetTester tester) async {
+    Set<String> selected = <String>{};
+    const tags = <AdminTreatmentTag>[AdminTreatmentTag('cardio', 'Cardiologia', 'Cardiology', 'categoria'), AdminTreatmentTag('dolore', 'Dolore', 'Pain', 'patologia')];
+    await tester.pumpWidget(AdminTestApp(child: StatefulBuilder(builder: (context, setState) => AdminTagSelector(tags: tags, selected: selected, onChanged: (value) => setState(() => selected = value)))));
+    expect(find.text('Categoria'), findsOneWidget);
+    expect(find.text('Patologia'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey<String>('tag-cardio')));
+    await tester.pump();
+    expect(selected, contains('cardio'));
+  });
+
+  testWidgets('review queue approves fake review', (WidgetTester tester) async {
+    AdminReview? approved;
+    final review = AdminReview(<String, dynamic>{'id':'r1','status':'pending','target_type':'treatment','target_id':'t1','target_label':'Cura demo','rating':5,'sub_ratings':<String,dynamic>{'chiarezza':4},'title':'Chiaro','body':'Testo completo della recensione'}, authorLabel:'Utente A.');
+    await tester.binding.setSurfaceSize(const Size(1600, 700));
+    await tester.pumpWidget(AdminTestApp(child: AdminReviewQueue(reviews: <AdminReview>[review], onApprove: (value) => approved=value)));
+    await tester.tap(find.byKey(const Key('approve-r1')));
+    expect(approved, review);
   });
 }
 

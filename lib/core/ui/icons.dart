@@ -53,4 +53,12 @@ class M24Icons {
   static const IconData delete = LucideIcons.trash2;
   static const IconData logout = LucideIcons.logOut;
   static const IconData chevron = LucideIcons.chevronRight;
+  static const IconData star = LucideIcons.star;
+  static const IconData favorite = LucideIcons.heart;
+  static const IconData compare = LucideIcons.columns3;
+  static const IconData filters = LucideIcons.slidersHorizontal;
+  static const IconData location = LucideIcons.mapPin;
+  static const IconData verified = LucideIcons.badgeCheck;
+  static const IconData phone = LucideIcons.phone;
+  static const IconData website = LucideIcons.globe;
 }

@@ -19,6 +19,7 @@ import 'package:medical24/features/health/prevention/data/prevention_models.dart
 import 'package:medical24/features/health/prevention/providers/prevention_providers.dart';
 import 'package:medical24/features/health/prevention/widgets/prevention_widgets.dart';
 import 'package:medical24/features/home/data/home_models.dart';
+import 'package:medical24/features/treatments/widgets/treatment_widgets.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
 
 /// Responsive overview built from the live home snapshot and value history.
@@ -40,7 +41,7 @@ class _HomeDashboardState extends ConsumerState<HomeDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.snapshot.isEmpty) return Center(child: M24EmptyState(icon: M24Icons.upload, title: context.l10n.t('homeEmptyTitle'), message: context.l10n.t('homeEmptyBody'), actionLabel: context.l10n.t('homeUploadFirstReport'), onAction: () => AddDocumentSheet.show(context)));
+    if (widget.snapshot.isEmpty) return ListView(children: <Widget>[M24EmptyState(icon: M24Icons.upload, title: context.l10n.t('homeEmptyTitle'), message: context.l10n.t('homeEmptyBody'), actionLabel: context.l10n.t('homeUploadFirstReport'), onAction: () => AddDocumentSheet.show(context)), const SizedBox(height: 24), const FeaturedTreatments()]);
     final HomeValue? selected = _selected;
     final List<BiomarkerSummary> catalog = ref.watch(healthCatalogProvider).value ?? const <BiomarkerSummary>[];
     final bool isPhone = MediaQuery.sizeOf(context).width < 1200;
@@ -78,6 +79,8 @@ class HomePhoneDashboard extends StatelessWidget {
       const SizedBox(height: 12),
       M24Card(padding: EdgeInsets.zero, child: Column(children: <Widget>[for (int i = 0; i < documents.length; i++) ...<Widget>[HomeDocumentRow(document: documents[i]), if (i < documents.length - 1) Divider(height: 1, color: context.m24.colors.divider)]])),
       const SizedBox(height: 24),
+      const FeaturedTreatments(),
+      const SizedBox(height: 24),
       M24Disclaimer(phoneText: context.l10n.t('disclaimerPhone'), desktopText: context.l10n.t('disclaimerDesktop')),
     ]);
   }
@@ -114,6 +117,8 @@ class HomeDesktopDashboard extends StatelessWidget {
         const SizedBox(height: 12),
         M24Table(columns: <String>[context.l10n.t('homeTableDocument'), context.l10n.t('homeTableDate'), context.l10n.t('homeTableStatus')], rows: documents.map((document) { final String title = homeDocumentTitle(context, document); return <Widget>[Row(children: <Widget>[const Icon(M24Icons.archive, size: 18), const SizedBox(width: 8), Expanded(child: Tooltip(message: title, child: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis)))]), Text(homeDocumentDate(context, document)), homeDocumentPill(context, document)]; }).toList(), onRowTap: (index) => context.push(AppRoutes.archiveDocument(documents[index].id))),
       ])),
+      const SizedBox(height: 24),
+      const FeaturedTreatments(),
       const SizedBox(height: 24),
       M24Disclaimer(phoneText: context.l10n.t('disclaimerPhone'), desktopText: context.l10n.t('disclaimerDesktop')),
     ]);

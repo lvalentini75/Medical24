@@ -67,6 +67,65 @@ Nota tecnica: nelle espressioni regolari di PostgreSQL `\b` è il backspace, non
 
 Dopo la 0013 va deployata la Edge Function `explain` (verify_jwt attivo) e vanno impostati `CLAUDE_API_KEY` e `CLAUDE_MODEL_MEDIUM` in **Edge Functions > Secrets**.
 
+## 0017 — Cure: schema e RLS
+
+La migrazione `20261106_090000_migration.sql` (registro `0017_treatments_schema`) crea le sette tabelle del modulo M8 Cure: `facilities`, `doctors`, `treatment_tags`, `treatments`, `reviews`, `favorites` e `rating_summaries`. Tutte hanno RLS attiva e forzata e nascono in default deny.
+
+Enum introdotti: `facility_kind`, `doctor_role`, `treatment_tag_kind`, `treatment_family`, `treatment_scope`, `treatment_evidence_level`, `treatment_modality`, `treatment_status`, `review_target_type` (condiviso da `reviews`, `favorites` e `rating_summaries`) e `review_status`.
+
+`treatments.search_vector` è una colonna generata (`stored`) costruita da `m24_treatment_search_doc` con configurazione `italian` su titolo, sommario, categoria, patologie, tag e testo delle cinque sezioni di `description_sections`; è indicizzata con GIN. Ci sono inoltre indici su `(status, scope)`, `(status, family)`, `(facility_id)`, `(doctor_id)` e un indice trigram su `title` (estensione `pg_trgm`, abilitata dalla migrazione).
+
+Vincoli notevoli: `summary` ≤ 240 caratteri, `price_from_cents ≤ price_to_cents`, `description_sections` oggetto con sole chiavi `per_chi`, `come_funziona`, `durata`, `rischi_e_controindicazioni`, `evidenze_e_limiti`, `contraindications` array di `{text, severity: bassa|media|alta}`, `media` array di `{type: image|video, url, caption}`, `reviews.rating` 1–5, `title` ≤ 80, `body` 20–2000, unique `(author_id, target_type, target_id)`.
+
+Trigger: `trg_treatments_check_tags` rifiuta (errore `23514`) ogni tag che non esista in `treatment_tags`; `trg_reviews_rating_summary` ricalcola `rating_summaries` contando solo le recensioni `approved`, a ogni insert, cambio di stato e ritiro; i `trg_*_updated_at` usano `set_updated_at()` delle fondamenta.
+
+Accesso: lettura pubblica (`anon` e `authenticated`) delle strutture e dei medici solo se `verified` o `is_demo`, delle cure solo con `status = 'published'`, delle recensioni solo se `approved`, del vocabolario dei tag e di `rating_summaries` sempre; l'autore legge le proprie recensioni in ogni stato; l'admin legge tutto. **Nessuna scrittura diretta**: l'unica tabella scrivibile dal client è `favorites` (select, insert e delete del solo proprietario). Le funzioni di redazione, ricerca e moderazione arrivano con P07-A2 e P07-A3; questa migrazione non contiene seed di contenuto.
+
+Il test `tests/0017_treatments_schema_test.sql` dichiara `plan(28)` e si esegue solo sul progetto dev dal SQL Editor.
+
+## 0018 — Cure: funzioni di lettura
+
+La migrazione `20261107_090000_migration.sql` (registro `0018_treatments_read`) aggiunge **solo funzioni di lettura** sopra lo schema della 0017, che non viene toccata. Nessuna scrittura, nessuna tabella nuova, nessun seed, nessuna schermata: la redazione e la moderazione arrivano con P07-A3.
+
+Tutte le funzioni pubbliche sono `security invoker` e `stable`, eseguibili da `anon` e `authenticated`: girano con i privilegi del chiamante, quindi la RLS della 0017 resta l'unico guardiano e chi non è admin vede comunque soltanto le cure `published`, i medici e le strutture `verified` o `is_demo` e le recensioni `approved`.
+
+- `search_treatments(p_query text, p_scope text[], p_family text[], p_modality text[], p_city text, p_min_rating numeric, p_max_price_cents int, p_duration_bucket text, p_conditions text[], p_tags text[], p_sort text, p_limit int, p_offset int)` → `id, title, summary, family, scope, evidence_level, price_from_cents, session_minutes, modality, doctor_display_name, facility_name, facility_city, cover_url, rating_avg, rating_count, is_demo, featured, total_count`. Il testo libero usa `websearch_to_tsquery('italian')` su `search_vector`, più `ilike` sul nome del medico e su quello della struttura, più similarità trigram sul titolo con soglia 0,3. `p_duration_bucket` accetta `30|45|60|90` e seleziona `session_minutes <= bucket` (altro valore: `22023`). `p_sort` accetta `pertinenza` (ts_rank poi valutazione), `rating`, `prezzo_asc`, `prezzo_desc`, `attesa`, `recenti` (altro valore: `22023`). `p_limit` è costretto tra 1 e 50; `total_count` è una window function e resta il totale prima della paginazione.
+- `facets_for_treatments(...)` — stessi dieci filtri, senza ordinamento né paginazione → `jsonb` con `total` e i conteggi per `scope`, `family`, `modality`, `city` ed `evidence_level` calcolati sullo stesso insieme filtrato della ricerca.
+- `treatment_detail(p_id uuid)` → `jsonb` completo della cura (sezioni, controindicazioni con la severità massima, prezzi, tempi, media, `cover_url`) con `doctor`, `facility`, `rating` da `rating_summaries` e le ultime cinque recensioni `approved`; `null` se la cura non è visibile al chiamante.
+- `treatment_compare(p_ids uuid[])` → da 2 a 4 cure (fuori intervallo: `22023`) con `title, session_minutes, sessions_count, course_weeks, price_from_cents, price_to_cents, waiting_days, modality, evidence_level, max_contraindication_severity, rating_avg, rating_count, doctor_display_name, facility_name`, nell'ordine degli id richiesti.
+- `reviews_for_target(p_target_type text, p_target_id uuid, p_limit int, p_offset int)` → recensioni `approved` dalla più recente, con `author_label` (nome più iniziale del cognome), `verified` e `total_count`.
+- `featured_treatments(p_limit int)` → cure `published` e `featured` per la home.
+
+Funzioni interne (prefisso `m24_`, non destinate al client): `m24_treatments_filtered(...)` è il corpo unico del filtro condiviso da ricerca, faccette e confronto; `m24_display_name_initial`, `m24_treatment_cover_url` e `m24_max_contraindication` sono pure; `m24_review_author_label(uuid)` è `security definer` e legge da `profiles` esclusivamente `full_name`, restituendolo già ridotto (nessun altro campo del profilo esce dalla funzione).
+
+Il test `tests/0018_treatments_read_test.sql` dichiara `plan(34)` e si esegue solo sul progetto dev dal SQL Editor.
+
+## 0019 — Cure: funzioni di scrittura e moderazione
+
+La migrazione `20261108_090000_migration.sql` (registro `0019_treatments_write`) aggiunge **solo funzioni di scrittura e moderazione** sopra lo schema della 0017 e le letture della 0018, che non vengono toccate. Nessuna tabella nuova, nessun seed, nessuna schermata.
+
+Le tabelle del modulo non hanno policy di scrittura (default deny della 0017): la via di scrittura è una sola. Tutte le funzioni sono `security definer`, **revocate a `public` e a `anon`** e concesse a `authenticated` (e `service_role`), con i controlli dentro.
+
+- `submit_review(p_target_type text, p_target_id uuid, p_rating int, p_sub_ratings jsonb, p_title text, p_body text)` → `uuid`. Autore = `auth.uid()`; il bersaglio deve esistere ed essere visibile (cura `published`, medico o struttura `verified`/`is_demo`); voto 1–5; `sub_ratings` con sole chiavi `efficacia`, `costo`, `esperienza`, `chiarezza` e valori interi 1–5; titolo ≤ 80; corpo 20–2000 caratteri, senza URL (riconosciuti via espressione regolare) e senza nessuno dei trenta pattern della regola `forbidden_phrases` del board (`check_forbidden_phrases`): una recensione non è il posto per diagnosi o terapie rivolte ad altri. Massimo **cinque recensioni al giorno** per autore (`daily_limit_reached`, `P0001`); una sola per autore e bersaglio (il `23505` dell'indice unico diventa l'errore leggibile `review_exists`, sempre `23505`). La recensione nasce `pending`; audit `review.submitted`.
+- `moderate_review(p_id uuid, p_status text, p_note text)` → `void`. Solo admin (`42501`); `p_status` è `approved` o `rejected`; valorizza `moderated_by` e `moderated_at`; audit `review.moderated` e riga `admin_action` in `platform_events` (inserimento diretto, come in `ai_task_set`).
+- `withdraw_review(p_id uuid)` → `void`. Solo l'autore (`42501` per chiunque altro); stato `withdrawn`; audit `review.withdrawn`.
+- `treatment_upsert(p_payload jsonb)` → `uuid`. Solo admin. Payload a chiavi chiuse; senza `id` crea una scheda `draft`, con `id` aggiorna. Valida enum (`family`, `scope`, `evidence_level`, `modality`), prezzi (non negativi e `from ≤ to`), valuta a tre lettere, minuti e conteggi positivi, chiavi ammesse di `description_sections`, esistenza dei `tags` nel vocabolario, forma di `contraindications` e `media`, esistenza di `doctor_id` e `facility_id`. **Una modifica a una cura `published` incrementa `version`**: la scheda pubblicata non cambia in silenzio. Audit `treatment.upsert`.
+- `treatment_set_status(p_id uuid, p_status text)` → `void`. Solo admin. Transizioni ammesse: `draft → verified → published → retired` e `published → verified`; qualsiasi altra è `invalid_transition` (`22023`). `published` richiede un medico **o** una struttura e la sezione `evidenze_e_limiti` non vuota; `published_at` è valorizzato alla prima pubblicazione e non viene più riscritto. Audit `treatment.status` e `admin_action`.
+- `doctor_upsert(p_payload jsonb)` e `facility_upsert(p_payload jsonb)` → `uuid`. Solo admin, payload a chiavi chiuse, validazione di enum, coordinate, orari e array; un medico `verified` deve avere albo e numero di iscrizione. Audit `doctor.upsert` e `facility.upsert`.
+- `toggle_favorite(p_target_type text, p_target_id uuid)` → `boolean`. Aggiunge o rimuove il preferito di `auth.uid()` e restituisce lo stato finale: `true` se adesso è tra i preferiti, `false` se è stato tolto.
+
+Funzioni interne (prefisso `m24_`, non destinate al client ma eseguibili da `authenticated` perché usate dalle precedenti): `m24_require_auth`, `m24_require_admin`, `m24_target_exists`, `m24_has_url`, `m24_valid_sub_ratings` e i lettori tipati `m24_jsonb_text`, `m24_jsonb_int`, `m24_jsonb_bool`, `m24_jsonb_text_array`.
+
+Il test `tests/0019_treatments_write_test.sql` dichiara `plan(26)` e si esegue solo sul progetto dev dal SQL Editor (Alice utente, Bob admin, Carla terza utente).
+
+## 0020 — Cure: seed dimostrativo
+
+La migrazione `20261109_090000_migration.sql` (registro `0020_treatments_seed`) aggiunge esclusivamente dati dimostrativi idempotenti con identificativi fissi: 10 strutture, 16 professionisti, 40 tag, 40 cure `published` (8 `featured`), 6 utenti Auth e 134 recensioni (120 `approved`, 10 `pending`, 4 `rejected`). Strutture, professionisti e cure hanno `is_demo = true`; i nomi dichiarano esplicitamente la natura demo e i contenuti italiani sono informativi, prudenti e privi di promesse di guarigione. Le immagini usano soltanto URL neutri `https://placehold.co/...`.
+
+La distribuzione delle cure e': 12 riabilitazione, 10 prevenzione/diagnostica con evidenza `linee_guida`, 8 benessere con evidenza `esperienziale` o `osservazionale`, 6 terapie tradizionali con `studi_clinici` e 4 percorsi sperimentali `osservazionale` con limiti espliciti. Ogni scheda ha cinque sezioni, 1-3 controindicazioni, prezzi, tempi, modalita', 1-2 media, medico e struttura. Il trigger della 0017 aggiorna i 40 riepiloghi di valutazione.
+
+La funzione interna `m24_seed_0020_treatments_demo()` e' revocata a `public`, `anon` e `authenticated` e serve soltanto a eseguire e verificare nuovamente lo stesso seed senza duplicazioni. Il test `tests/0020_treatments_seed_test.sql` dichiara `plan(35)` e si esegue solo sul progetto dev dal SQL Editor.
+
 ## Edge Functions
 
 From **Edge Functions**, deploy `document-ingest`, `extract`,

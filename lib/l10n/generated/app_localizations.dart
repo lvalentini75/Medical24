@@ -1127,7 +1127,7 @@ abstract class AppLocalizations {
   /// No description provided for @treatmentsEmptyBody.
   ///
   /// In it, this message translates to:
-  /// **'Il database delle cure arriva con il modulo dedicato.'**
+  /// **'Prova ad allargare i filtri o a cambiare la ricerca.'**
   String get treatmentsEmptyBody;
 
   /// No description provided for @doctorTitle.
@@ -5547,6 +5547,1122 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Confermare il cambio di stato della regola?'**
   String get adminRuleStatusConfirm;
+
+  /// No description provided for @treatmentsTitleLong.
+  ///
+  /// In it, this message translates to:
+  /// **'Cure e percorsi'**
+  String get treatmentsTitleLong;
+
+  /// No description provided for @treatmentsSubtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Trova percorsi, professionisti e strutture e confronta le opzioni.'**
+  String get treatmentsSubtitle;
+
+  /// No description provided for @treatmentsSearchHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca una cura o un percorso'**
+  String get treatmentsSearchHint;
+
+  /// No description provided for @treatmentsFilters.
+  ///
+  /// In it, this message translates to:
+  /// **'Filtri'**
+  String get treatmentsFilters;
+
+  /// No description provided for @treatmentsFiltersTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Filtri di ricerca'**
+  String get treatmentsFiltersTitle;
+
+  /// No description provided for @treatmentsScope.
+  ///
+  /// In it, this message translates to:
+  /// **'Ambito'**
+  String get treatmentsScope;
+
+  /// No description provided for @treatmentsCity.
+  ///
+  /// In it, this message translates to:
+  /// **'Località'**
+  String get treatmentsCity;
+
+  /// No description provided for @treatmentsModality.
+  ///
+  /// In it, this message translates to:
+  /// **'Modalità'**
+  String get treatmentsModality;
+
+  /// No description provided for @treatmentsDuration.
+  ///
+  /// In it, this message translates to:
+  /// **'Durata indicativa'**
+  String get treatmentsDuration;
+
+  /// No description provided for @treatmentsFamily.
+  ///
+  /// In it, this message translates to:
+  /// **'Famiglia'**
+  String get treatmentsFamily;
+
+  /// No description provided for @treatmentsEvidence.
+  ///
+  /// In it, this message translates to:
+  /// **'Livello di evidenza'**
+  String get treatmentsEvidence;
+
+  /// No description provided for @treatmentsMinRating.
+  ///
+  /// In it, this message translates to:
+  /// **'Valutazione minima'**
+  String get treatmentsMinRating;
+
+  /// No description provided for @treatmentsResetFilters.
+  ///
+  /// In it, this message translates to:
+  /// **'Azzera filtri'**
+  String get treatmentsResetFilters;
+
+  /// No description provided for @treatmentsAll.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutti'**
+  String get treatmentsAll;
+
+  /// No description provided for @treatmentsSort.
+  ///
+  /// In it, this message translates to:
+  /// **'Ordina per'**
+  String get treatmentsSort;
+
+  /// No description provided for @treatmentsCount.
+  ///
+  /// In it, this message translates to:
+  /// **'{count} percorsi'**
+  String treatmentsCount(Object count);
+
+  /// No description provided for @treatmentsEmptyTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna cura trovata'**
+  String get treatmentsEmptyTitle;
+
+  /// No description provided for @treatmentsLoadError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a caricare le cure.'**
+  String get treatmentsLoadError;
+
+  /// No description provided for @treatmentsDemo.
+  ///
+  /// In it, this message translates to:
+  /// **'Demo'**
+  String get treatmentsDemo;
+
+  /// No description provided for @treatmentsMinutes.
+  ///
+  /// In it, this message translates to:
+  /// **'{count} min'**
+  String treatmentsMinutes(Object count);
+
+  /// No description provided for @treatmentsFromPrice.
+  ///
+  /// In it, this message translates to:
+  /// **'da {price}'**
+  String treatmentsFromPrice(Object price);
+
+  /// No description provided for @treatmentsPriceOnRequest.
+  ///
+  /// In it, this message translates to:
+  /// **'Su richiesta'**
+  String get treatmentsPriceOnRequest;
+
+  /// No description provided for @treatmentsNoReviews.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna recensione'**
+  String get treatmentsNoReviews;
+
+  /// No description provided for @treatmentsPatientExperience.
+  ///
+  /// In it, this message translates to:
+  /// **'Esperienza dei pazienti ★ {rating} · {count} recensioni'**
+  String treatmentsPatientExperience(Object count, Object rating);
+
+  /// No description provided for @treatmentsEvidenceLink.
+  ///
+  /// In it, this message translates to:
+  /// **'Evidenze e limiti'**
+  String get treatmentsEvidenceLink;
+
+  /// No description provided for @treatmentsDetails.
+  ///
+  /// In it, this message translates to:
+  /// **'Vedi dettagli'**
+  String get treatmentsDetails;
+
+  /// No description provided for @treatmentsCompareLimit.
+  ///
+  /// In it, this message translates to:
+  /// **'Puoi confrontare fino a 4 cure.'**
+  String get treatmentsCompareLimit;
+
+  /// No description provided for @treatmentsYourCompare.
+  ///
+  /// In it, this message translates to:
+  /// **'Il tuo confronto'**
+  String get treatmentsYourCompare;
+
+  /// No description provided for @treatmentsCompareEmpty.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona fino a quattro cure.'**
+  String get treatmentsCompareEmpty;
+
+  /// No description provided for @treatmentsOpenCompare.
+  ///
+  /// In it, this message translates to:
+  /// **'Apri confronto completo'**
+  String get treatmentsOpenCompare;
+
+  /// No description provided for @treatmentsSelectedCompare.
+  ///
+  /// In it, this message translates to:
+  /// **'{count} selezionate · Confronta'**
+  String treatmentsSelectedCompare(Object count);
+
+  /// No description provided for @treatmentsCompareTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Confronto cure'**
+  String get treatmentsCompareTitle;
+
+  /// No description provided for @treatmentsCompareNeedTwo.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona da 2 a 4 cure.'**
+  String get treatmentsCompareNeedTwo;
+
+  /// No description provided for @treatmentsClearCompare.
+  ///
+  /// In it, this message translates to:
+  /// **'Svuota selezione'**
+  String get treatmentsClearCompare;
+
+  /// No description provided for @treatmentsFavorite.
+  ///
+  /// In it, this message translates to:
+  /// **'Preferito'**
+  String get treatmentsFavorite;
+
+  /// No description provided for @treatmentsFavoriteAdded.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiunto ai preferiti'**
+  String get treatmentsFavoriteAdded;
+
+  /// No description provided for @treatmentsFavoriteRemoved.
+  ///
+  /// In it, this message translates to:
+  /// **'Rimosso dai preferiti'**
+  String get treatmentsFavoriteRemoved;
+
+  /// No description provided for @treatmentsAddCompare.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi al confronto'**
+  String get treatmentsAddCompare;
+
+  /// No description provided for @treatmentsSessions.
+  ///
+  /// In it, this message translates to:
+  /// **'Sedute'**
+  String get treatmentsSessions;
+
+  /// No description provided for @treatmentsWeeks.
+  ///
+  /// In it, this message translates to:
+  /// **'Settimane'**
+  String get treatmentsWeeks;
+
+  /// No description provided for @treatmentsWaiting.
+  ///
+  /// In it, this message translates to:
+  /// **'Attesa'**
+  String get treatmentsWaiting;
+
+  /// No description provided for @treatmentsDays.
+  ///
+  /// In it, this message translates to:
+  /// **'giorni'**
+  String get treatmentsDays;
+
+  /// No description provided for @treatmentsCost.
+  ///
+  /// In it, this message translates to:
+  /// **'Costo'**
+  String get treatmentsCost;
+
+  /// No description provided for @treatmentsProfessional.
+  ///
+  /// In it, this message translates to:
+  /// **'Professionista'**
+  String get treatmentsProfessional;
+
+  /// No description provided for @treatmentsFacility.
+  ///
+  /// In it, this message translates to:
+  /// **'Struttura'**
+  String get treatmentsFacility;
+
+  /// No description provided for @treatmentsContraindications.
+  ///
+  /// In it, this message translates to:
+  /// **'Controindicazioni'**
+  String get treatmentsContraindications;
+
+  /// No description provided for @treatmentsRequirements.
+  ///
+  /// In it, this message translates to:
+  /// **'Requisiti'**
+  String get treatmentsRequirements;
+
+  /// No description provided for @treatmentsExpectedOutcome.
+  ///
+  /// In it, this message translates to:
+  /// **'Esito atteso'**
+  String get treatmentsExpectedOutcome;
+
+  /// No description provided for @treatmentsRatings.
+  ///
+  /// In it, this message translates to:
+  /// **'Valutazioni'**
+  String get treatmentsRatings;
+
+  /// No description provided for @treatmentsReviews.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensioni'**
+  String get treatmentsReviews;
+
+  /// No description provided for @treatmentsVerifiedReview.
+  ///
+  /// In it, this message translates to:
+  /// **'Esperienza verificata'**
+  String get treatmentsVerifiedReview;
+
+  /// No description provided for @treatmentsNotFound.
+  ///
+  /// In it, this message translates to:
+  /// **'Cura non disponibile'**
+  String get treatmentsNotFound;
+
+  /// No description provided for @treatmentsWriteReview.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi una recensione'**
+  String get treatmentsWriteReview;
+
+  /// No description provided for @treatmentsReviewTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Titolo'**
+  String get treatmentsReviewTitle;
+
+  /// No description provided for @treatmentsReviewBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Racconta la tua esperienza'**
+  String get treatmentsReviewBody;
+
+  /// No description provided for @treatmentsReviewCounter.
+  ///
+  /// In it, this message translates to:
+  /// **'{count}/2000 · minimo 20 caratteri'**
+  String treatmentsReviewCounter(Object count);
+
+  /// No description provided for @treatmentsSubmitReview.
+  ///
+  /// In it, this message translates to:
+  /// **'Invia recensione'**
+  String get treatmentsSubmitReview;
+
+  /// No description provided for @treatmentsReviewThanks.
+  ///
+  /// In it, this message translates to:
+  /// **'Grazie, la recensione sarà pubblicata dopo la moderazione'**
+  String get treatmentsReviewThanks;
+
+  /// No description provided for @treatmentsReviewStatus.
+  ///
+  /// In it, this message translates to:
+  /// **'La tua recensione è {status}'**
+  String treatmentsReviewStatus(Object status);
+
+  /// No description provided for @treatmentsWithdrawReview.
+  ///
+  /// In it, this message translates to:
+  /// **'Ritira'**
+  String get treatmentsWithdrawReview;
+
+  /// No description provided for @treatmentsReviewError_review_exists.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai già inviato una recensione.'**
+  String get treatmentsReviewError_review_exists;
+
+  /// No description provided for @treatmentsReviewError_url_not_allowed.
+  ///
+  /// In it, this message translates to:
+  /// **'Non inserire link nella recensione.'**
+  String get treatmentsReviewError_url_not_allowed;
+
+  /// No description provided for @treatmentsReviewError_forbidden_content.
+  ///
+  /// In it, this message translates to:
+  /// **'Il testo contiene contenuti non consentiti.'**
+  String get treatmentsReviewError_forbidden_content;
+
+  /// No description provided for @treatmentsReviewError_daily_limit_reached.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai raggiunto il limite giornaliero.'**
+  String get treatmentsReviewError_daily_limit_reached;
+
+  /// No description provided for @treatmentsReviewError_target_not_found.
+  ///
+  /// In it, this message translates to:
+  /// **'Questa cura non è più disponibile.'**
+  String get treatmentsReviewError_target_not_found;
+
+  /// No description provided for @treatmentsReviewError_unknown.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a inviare la recensione.'**
+  String get treatmentsReviewError_unknown;
+
+  /// No description provided for @treatmentsRelativeNow.
+  ///
+  /// In it, this message translates to:
+  /// **'Adesso'**
+  String get treatmentsRelativeNow;
+
+  /// No description provided for @treatmentsRelativeMinutes.
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, =1{1 minuto fa} other{{count} minuti fa}}'**
+  String treatmentsRelativeMinutes(int count);
+
+  /// No description provided for @treatmentsRelativeHours.
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, =1{1 ora fa} other{{count} ore fa}}'**
+  String treatmentsRelativeHours(int count);
+
+  /// No description provided for @treatmentsRelativeDays.
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, =1{1 giorno fa} other{{count} giorni fa}}'**
+  String treatmentsRelativeDays(int count);
+
+  /// No description provided for @treatmentsFavorites.
+  ///
+  /// In it, this message translates to:
+  /// **'Cure preferite'**
+  String get treatmentsFavorites;
+
+  /// No description provided for @treatmentsFavoritesEmpty.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna cura preferita'**
+  String get treatmentsFavoritesEmpty;
+
+  /// No description provided for @treatmentsFavoritesEmptyBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi ai preferiti le cure che vuoi ritrovare.'**
+  String get treatmentsFavoritesEmptyBody;
+
+  /// No description provided for @treatmentsRemoveFavorite.
+  ///
+  /// In it, this message translates to:
+  /// **'Rimuovi dai preferiti'**
+  String get treatmentsRemoveFavorite;
+
+  /// No description provided for @treatmentsFeatured.
+  ///
+  /// In it, this message translates to:
+  /// **'Cure in evidenza'**
+  String get treatmentsFeatured;
+
+  /// No description provided for @treatmentsSeeAll.
+  ///
+  /// In it, this message translates to:
+  /// **'Vedi tutte'**
+  String get treatmentsSeeAll;
+
+  /// No description provided for @treatmentsSection_per_chi.
+  ///
+  /// In it, this message translates to:
+  /// **'Per chi'**
+  String get treatmentsSection_per_chi;
+
+  /// No description provided for @treatmentsSection_come_funziona.
+  ///
+  /// In it, this message translates to:
+  /// **'Come funziona'**
+  String get treatmentsSection_come_funziona;
+
+  /// No description provided for @treatmentsSection_durata.
+  ///
+  /// In it, this message translates to:
+  /// **'Durata'**
+  String get treatmentsSection_durata;
+
+  /// No description provided for @treatmentsSection_rischi_e_controindicazioni.
+  ///
+  /// In it, this message translates to:
+  /// **'Rischi e controindicazioni'**
+  String get treatmentsSection_rischi_e_controindicazioni;
+
+  /// No description provided for @treatmentsSection_evidenze_e_limiti.
+  ///
+  /// In it, this message translates to:
+  /// **'Evidenze e limiti'**
+  String get treatmentsSection_evidenze_e_limiti;
+
+  /// No description provided for @adminContents.
+  ///
+  /// In it, this message translates to:
+  /// **'Contenuti'**
+  String get adminContents;
+
+  /// No description provided for @adminTreatments.
+  ///
+  /// In it, this message translates to:
+  /// **'Cure'**
+  String get adminTreatments;
+
+  /// No description provided for @adminProviders.
+  ///
+  /// In it, this message translates to:
+  /// **'Professionisti e strutture'**
+  String get adminProviders;
+
+  /// No description provided for @adminReviews.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensioni'**
+  String get adminReviews;
+
+  /// No description provided for @adminPendingReviews.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensioni in attesa'**
+  String get adminPendingReviews;
+
+  /// No description provided for @adminNewTreatment.
+  ///
+  /// In it, this message translates to:
+  /// **'Nuova cura'**
+  String get adminNewTreatment;
+
+  /// No description provided for @adminEditTreatment.
+  ///
+  /// In it, this message translates to:
+  /// **'Modifica cura'**
+  String get adminEditTreatment;
+
+  /// No description provided for @adminSearchTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca per titolo'**
+  String get adminSearchTitle;
+
+  /// No description provided for @adminScope.
+  ///
+  /// In it, this message translates to:
+  /// **'Ambito'**
+  String get adminScope;
+
+  /// No description provided for @adminFamily.
+  ///
+  /// In it, this message translates to:
+  /// **'Famiglia'**
+  String get adminFamily;
+
+  /// No description provided for @adminFeatured.
+  ///
+  /// In it, this message translates to:
+  /// **'In evidenza'**
+  String get adminFeatured;
+
+  /// No description provided for @adminDemo.
+  ///
+  /// In it, this message translates to:
+  /// **'Demo'**
+  String get adminDemo;
+
+  /// No description provided for @adminDemoOnly.
+  ///
+  /// In it, this message translates to:
+  /// **'Solo demo'**
+  String get adminDemoOnly;
+
+  /// No description provided for @adminFeaturedOnly.
+  ///
+  /// In it, this message translates to:
+  /// **'Solo in evidenza'**
+  String get adminFeaturedOnly;
+
+  /// No description provided for @adminTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Titolo'**
+  String get adminTitle;
+
+  /// No description provided for @adminProfessional.
+  ///
+  /// In it, this message translates to:
+  /// **'Professionista'**
+  String get adminProfessional;
+
+  /// No description provided for @adminFacility.
+  ///
+  /// In it, this message translates to:
+  /// **'Struttura'**
+  String get adminFacility;
+
+  /// No description provided for @adminRating.
+  ///
+  /// In it, this message translates to:
+  /// **'Valutazione'**
+  String get adminRating;
+
+  /// No description provided for @adminIdentity.
+  ///
+  /// In it, this message translates to:
+  /// **'Anagrafica'**
+  String get adminIdentity;
+
+  /// No description provided for @adminSummary.
+  ///
+  /// In it, this message translates to:
+  /// **'Sommario'**
+  String get adminSummary;
+
+  /// No description provided for @adminSummaryTooLong.
+  ///
+  /// In it, this message translates to:
+  /// **'Il sommario non può superare 240 caratteri.'**
+  String get adminSummaryTooLong;
+
+  /// No description provided for @adminCategory.
+  ///
+  /// In it, this message translates to:
+  /// **'Categoria'**
+  String get adminCategory;
+
+  /// No description provided for @adminEvidenceLevel.
+  ///
+  /// In it, this message translates to:
+  /// **'Livello di evidenza'**
+  String get adminEvidenceLevel;
+
+  /// No description provided for @adminModality.
+  ///
+  /// In it, this message translates to:
+  /// **'Modalità'**
+  String get adminModality;
+
+  /// No description provided for @adminEvidenceRequiredPublish.
+  ///
+  /// In it, this message translates to:
+  /// **'Obbligatoria per pubblicare'**
+  String get adminEvidenceRequiredPublish;
+
+  /// No description provided for @adminConditionsTags.
+  ///
+  /// In it, this message translates to:
+  /// **'Patologie e tag'**
+  String get adminConditionsTags;
+
+  /// No description provided for @adminConditions.
+  ///
+  /// In it, this message translates to:
+  /// **'Patologie'**
+  String get adminConditions;
+
+  /// No description provided for @adminCommaSeparated.
+  ///
+  /// In it, this message translates to:
+  /// **'Separate da virgola'**
+  String get adminCommaSeparated;
+
+  /// No description provided for @adminContraindications.
+  ///
+  /// In it, this message translates to:
+  /// **'Controindicazioni'**
+  String get adminContraindications;
+
+  /// No description provided for @adminContraindicationsHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Testo e severità bassa, media o alta'**
+  String get adminContraindicationsHint;
+
+  /// No description provided for @adminCostsTimes.
+  ///
+  /// In it, this message translates to:
+  /// **'Costi e tempi'**
+  String get adminCostsTimes;
+
+  /// No description provided for @adminPriceFrom.
+  ///
+  /// In it, this message translates to:
+  /// **'Prezzo da (€)'**
+  String get adminPriceFrom;
+
+  /// No description provided for @adminPriceTo.
+  ///
+  /// In it, this message translates to:
+  /// **'Prezzo a (€)'**
+  String get adminPriceTo;
+
+  /// No description provided for @adminPriceNotes.
+  ///
+  /// In it, this message translates to:
+  /// **'Note sul prezzo'**
+  String get adminPriceNotes;
+
+  /// No description provided for @adminSsn.
+  ///
+  /// In it, this message translates to:
+  /// **'SSN'**
+  String get adminSsn;
+
+  /// No description provided for @adminMinutes.
+  ///
+  /// In it, this message translates to:
+  /// **'Minuti'**
+  String get adminMinutes;
+
+  /// No description provided for @adminSessions.
+  ///
+  /// In it, this message translates to:
+  /// **'Sedute'**
+  String get adminSessions;
+
+  /// No description provided for @adminWeeks.
+  ///
+  /// In it, this message translates to:
+  /// **'Settimane'**
+  String get adminWeeks;
+
+  /// No description provided for @adminWaitingDays.
+  ///
+  /// In it, this message translates to:
+  /// **'Attesa (giorni)'**
+  String get adminWaitingDays;
+
+  /// No description provided for @adminRequirementsOutcome.
+  ///
+  /// In it, this message translates to:
+  /// **'Requisiti ed esito atteso'**
+  String get adminRequirementsOutcome;
+
+  /// No description provided for @adminRequirements.
+  ///
+  /// In it, this message translates to:
+  /// **'Requisiti'**
+  String get adminRequirements;
+
+  /// No description provided for @adminExpectedOutcome.
+  ///
+  /// In it, this message translates to:
+  /// **'Esito atteso'**
+  String get adminExpectedOutcome;
+
+  /// No description provided for @adminMedia.
+  ///
+  /// In it, this message translates to:
+  /// **'Media'**
+  String get adminMedia;
+
+  /// No description provided for @adminMediaHint.
+  ///
+  /// In it, this message translates to:
+  /// **'URL, tipo immagine/video e didascalia'**
+  String get adminMediaHint;
+
+  /// No description provided for @adminProfessionalFacility.
+  ///
+  /// In it, this message translates to:
+  /// **'Professionista e struttura'**
+  String get adminProfessionalFacility;
+
+  /// No description provided for @adminJsonListError.
+  ///
+  /// In it, this message translates to:
+  /// **'Il JSON deve essere un elenco.'**
+  String get adminJsonListError;
+
+  /// No description provided for @adminInvalidPriceRange.
+  ///
+  /// In it, this message translates to:
+  /// **'Il prezzo iniziale non può superare quello finale.'**
+  String get adminInvalidPriceRange;
+
+  /// No description provided for @adminMarkVerified.
+  ///
+  /// In it, this message translates to:
+  /// **'Segna verificata'**
+  String get adminMarkVerified;
+
+  /// No description provided for @adminPublish.
+  ///
+  /// In it, this message translates to:
+  /// **'Pubblica'**
+  String get adminPublish;
+
+  /// No description provided for @adminWithdraw.
+  ///
+  /// In it, this message translates to:
+  /// **'Ritira'**
+  String get adminWithdraw;
+
+  /// No description provided for @adminReturnToReview.
+  ///
+  /// In it, this message translates to:
+  /// **'Riporta in revisione'**
+  String get adminReturnToReview;
+
+  /// No description provided for @adminVerified.
+  ///
+  /// In it, this message translates to:
+  /// **'Verificata'**
+  String get adminVerified;
+
+  /// No description provided for @adminPublished.
+  ///
+  /// In it, this message translates to:
+  /// **'Pubblicata'**
+  String get adminPublished;
+
+  /// No description provided for @adminApproved.
+  ///
+  /// In it, this message translates to:
+  /// **'Approvata'**
+  String get adminApproved;
+
+  /// No description provided for @adminRejected.
+  ///
+  /// In it, this message translates to:
+  /// **'Rifiutata'**
+  String get adminRejected;
+
+  /// No description provided for @adminPublishedAt.
+  ///
+  /// In it, this message translates to:
+  /// **'Pubblicata il'**
+  String get adminPublishedAt;
+
+  /// No description provided for @adminConfirmStatus.
+  ///
+  /// In it, this message translates to:
+  /// **'Confermare il cambio di stato?'**
+  String get adminConfirmStatus;
+
+  /// No description provided for @adminConfirmStatusBody.
+  ///
+  /// In it, this message translates to:
+  /// **'La modifica sarà immediatamente visibile secondo le regole di pubblicazione.'**
+  String get adminConfirmStatusBody;
+
+  /// No description provided for @adminPublishRequiresProvider.
+  ///
+  /// In it, this message translates to:
+  /// **'Per pubblicare seleziona un professionista o una struttura nella sezione Professionista e struttura.'**
+  String get adminPublishRequiresProvider;
+
+  /// No description provided for @adminPublishRequiresEvidence.
+  ///
+  /// In it, this message translates to:
+  /// **'Per pubblicare completa Evidenze e limiti nella sezione Contenuti.'**
+  String get adminPublishRequiresEvidence;
+
+  /// No description provided for @adminUnknownTag.
+  ///
+  /// In it, this message translates to:
+  /// **'Uno dei tag selezionati non esiste più.'**
+  String get adminUnknownTag;
+
+  /// No description provided for @adminInvalidSections.
+  ///
+  /// In it, this message translates to:
+  /// **'Controlla le cinque sezioni dei contenuti.'**
+  String get adminInvalidSections;
+
+  /// No description provided for @adminProfessionals.
+  ///
+  /// In it, this message translates to:
+  /// **'Professionisti'**
+  String get adminProfessionals;
+
+  /// No description provided for @adminFacilities.
+  ///
+  /// In it, this message translates to:
+  /// **'Strutture'**
+  String get adminFacilities;
+
+  /// No description provided for @adminNew.
+  ///
+  /// In it, this message translates to:
+  /// **'Nuovo'**
+  String get adminNew;
+
+  /// No description provided for @adminRole.
+  ///
+  /// In it, this message translates to:
+  /// **'Ruolo'**
+  String get adminRole;
+
+  /// No description provided for @adminSpecialties.
+  ///
+  /// In it, this message translates to:
+  /// **'Specialità'**
+  String get adminSpecialties;
+
+  /// No description provided for @adminVerifiedRequiresRegistry.
+  ///
+  /// In it, this message translates to:
+  /// **'Per verificare il professionista servono albo e numero di iscrizione.'**
+  String get adminVerifiedRequiresRegistry;
+
+  /// No description provided for @adminCity.
+  ///
+  /// In it, this message translates to:
+  /// **'Città'**
+  String get adminCity;
+
+  /// No description provided for @adminReviewModeration.
+  ///
+  /// In it, this message translates to:
+  /// **'Moderazione recensioni'**
+  String get adminReviewModeration;
+
+  /// No description provided for @adminTargetType.
+  ///
+  /// In it, this message translates to:
+  /// **'Tipo di bersaglio'**
+  String get adminTargetType;
+
+  /// No description provided for @adminDate.
+  ///
+  /// In it, this message translates to:
+  /// **'Data'**
+  String get adminDate;
+
+  /// No description provided for @adminAuthor.
+  ///
+  /// In it, this message translates to:
+  /// **'Autore'**
+  String get adminAuthor;
+
+  /// No description provided for @adminTarget.
+  ///
+  /// In it, this message translates to:
+  /// **'Bersaglio'**
+  String get adminTarget;
+
+  /// No description provided for @adminPreview.
+  ///
+  /// In it, this message translates to:
+  /// **'Anteprima'**
+  String get adminPreview;
+
+  /// No description provided for @adminReject.
+  ///
+  /// In it, this message translates to:
+  /// **'Rifiuta'**
+  String get adminReject;
+
+  /// No description provided for @adminModerationNote.
+  ///
+  /// In it, this message translates to:
+  /// **'Nota di moderazione'**
+  String get adminModerationNote;
+
+  /// No description provided for @adminRejectionNoteRequired.
+  ///
+  /// In it, this message translates to:
+  /// **'La nota è obbligatoria per il rifiuto.'**
+  String get adminRejectionNoteRequired;
+
+  /// No description provided for @adminContraindicationText.
+  ///
+  /// In it, this message translates to:
+  /// **'Testo'**
+  String get adminContraindicationText;
+
+  /// No description provided for @adminSeverity.
+  ///
+  /// In it, this message translates to:
+  /// **'Severità'**
+  String get adminSeverity;
+
+  /// No description provided for @adminRemoveRow.
+  ///
+  /// In it, this message translates to:
+  /// **'Rimuovi riga'**
+  String get adminRemoveRow;
+
+  /// No description provided for @adminMediaType.
+  ///
+  /// In it, this message translates to:
+  /// **'Tipo'**
+  String get adminMediaType;
+
+  /// No description provided for @adminUrl.
+  ///
+  /// In it, this message translates to:
+  /// **'URL'**
+  String get adminUrl;
+
+  /// No description provided for @adminCaption.
+  ///
+  /// In it, this message translates to:
+  /// **'Didascalia'**
+  String get adminCaption;
+
+  /// No description provided for @adminInvalidUrl.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserisci un URL http o https valido.'**
+  String get adminInvalidUrl;
+
+  /// No description provided for @adminSearchTags.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca tag'**
+  String get adminSearchTags;
+
+  /// No description provided for @adminDisplayName.
+  ///
+  /// In it, this message translates to:
+  /// **'Nome visualizzato'**
+  String get adminDisplayName;
+
+  /// No description provided for @adminLanguages.
+  ///
+  /// In it, this message translates to:
+  /// **'Lingue'**
+  String get adminLanguages;
+
+  /// No description provided for @adminRegistryBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Albo'**
+  String get adminRegistryBody;
+
+  /// No description provided for @adminRegistryNumber.
+  ///
+  /// In it, this message translates to:
+  /// **'Numero di iscrizione'**
+  String get adminRegistryNumber;
+
+  /// No description provided for @adminBio.
+  ///
+  /// In it, this message translates to:
+  /// **'Biografia'**
+  String get adminBio;
+
+  /// No description provided for @adminPhotoUrl.
+  ///
+  /// In it, this message translates to:
+  /// **'URL foto'**
+  String get adminPhotoUrl;
+
+  /// No description provided for @adminSsnAccredited.
+  ///
+  /// In it, this message translates to:
+  /// **'Accreditata SSN'**
+  String get adminSsnAccredited;
+
+  /// No description provided for @adminAddress.
+  ///
+  /// In it, this message translates to:
+  /// **'Indirizzo'**
+  String get adminAddress;
+
+  /// No description provided for @adminRegion.
+  ///
+  /// In it, this message translates to:
+  /// **'Regione'**
+  String get adminRegion;
+
+  /// No description provided for @adminCountry.
+  ///
+  /// In it, this message translates to:
+  /// **'Paese'**
+  String get adminCountry;
+
+  /// No description provided for @adminLatitude.
+  ///
+  /// In it, this message translates to:
+  /// **'Latitudine'**
+  String get adminLatitude;
+
+  /// No description provided for @adminLongitude.
+  ///
+  /// In it, this message translates to:
+  /// **'Longitudine'**
+  String get adminLongitude;
+
+  /// No description provided for @adminPhone.
+  ///
+  /// In it, this message translates to:
+  /// **'Telefono'**
+  String get adminPhone;
+
+  /// No description provided for @adminEmail.
+  ///
+  /// In it, this message translates to:
+  /// **'Email'**
+  String get adminEmail;
+
+  /// No description provided for @adminWebsite.
+  ///
+  /// In it, this message translates to:
+  /// **'Sito'**
+  String get adminWebsite;
+
+  /// No description provided for @adminServices.
+  ///
+  /// In it, this message translates to:
+  /// **'Servizi'**
+  String get adminServices;
+
+  /// No description provided for @adminOpeningHours.
+  ///
+  /// In it, this message translates to:
+  /// **'Orari'**
+  String get adminOpeningHours;
+
+  /// No description provided for @adminTimeRange.
+  ///
+  /// In it, this message translates to:
+  /// **'Fascia oraria'**
+  String get adminTimeRange;
+
+  /// No description provided for @adminInvalidNumber.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserisci un numero valido.'**
+  String get adminInvalidNumber;
 }
 
 class _AppLocalizationsDelegate

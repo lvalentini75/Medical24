@@ -16,8 +16,10 @@ String adminJson(dynamic value) => const JsonEncoder.withIndent('  ').convert(va
 String adminDate(BuildContext context, DateTime? date) => date == null ? '-' : DateFormat.yMd(Localizations.localeOf(context).toLanguageTag()).add_Hm().format(date.toLocal());
 
 class AdminOverviewContent extends StatelessWidget {
-  const AdminOverviewContent({super.key, required this.data});
+  const AdminOverviewContent({super.key, required this.data, this.pendingReviews = 0, this.onPendingReviews});
   final AdminOverviewData data;
+  final int pendingReviews;
+  final VoidCallback? onPendingReviews;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +32,10 @@ class AdminOverviewContent extends StatelessWidget {
       (M24Icons.confirm, context.l10n.adminExtractionsOk, '${extraction['ok'] ?? 0}'),
       (M24Icons.error, context.l10n.adminExtractionsFailed, '${extraction['failed'] ?? 0}'),
       (M24Icons.review, context.l10n.adminExtractionsReview, '${extraction['review'] ?? 0}'),
+      (M24Icons.review, context.l10n.adminPendingReviews, '$pendingReviews'),
     ];
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
-      GridView.count(shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), crossAxisCount: 4, childAspectRatio: 2.8, mainAxisSpacing: 12, crossAxisSpacing: 12, children: stats.map(((IconData, String, String) stat) => M24StatTile(icon: stat.$1, label: stat.$2, value: stat.$3)).toList()),
+      GridView.count(shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), crossAxisCount: 4, childAspectRatio: 2.8, mainAxisSpacing: 12, crossAxisSpacing: 12, children: stats.asMap().entries.map((entry) => InkWell(onTap: entry.key == stats.length - 1 ? onPendingReviews : null, child: M24StatTile(icon: entry.value.$1, label: entry.value.$2, value: entry.value.$3))).toList()),
       const SizedBox(height: 20),
       Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
         Expanded(child: AdminMapCard(title: context.l10n.adminCostToday, values: data.costToday, money: true)), const SizedBox(width: 16),

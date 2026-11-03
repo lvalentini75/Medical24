@@ -30,6 +30,9 @@ class AppRoutes {
   static String analysis(String id) => '/archive/document/$id/analysis';
   static String analysisReview(String id) => '/archive/document/$id/analysis/review';
   static const String treatments = '/treatments';
+  static String treatment(String id) => '/treatments/${Uri.encodeComponent(id)}';
+  static const String treatmentFavorites = '/treatments/favorites';
+  static String treatmentCompare(List<String> ids) => '/treatments/compare?ids=${Uri.encodeQueryComponent(ids.join(','))}';
   static const String doctor = '/doctor';
 
   static const String settings = '/settings';
@@ -44,6 +47,11 @@ class AppRoutes {
   static const String adminEvents = '/admin/events';
   static const String adminAudit = '/admin/audit';
   static const String adminRules = '/admin/rules';
+  static const String adminTreatments = '/admin/treatments';
+  static const String adminTreatmentNew = '/admin/treatments/new';
+  static String adminTreatmentEdit(String id) => '/admin/treatments/${Uri.encodeComponent(id)}';
+  static const String adminProviders = '/admin/providers';
+  static const String adminReviews = '/admin/reviews';
   static const String devKit = '/dev/kit';
 
   static const List<String> publicRoutes = <String>[
