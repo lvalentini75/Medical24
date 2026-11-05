@@ -14,6 +14,9 @@ import 'package:medical24/l10n/generated/localization_lookup.dart';
 import 'package:medical24/features/home/data/home_models.dart';
 import 'package:medical24/features/home/providers/home_providers.dart';
 import 'package:medical24/features/home/widgets/home_dashboard.dart';
+import 'package:medical24/features/family/widgets/subject_selector.dart';
+import 'package:medical24/features/family/data/family_repository.dart';
+import 'package:medical24/features/family/providers/family_providers.dart';
 
 /// Home reads the real profile from Supabase: no mock data.
 class HomeScreen extends ConsumerStatefulWidget {
@@ -37,6 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     final AsyncValue<UserProfile?> profile = ref.watch(myProfileProvider);
     final String language = Localizations.localeOf(context).languageCode;
     final AsyncValue<HomeSnapshot> snapshot = ref.watch(homeSnapshotProvider);
+    final FamilySubject? currentSubject = ref.watch(currentSubjectProvider).value;
 
     return profile.when(
       loading: () => const AppLoadingView(),
@@ -45,7 +49,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
         onRetry: () => ref.read(myProfileProvider.notifier).refreshProfile(),
       ),
       data: (UserProfile? data) {
-        final String? name = data?.firstName;
+        final String? name = currentSubject?.fullName.trim().split(RegExp(r'\s+')).firstOrNull ?? data?.firstName;
         final bool desktop = MediaQuery.sizeOf(context).width >= 1200;
         final int hour = DateTime.now().hour;
         final String greetingKey = desktop ? (hour < 12 ? 'homeGreetingMorning' : hour < 18 ? 'homeGreetingAfternoon' : 'homeGreetingEvening') : 'homeGreeting';
@@ -57,7 +61,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
           subtitle: desktop && updatedAt != null ? l10n.t('homeUpdatedAt', args: <String, String>{'date': DateFormat.yMMMd(Localizations.localeOf(context).toLanguageTag()).format(updatedAt)}) : l10n.t('homeHealthSpace'),
           action: M24Button(label: l10n.t(desktop ? 'homeUploadReport' : 'homeUpload'), icon: M24Icons.upload, onPressed: () => AddDocumentSheet.show(context)),
           showDisclaimer: false,
-          child: snapshot.when(loading: () => const AppLoadingView(), error: (Object error, StackTrace _) => AppErrorView(message: AppFailure.from(error, where: 'home_snapshot').localized(language), onRetry: () => ref.invalidate(homeSnapshotProvider)), data: (HomeSnapshot value) => RefreshIndicator(onRefresh: () async { ref.invalidate(homeSnapshotProvider); await ref.read(homeSnapshotProvider.future); }, child: HomeDashboard(snapshot: value))),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
+            if (!desktop) const Align(alignment: Alignment.centerLeft, child: SubjectSelectorChip()),
+            if (!desktop) const SizedBox(height: 12),
+            Expanded(child: snapshot.when(loading: () => const AppLoadingView(), error: (Object error, StackTrace _) => AppErrorView(message: AppFailure.from(error, where: 'home_snapshot').localized(language), onRetry: () => ref.invalidate(homeSnapshotProvider)), data: (HomeSnapshot value) => RefreshIndicator(onRefresh: () async { ref.invalidate(homeSnapshotProvider); await ref.read(homeSnapshotProvider.future); }, child: HomeDashboard(snapshot: value)))),
+          ]),
         );
       },
     );

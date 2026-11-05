@@ -623,10 +623,109 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsExportBody =>
-      'Ricevi profilo, consensi e registro degli accessi in formato leggibile.';
+      'Scarica un pacchetto con i dati e i file del tuo account.';
 
   @override
   String get settingsExportDone => 'Export pronto';
+
+  @override
+  String get settingsExportTitle => 'Esporta i miei dati';
+
+  @override
+  String get settingsExportExplanation =>
+      'Il pacchetto include profilo, consensi, documenti, valori, sintomi, dati di prevenzione, condivisioni e file originali disponibili. Resta disponibile per 7 giorni e puoi richiederne uno ogni 24 ore.';
+
+  @override
+  String get settingsExportRequest => 'Richiedi l\'export';
+
+  @override
+  String get settingsExportRefresh => 'Aggiorna';
+
+  @override
+  String get settingsExportDownload => 'Scarica';
+
+  @override
+  String get settingsExportWait =>
+      'Stiamo preparando il pacchetto. Può richiedere qualche decina di secondi.';
+
+  @override
+  String get settingsExportNoneTitle => 'Nessun export richiesto';
+
+  @override
+  String get settingsExportNoneBody =>
+      'Richiedi un pacchetto per scaricare una copia dei tuoi dati.';
+
+  @override
+  String get settingsExportPendingTitle => 'Export in corso';
+
+  @override
+  String get settingsExportPendingBody =>
+      'Il pacchetto è in preparazione. Aggiorna tra poco per controllare lo stato.';
+
+  @override
+  String get settingsExportReadyTitle => 'Export pronto';
+
+  @override
+  String settingsExportReadyDetails(String date, String bytes, int count) {
+    return 'Scade il $date · $bytes · $count file';
+  }
+
+  @override
+  String get settingsExportFailedTitle => 'Export non riuscito';
+
+  @override
+  String get settingsExportExpiredTitle => 'Export scaduto';
+
+  @override
+  String get settingsExportExpiredBody =>
+      'Il pacchetto non è più disponibile. Puoi richiederne uno nuovo.';
+
+  @override
+  String get settingsExportDateUnavailable => 'data non disponibile';
+
+  @override
+  String get settingsExportIncompleteTitle => 'Il pacchetto non è completo';
+
+  @override
+  String get settingsExportIncompleteBody =>
+      'Alcuni file non sono inclusi perché il pacchetto ha raggiunto il limite di dimensione.';
+
+  @override
+  String get settingsExportFailureBuild =>
+      'Non siamo riusciti a preparare il pacchetto. Riprova.';
+
+  @override
+  String get settingsExportFailureUpload =>
+      'Non siamo riusciti a salvare il pacchetto. Riprova.';
+
+  @override
+  String get settingsExportFailureFinalize =>
+      'Il pacchetto non è stato finalizzato. Riprova.';
+
+  @override
+  String get settingsExportFailureUnknown =>
+      'L\'export non è riuscito. Riprova.';
+
+  @override
+  String settingsExportErrorDaily(int hours) {
+    return 'Puoi chiedere un nuovo export tra circa $hours ore.';
+  }
+
+  @override
+  String get settingsExportErrorDailyGeneric =>
+      'Puoi richiedere un solo export ogni 24 ore.';
+
+  @override
+  String get settingsExportErrorForbidden =>
+      'Non hai il permesso di esportare questi dati.';
+
+  @override
+  String get settingsExportErrorServer =>
+      'Non siamo riusciti a completare la richiesta. Riprova.';
+
+  @override
+  String get settingsExportDownloadError =>
+      'Non siamo riusciti ad aprire il download. Aggiorna e riprova.';
 
   @override
   String get settingsConsents => 'Registro dei consensi';
@@ -646,10 +745,36 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsDeleteConfirmBody =>
-      'L\'accesso si chiude subito. I dati vengono rimossi definitivamente entro 30 giorni. L\'operazione non si annulla.';
+      'I file vengono eliminati subito; il resto dei dati viene rimosso dopo 30 giorni. L\'operazione non si annulla. I link condivisi e il QR di emergenza smettono di funzionare immediatamente.';
 
   @override
   String get settingsDeleteConfirmAction => 'Elimina definitivamente';
+
+  @override
+  String get settingsDeleteConfirmTypeWord => 'ELIMINA';
+
+  @override
+  String get settingsDeleteConfirmTypeLabel => 'Scrivi ELIMINA per confermare';
+
+  @override
+  String get settingsDeleteConfirmTypeHint => 'ELIMINA';
+
+  @override
+  String get settingsDeleteErrorConfirmation =>
+      'La conferma non è valida. Scrivi ELIMINA e riprova.';
+
+  @override
+  String get settingsDeleteErrorUnauthorized =>
+      'La sessione è scaduta. Accedi di nuovo e riprova.';
+
+  @override
+  String get settingsDeleteErrorServer =>
+      'Non siamo riusciti a eliminare l\'account. Riprova.';
+
+  @override
+  String settingsDeleteSuccess(String date) {
+    return 'Account eliminato: i dati residui saranno rimossi il $date.';
+  }
 
   @override
   String get settingsAppVersion => 'Versione app';
@@ -861,6 +986,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get archiveSourceFile => 'File o PDF';
+
+  @override
+  String get archiveChangeFile => 'Cambia file';
+
+  @override
+  String get archiveFileNotSelected => 'Nessun file selezionato.';
+
+  @override
+  String get archiveFileTooLarge =>
+      'Il file supera il limite di 25 MB. Scegli un file più piccolo.';
 
   @override
   String get archiveSourceShare => 'Condivisione';
@@ -3611,4 +3746,611 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get adminInvalidNumber => 'Inserisci un numero valido.';
+
+  @override
+  String get doctorSubtitle =>
+      'Prepara e condividi in sicurezza le informazioni utili alla visita.';
+
+  @override
+  String get doctorShareTitle => 'Condividi con il medico';
+
+  @override
+  String get doctorShareBody =>
+      'Crea un accesso protetto e temporaneo al tuo dossier.';
+
+  @override
+  String get doctorLinksTitle => 'I miei link';
+
+  @override
+  String get doctorLinksBody => 'Controlla accessi, scadenze e revoca i link.';
+
+  @override
+  String get doctorQuestionsTitle => 'Domande';
+
+  @override
+  String get doctorQuestionsBody =>
+      'Prepara le domande da portare alla visita.';
+
+  @override
+  String get doctorEmergencyTitle => 'Scheda di emergenza';
+
+  @override
+  String get doctorEmergencyBody => 'Tieni pronte le informazioni essenziali.';
+
+  @override
+  String get doctorComingNext =>
+      'Questa funzione arriva nel prossimo passaggio del modulo Medico.';
+
+  @override
+  String get doctorDossierTitle => 'Il mio dossier';
+
+  @override
+  String doctorShareStep(int current, int total) {
+    return 'Passo $current di $total';
+  }
+
+  @override
+  String get doctorShareReady => 'Link pronto';
+
+  @override
+  String get doctorShareWhat => 'Cosa condividere';
+
+  @override
+  String get doctorShareEverything => 'Tutto il dossier';
+
+  @override
+  String get doctorBodyAreas => 'Aree del corpo';
+
+  @override
+  String get doctorPeriod => 'Periodo';
+
+  @override
+  String get doctorFrom => 'Da';
+
+  @override
+  String get doctorTo => 'A';
+
+  @override
+  String get doctorDocumentCategories => 'Categorie di documenti';
+
+  @override
+  String get doctorShareProtect => 'Proteggi il link';
+
+  @override
+  String get doctorPinHelp =>
+      'Usa 4–6 cifre: non tutte uguali e non in sequenza crescente o decrescente.';
+
+  @override
+  String get doctorPin => 'PIN';
+
+  @override
+  String get doctorPinConfirm => 'Conferma PIN';
+
+  @override
+  String doctorExpiryDays(int days) {
+    return 'Scadenza: $days giorni';
+  }
+
+  @override
+  String doctorMaxOpens(int count) {
+    return 'Aperture massime: $count';
+  }
+
+  @override
+  String get doctorShareReview => 'Controlla e crea';
+
+  @override
+  String doctorShareSelection(int organs, int categories) {
+    return '$organs aree · $categories categorie';
+  }
+
+  @override
+  String doctorShareLimits(int days, int opens) {
+    return 'Scade tra $days giorni · massimo $opens aperture';
+  }
+
+  @override
+  String get doctorCreateLink => 'Crea link';
+
+  @override
+  String get doctorShareCode => 'Codice a sei cifre';
+
+  @override
+  String get doctorPinVoiceWarning =>
+      'Comunica il PIN a voce, non per messaggio.';
+
+  @override
+  String get doctorPublicAddress => 'Indirizzo pubblico';
+
+  @override
+  String get doctorCopy => 'Copia';
+
+  @override
+  String get doctorCopied => 'Copiato';
+
+  @override
+  String get doctorShareAction => 'Condividi';
+
+  @override
+  String get doctorGeneratePdf => 'Genera PDF';
+
+  @override
+  String get doctorDownloadPdf => 'Scarica PDF';
+
+  @override
+  String doctorOpensLeft(int count) {
+    return 'Aperture residue: $count';
+  }
+
+  @override
+  String get doctorPdfError => 'Non siamo riusciti a preparare il PDF.';
+
+  @override
+  String get doctorErrorWeakPin =>
+      'Scegli un PIN di 4–6 cifre, non tutte uguali e non in sequenza.';
+
+  @override
+  String get doctorErrorPinMismatch => 'I due PIN non coincidono.';
+
+  @override
+  String get doctorErrorTooManyLinks =>
+      'Hai già cinque link attivi. Revocane uno prima di crearne un altro.';
+
+  @override
+  String get doctorErrorInvalidScope =>
+      'Scegli almeno un\'area, un periodo o una categoria.';
+
+  @override
+  String get doctorErrorCreate =>
+      'Non siamo riusciti a creare il link. Riprova.';
+
+  @override
+  String get doctorStatusActive => 'Attivo';
+
+  @override
+  String get doctorStatusExpired => 'Scaduto';
+
+  @override
+  String get doctorStatusRevoked => 'Revocato';
+
+  @override
+  String get doctorStatusLocked => 'Bloccato';
+
+  @override
+  String get doctorStatusExhausted => 'Esaurito';
+
+  @override
+  String doctorLinkExpires(String date) {
+    return 'Scade il $date';
+  }
+
+  @override
+  String doctorLinkUsage(int used, int max) {
+    return '$used aperture su $max';
+  }
+
+  @override
+  String get doctorLastOpen => 'Ultima apertura';
+
+  @override
+  String get doctorRelativeNow => 'Adesso';
+
+  @override
+  String doctorRelativeMinutes(int count) {
+    return '$count min fa';
+  }
+
+  @override
+  String doctorRelativeHours(int count) {
+    return '$count ore fa';
+  }
+
+  @override
+  String doctorRelativeDays(int count) {
+    return '$count giorni fa';
+  }
+
+  @override
+  String get doctorLinksError => 'Non siamo riusciti a caricare i link.';
+
+  @override
+  String get doctorLinksEmpty => 'Nessun link';
+
+  @override
+  String get doctorLinksEmptyBody =>
+      'Crea un link protetto per condividere il dossier.';
+
+  @override
+  String get doctorLinkDetail => 'Dettaglio link';
+
+  @override
+  String get doctorLinkMissing => 'Questo link non è più disponibile.';
+
+  @override
+  String get doctorOpenLog => 'Registro delle aperture';
+
+  @override
+  String get doctorNoOpens => 'Nessuna apertura registrata.';
+
+  @override
+  String get doctorOutcomeOk => 'Aperto';
+
+  @override
+  String get doctorOutcomeWrongPin => 'PIN errato';
+
+  @override
+  String get doctorRevoke => 'Revoca';
+
+  @override
+  String get doctorRevokeConfirmTitle => 'Revocare questo link?';
+
+  @override
+  String get doctorRevokeConfirmBody => 'Il medico non potrà più aprirlo.';
+
+  @override
+  String get doctorRevokeError => 'Non siamo riusciti a revocare il link.';
+
+  @override
+  String get doctorDossierError => 'Non siamo riusciti a caricare il dossier.';
+
+  @override
+  String get doctorDossierEmpty => 'Nessun dossier';
+
+  @override
+  String get doctorDossierEmptyBody =>
+      'Genera una fotografia aggiornata e ordinata dei tuoi dati.';
+
+  @override
+  String get doctorDossierGenerate => 'Genera';
+
+  @override
+  String doctorDossierGenerated(String date) {
+    return 'Generato il $date';
+  }
+
+  @override
+  String get doctorHealthStatus => 'Stato di salute';
+
+  @override
+  String get doctorAreasToFollow => 'Aree da seguire';
+
+  @override
+  String get doctorRisks => 'Rischi';
+
+  @override
+  String get doctorOutOfRange => 'Valori fuori intervallo';
+
+  @override
+  String get doctorRecommendedExams => 'Esami consigliati';
+
+  @override
+  String get doctorDocuments => 'Documenti';
+
+  @override
+  String get doctorRuleVersions => 'Versioni delle regole';
+
+  @override
+  String get doctorDisclaimerTitle => 'Avvertenza';
+
+  @override
+  String get doctorDossierDisclaimer =>
+      'Le informazioni non sostituiscono il parere del medico.';
+
+  @override
+  String get doctorNoData => 'Nessun dato disponibile.';
+
+  @override
+  String doctorHealthCounts(int ok, int monitor, int attention) {
+    return '$ok nella norma · $monitor da monitorare · $attention in attenzione';
+  }
+
+  @override
+  String get doctorTrendUp => 'in aumento';
+
+  @override
+  String get doctorTrendDown => 'in diminuzione';
+
+  @override
+  String get doctorTrendStable => 'stabile';
+
+  @override
+  String get doctorTrendUnknown => 'tendenza non disponibile';
+
+  @override
+  String get doctorOrganHeart => 'Cuore e circolazione';
+
+  @override
+  String get doctorOrganLung => 'Polmoni e respiro';
+
+  @override
+  String get doctorOrganLiver => 'Fegato';
+
+  @override
+  String get doctorOrganKidney => 'Reni e vie urinarie';
+
+  @override
+  String get doctorOrganMetabolism => 'Metabolismo e pancreas';
+
+  @override
+  String get doctorOrganGut => 'Stomaco e intestino';
+
+  @override
+  String get doctorOrganBlood => 'Sangue';
+
+  @override
+  String get doctorOrganImmune => 'Difese e infiammazione';
+
+  @override
+  String get doctorOrganThyroid => 'Tiroide e ormoni';
+
+  @override
+  String get doctorOrganBrain => 'Cervello e nervi';
+
+  @override
+  String get doctorOrganMusculoskeletal => 'Ossa e muscoli';
+
+  @override
+  String get doctorOrganReproductive => 'Apparato riproduttivo';
+
+  @override
+  String get doctorOrganBreast => 'Seno';
+
+  @override
+  String get doctorOrganReproductiveFemale => 'Utero e ovaie';
+
+  @override
+  String get doctorOrganProstate => 'Prostata';
+
+  @override
+  String get doctorOrganReproductiveMale => 'Testicoli e ormoni';
+
+  @override
+  String get doctorQuestionsSubtitle =>
+      'Prepara, invia e conserva le risposte per la visita.';
+
+  @override
+  String get doctorQuestionNew => 'Nuova domanda';
+
+  @override
+  String get doctorQuestionFilterAll => 'Tutte';
+
+  @override
+  String get doctorQuestionStatusDraft => 'Bozza';
+
+  @override
+  String get doctorQuestionStatusSent => 'Inviata';
+
+  @override
+  String get doctorQuestionStatusAnswered => 'Risposta';
+
+  @override
+  String get doctorQuestionStatusClosed => 'Chiusa';
+
+  @override
+  String get doctorQuestionsError =>
+      'Non siamo riusciti a caricare le domande.';
+
+  @override
+  String get doctorQuestionsEmpty => 'Nessuna domanda';
+
+  @override
+  String get doctorQuestionsEmptyBody =>
+      'Scrivi una domanda da portare al medico.';
+
+  @override
+  String get doctorQuestionTitleLabel => 'Titolo';
+
+  @override
+  String get doctorQuestionBodyLabel => 'Domanda';
+
+  @override
+  String get doctorQuestionEmailLabel => 'Email del medico';
+
+  @override
+  String get doctorQuestionLinkLabel => 'Link allegato';
+
+  @override
+  String get doctorQuestionNoLink => 'Nessun link';
+
+  @override
+  String get doctorQuestionSaveDraft => 'Salva bozza';
+
+  @override
+  String get doctorQuestionRequired => 'Inserisci titolo e domanda.';
+
+  @override
+  String doctorCharacterCounter(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get doctorQuestionDetail => 'Dettaglio domanda';
+
+  @override
+  String get doctorQuestionMissing => 'Questa domanda non è più disponibile.';
+
+  @override
+  String doctorQuestionDoctorEmail(String email) {
+    return 'Medico: $email';
+  }
+
+  @override
+  String get doctorQuestionAnswerTitle => 'Risposta';
+
+  @override
+  String get doctorAnswerViaLink => 'Dal link del medico';
+
+  @override
+  String get doctorAnswerViaApp => 'Registrata da te';
+
+  @override
+  String get doctorQuestionEdit => 'Modifica';
+
+  @override
+  String get doctorQuestionSend => 'Invia';
+
+  @override
+  String get doctorQuestionDelete => 'Elimina';
+
+  @override
+  String get doctorQuestionRecordAnswer => 'Registra risposta';
+
+  @override
+  String get doctorQuestionClose => 'Chiudi';
+
+  @override
+  String get doctorQuestionAnswerLabel => 'Testo della risposta';
+
+  @override
+  String get doctorQuestionDeleteConfirm => 'Eliminare questa bozza?';
+
+  @override
+  String get doctorQuestionDeleteConfirmBody =>
+      'La domanda verrà eliminata definitivamente.';
+
+  @override
+  String get doctorQuestionErrorDailyLimit =>
+      'Hai raggiunto il limite giornaliero di domande.';
+
+  @override
+  String get doctorQuestionErrorNotEditable =>
+      'Questa domanda non è più modificabile.';
+
+  @override
+  String get doctorQuestionErrorNotSendable =>
+      'Questa domanda non può essere inviata.';
+
+  @override
+  String get doctorQuestionErrorNotAnswerable =>
+      'Non è possibile registrare una risposta per questa domanda.';
+
+  @override
+  String get doctorQuestionErrorInvalidLink =>
+      'Il link allegato non è più valido.';
+
+  @override
+  String get doctorQuestionErrorUnknown =>
+      'Non siamo riusciti a completare l\'operazione.';
+
+  @override
+  String get doctorEmergencySubtitle =>
+      'Informazioni essenziali da rendere disponibili a chi soccorre.';
+
+  @override
+  String get doctorEmergencyLoadError =>
+      'Non siamo riusciti a caricare la scheda di emergenza.';
+
+  @override
+  String get doctorEmergencyDetails => 'Dati della scheda';
+
+  @override
+  String get doctorEmergencyBloodGroup => 'Gruppo sanguigno';
+
+  @override
+  String get doctorEmergencyAllergies => 'Allergie';
+
+  @override
+  String get doctorEmergencyMedications => 'Farmaci';
+
+  @override
+  String get doctorEmergencyConditions => 'Patologie';
+
+  @override
+  String get doctorEmergencyContacts => 'Contatti';
+
+  @override
+  String get doctorEmergencyNotes => 'Note';
+
+  @override
+  String get doctorEmergencyVisible => 'Visibile a chi soccorre';
+
+  @override
+  String get doctorEmergencyAddItem => 'Aggiungi una voce';
+
+  @override
+  String get doctorEmergencyAddContact => 'Aggiungi contatto';
+
+  @override
+  String get doctorEmergencyRemoveContact => 'Rimuovi contatto';
+
+  @override
+  String get doctorEmergencyContactName => 'Nome';
+
+  @override
+  String get doctorEmergencyContactPhone => 'Telefono';
+
+  @override
+  String get doctorEmergencyContactRelation => 'Relazione';
+
+  @override
+  String get doctorEmergencyNoChanges => 'Non ci sono modifiche da salvare.';
+
+  @override
+  String get doctorEmergencySaved => 'Scheda salvata';
+
+  @override
+  String get doctorEmergencySaveError =>
+      'Non siamo riusciti a salvare la scheda.';
+
+  @override
+  String get doctorEmergencyErrorUnknownKey =>
+      'Uno dei campi non è riconosciuto.';
+
+  @override
+  String get doctorEmergencyErrorInvalidValue => 'Controlla i valori inseriti.';
+
+  @override
+  String get doctorEmergencyCodeTitle => 'Codice da mostrare';
+
+  @override
+  String get doctorEmergencyCodeAfterSave =>
+      'Salva la scheda per creare il codice QR.';
+
+  @override
+  String get doctorEmergencyRegenerate => 'Rigenera il codice';
+
+  @override
+  String get doctorEmergencyRegenerateConfirm => 'Rigenerare il codice?';
+
+  @override
+  String get doctorEmergencyRegenerateWarning =>
+      'Il vecchio QR smette di funzionare.';
+
+  @override
+  String get doctorEmergencyRegenerateError =>
+      'Non siamo riusciti a rigenerare il codice.';
+
+  @override
+  String get doctorEmergencyPreview => 'Come la vede chi soccorre';
+
+  @override
+  String get doctorEmergencyNameUnavailable => 'Nome non disponibile';
+
+  @override
+  String get doctorEmergencyPreviewEmpty =>
+      'Attiva almeno un campo con un valore per mostrarlo nell\'anteprima.';
+
+  @override
+  String get doctorBloodONegative => '0−';
+
+  @override
+  String get doctorBloodOPositive => '0+';
+
+  @override
+  String get doctorBloodANegative => 'A−';
+
+  @override
+  String get doctorBloodAPositive => 'A+';
+
+  @override
+  String get doctorBloodBNegative => 'B−';
+
+  @override
+  String get doctorBloodBPositive => 'B+';
+
+  @override
+  String get doctorBloodABNegative => 'AB−';
+
+  @override
+  String get doctorBloodABPositive => 'AB+';
 }

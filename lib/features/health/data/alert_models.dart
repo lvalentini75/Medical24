@@ -16,3 +16,11 @@ class HealthAlert {
 
   factory HealthAlert.fromJson(Map<String, dynamic> json) => HealthAlert(id: json['id'].toString(), type: HealthAlertType.values.firstWhere((HealthAlertType value) => value.name == json['type'], orElse: () => HealthAlertType.info), code: (json['code'] ?? '').toString(), level: (json['level'] ?? '').toString(), messageKey: (json['message_key'] ?? '').toString(), createdAt: DateTime.parse(json['created_at'].toString()).toLocal(), readAt: json['read_at'] == null ? null : DateTime.parse(json['read_at'].toString()).toLocal(), biomarkerNameIt: json['name_it']?.toString(), biomarkerNameEn: json['name_en']?.toString());
 }
+
+class SubjectHealthAlert {
+  const SubjectHealthAlert({required this.alert, required this.subjectId, required this.subjectName, required this.isSelf});
+  final HealthAlert alert;
+  final String subjectId;
+  final String subjectName;
+  final bool isSelf;
+}

@@ -34,10 +34,19 @@ class AppRoutes {
   static const String treatmentFavorites = '/treatments/favorites';
   static String treatmentCompare(List<String> ids) => '/treatments/compare?ids=${Uri.encodeQueryComponent(ids.join(','))}';
   static const String doctor = '/doctor';
+  static const String doctorShare = '/doctor/share';
+  static const String doctorLinks = '/doctor/links';
+  static String doctorLink(String id) => '/doctor/links/${Uri.encodeComponent(id)}';
+  static const String doctorDossier = '/doctor/dossier';
+  static const String doctorQuestions = '/doctor/questions';
+  static const String doctorQuestionNew = '/doctor/questions/new';
+  static String doctorQuestion(String id) => '/doctor/questions/${Uri.encodeComponent(id)}';
+  static const String doctorEmergency = '/doctor/emergency';
 
   static const String settings = '/settings';
   static const String settingsProfile = '/settings/profile';
   static const String settingsConsents = '/settings/consents';
+  static const String settingsFamily = '/settings/family';
   static const String admin = '/admin';
   static const String adminOverview = '/admin/overview';
   static const String adminAi = '/admin/ai';

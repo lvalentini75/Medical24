@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/data/auth_repository.dart';
 import '../../features/profile/data/profile_repository.dart';
@@ -76,6 +77,29 @@ class LocaleNotifier extends Notifier<Locale> {
 
 final NotifierProvider<LocaleNotifier, Locale> localeProvider =
     NotifierProvider<LocaleNotifier, Locale>(LocaleNotifier.new);
+
+/// Per-account accessibility preference used by the global app theme.
+class CaregiverModeNotifier extends AsyncNotifier<bool> {
+  static const String _key = 'caregiver_mode';
+
+  @override
+  Future<bool> build() async {
+    final String? userId = ref.watch(sessionProvider)?.user.id;
+    if (userId == null) return false;
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getBool('${_key}_$userId') ?? false;
+  }
+
+  Future<void> setEnabled(bool enabled) async {
+    final String? userId = ref.read(sessionProvider)?.user.id;
+    if (userId == null) return;
+    await (await SharedPreferences.getInstance()).setBool('${_key}_$userId', enabled);
+    state = AsyncValue<bool>.data(enabled);
+  }
+}
+
+final AsyncNotifierProvider<CaregiverModeNotifier, bool> caregiverModeProvider =
+    AsyncNotifierProvider<CaregiverModeNotifier, bool>(CaregiverModeNotifier.new);
 
 final NotifierProvider<AppLockController, AppLockState> appLockProvider =
     NotifierProvider<AppLockController, AppLockState>(AppLockController.new);

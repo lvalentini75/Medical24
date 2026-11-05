@@ -15,6 +15,7 @@ import 'package:medical24/features/health/providers/health_providers.dart';
 import 'package:medical24/features/health/widgets/biomarker_history.dart';
 import 'package:medical24/features/health/widgets/biomarker_list.dart';
 import 'package:medical24/features/health/widgets/health_navigation.dart';
+import 'package:medical24/features/family/providers/family_providers.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
 
 /// Adaptive health values screen: rich phone list and 4+5+3 desktop workspace.
@@ -30,8 +31,9 @@ class HealthValuesScreen extends ConsumerWidget {
     if (width >= 1200) return HealthDesktopValues(catalog: catalog, selectedCode: selectedCode);
     if (code != null) return Scaffold(appBar: M24DetailAppBar(title: context.l10n.t('analysisHistoryTitle'), parentTitle: context.l10n.t('healthValuesTitle'), backTooltip: context.l10n.t('commonBack'), onBack: () => context.canPop() ? context.pop() : context.go(AppRoutes.health)), body: Padding(padding: EdgeInsets.all(width >= 600 ? 24 : 16), child: BiomarkerHistory(code: code!)));
     final List<BiomarkerSummary> rows = catalog.value ?? const <BiomarkerSummary>[];
-    final VoidCallback export = () => exportHealthCsv(ref.read(healthRepositoryProvider), rows, locale: Localizations.localeOf(context).languageCode).catchError((_) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.l10n.healthExportError))));
-    return SectionPage(title: context.l10n.t('navMyHealth'), subtitle: _updatedLabel(context, rows), action: PopupMenuButton<String>(tooltip: context.l10n.healthExportCsv, icon: const Icon(LucideIcons.ellipsis), onSelected: (_) => export(), itemBuilder: (_) => <PopupMenuEntry<String>>[PopupMenuItem<String>(value: 'export', child: Text(context.l10n.healthExportCsv))]), showDisclaimer: width >= 600, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
+    final bool hasSubject = ref.watch(currentSubjectProvider).value != null;
+    final VoidCallback? export = !hasSubject ? null : () => exportHealthCsv(ref.read(healthRepositoryProvider), rows, locale: Localizations.localeOf(context).languageCode).catchError((_) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.l10n.healthExportError))));
+    return SectionPage(title: context.l10n.t('navMyHealth'), subtitle: _updatedLabel(context, rows), action: PopupMenuButton<String>(enabled: export != null, tooltip: context.l10n.healthExportCsv, icon: const Icon(LucideIcons.ellipsis), onSelected: (_) => export?.call(), itemBuilder: (_) => <PopupMenuEntry<String>>[PopupMenuItem<String>(value: 'export', child: Text(context.l10n.healthExportCsv))]), showDisclaimer: width >= 600, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
       const HealthSectionNavigation(selected: HealthSection.biomarkers),
       const SizedBox(height: 16),
       Expanded(child: BiomarkerList(selectedCode: null, showDisclaimer: width < 600)),
@@ -40,13 +42,13 @@ class HealthValuesScreen extends ConsumerWidget {
 }
 
 /// Desktop health workspace with catalog, history, and source details.
-class HealthDesktopValues extends StatelessWidget {
+class HealthDesktopValues extends ConsumerWidget {
   const HealthDesktopValues({super.key, required this.catalog, required this.selectedCode});
   final AsyncValue<List<BiomarkerSummary>> catalog;
   final String? selectedCode;
 
   @override
-  Widget build(BuildContext context) => SectionPage(title: context.l10n.t('navMyHealth'), subtitle: _updatedLabel(context, catalog.value ?? const <BiomarkerSummary>[]), showDisclaimer: true, action: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[M24Button(label: context.l10n.healthExportCsv, icon: LucideIcons.fileDown, onPressed: () => exportHealthCsv(const SupabaseHealthRepository(), catalog.value ?? const <BiomarkerSummary>[], locale: Localizations.localeOf(context).languageCode), variant: M24ButtonVariant.outline), const SizedBox(width: 8), M24Button(label: context.l10n.t('homeUploadReport'), icon: M24Icons.upload, onPressed: () => context.go(AppRoutes.archive), variant: M24ButtonVariant.primary)]), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
+  Widget build(BuildContext context, WidgetRef ref) => SectionPage(title: context.l10n.t('navMyHealth'), subtitle: _updatedLabel(context, catalog.value ?? const <BiomarkerSummary>[]), showDisclaimer: true, action: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[M24Button(label: context.l10n.healthExportCsv, icon: LucideIcons.fileDown, onPressed: () => exportHealthCsv(ref.read(healthRepositoryProvider), catalog.value ?? const <BiomarkerSummary>[], locale: Localizations.localeOf(context).languageCode), variant: M24ButtonVariant.outline), const SizedBox(width: 8), M24Button(label: context.l10n.t('homeUploadReport'), icon: M24Icons.upload, onPressed: () => context.go(AppRoutes.archive), variant: M24ButtonVariant.primary)]), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
     const HealthSectionNavigation(selected: HealthSection.biomarkers, desktop: true),
     const SizedBox(height: 20),
     Expanded(child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[

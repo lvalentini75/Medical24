@@ -10,6 +10,7 @@ import {
 const CONFIG: TaskConfig = {
   model: "claude-sonnet-5-5", fallback_model: "claude-haiku-5-5",
   max_output_tokens: 8000, paused: false, maintenance: false, per_user_daily_limit: null,
+  request_options: {},
   prompt: { version: "extract-values-test", system: "Return JSON only.",
     user_template: "<document>{{document}}</document>" },
 };

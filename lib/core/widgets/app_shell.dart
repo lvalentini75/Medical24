@@ -15,6 +15,7 @@ import 'package:medical24/core/widgets/app_add_action.dart';
 import 'package:medical24/core/widgets/app_breadcrumb.dart';
 import 'package:medical24/features/health/providers/health_providers.dart';
 import 'package:medical24/features/admin/providers/admin_providers.dart';
+import 'package:medical24/features/family/widgets/subject_selector.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
 
 class AppShellDestination {
@@ -100,6 +101,7 @@ class PhoneAppShell extends StatelessWidget {
     return Scaffold(
       body: SafeArea(child: Column(children: <Widget>[
         if (firstLevel) Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: M24AppHeader(initials: initials, hasUnreadAlerts: unreadAlerts > 0, bellTooltip: context.l10n.t('alertsTitle'), avatarTooltip: context.l10n.t('navProfile'), onBellPressed: onAlerts, onAvatarPressed: onProfile)),
+        const SubjectContextBanner(),
         Expanded(child: Padding(padding: const EdgeInsets.only(bottom: 20), child: child)),
       ])),
       floatingActionButton: const AppAddFloatingButton(),
@@ -117,7 +119,7 @@ class M24BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const List<int> phoneDestinationIndices = <int>[0, 1, 2, 3];
+    const List<int> phoneDestinationIndices = <int>[0, 1, 2, 3, 4];
     return BottomAppBar(
       height: 64 + MediaQuery.paddingOf(context).bottom,
       padding: EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom),
@@ -131,7 +133,7 @@ class M24BottomBar extends StatelessWidget {
         child: Row(children: <Widget>[
           for (final int index in phoneDestinationIndices.take(2)) Expanded(child: M24BottomBarItem(destination: kAppShellDestinations[index], selected: currentIndex == index, alertCount: index == 1 ? unreadAlerts : 0, onTap: () => onDestinationSelected(index))),
           const SizedBox(width: 72),
-          for (final int index in phoneDestinationIndices.skip(2)) Expanded(child: M24BottomBarItem(destination: kAppShellDestinations[index], selected: currentIndex == index, onTap: () => onDestinationSelected(index))),
+           for (final int index in phoneDestinationIndices.skip(2)) Expanded(child: M24BottomBarItem(destination: kAppShellDestinations[index], selected: currentIndex == index, onTap: () => onDestinationSelected(index))),
         ]),
       ),
     );
@@ -188,6 +190,7 @@ class TabletAppShell extends StatelessWidget {
         )),
         Expanded(child: Column(children: <Widget>[
           if (firstLevel) Padding(padding: const EdgeInsets.symmetric(horizontal: 24), child: M24AppHeader(initials: initials, hasUnreadAlerts: unreadAlerts > 0, bellTooltip: context.l10n.t('alertsTitle'), avatarTooltip: context.l10n.t('navProfile'), onBellPressed: onAlerts, onAvatarPressed: onProfile)),
+          const SubjectContextBanner(),
           Expanded(child: child),
         ])),
       ])),
@@ -219,6 +222,7 @@ class DesktopAppShell extends StatelessWidget {
       M24Sidebar(currentIndex: currentIndex, path: path, onDestinationSelected: onDestinationSelected),
         Expanded(child: Column(children: <Widget>[
         M24TopBar(unreadAlerts: unreadAlerts, initials: initials, onAlerts: onAlerts, onProfile: onProfile),
+        const SubjectContextBanner(),
         Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 32), child: child)),
       ])),
     ]))),
@@ -288,6 +292,8 @@ class M24TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(height: 64, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 32), child: Row(children: <Widget>[
     const Expanded(child: AppBreadcrumb()),
+    const SubjectSelectorChip(),
+    const SizedBox(width: 12),
     ShellNavigationIcon(icon: M24Icons.bell, count: unreadAlerts, child: M24IconButton(icon: M24Icons.bell, tooltip: context.l10n.t('alertsTitle'), onPressed: onAlerts)),
     const SizedBox(width: 8),
     Tooltip(message: context.l10n.t('navProfile'), child: M24Avatar(initials: initials, onPressed: onProfile)),

@@ -1,5 +1,6 @@
 import 'package:medical24/core/models/observation.dart';
 import 'package:medical24/features/health/data/alert_models.dart';
+import 'package:medical24/features/family/data/family_repository.dart';
 
 class HomeValue {
   const HomeValue({required this.code, required this.value, required this.unit, required this.effectiveAt, required this.flag, this.valueRaw, this.nameIt, this.nameEn});
@@ -46,4 +47,10 @@ class HomeSnapshot {
     final Map<String, dynamic>? latest = json['latest_document'] is Map ? Map<String, dynamic>.from(json['latest_document'] as Map) : null;
     return HomeSnapshot(values: (json['values'] as List? ?? const <dynamic>[]).whereType<Map>().map((Map row) => HomeValue.fromJson(Map<String, dynamic>.from(row))).toList(), unreadAlerts: (json['unread_alerts'] as List? ?? const <dynamic>[]).whereType<Map>().map((Map row) => HealthAlert.fromJson(Map<String, dynamic>.from(row))).toList(), documentsToReview: (json['documents_to_review'] as List? ?? const <dynamic>[]).whereType<Map>().map((Map row) => HomeDocument.fromJson(Map<String, dynamic>.from(row))).toList(), latestDocument: latest == null ? null : HomeDocument.fromJson(latest), counts: HomeCounts.fromJson(Map<String, dynamic>.from(json['counts'] as Map? ?? const <String, dynamic>{})));
   }
+}
+
+class FamilyHomeSnapshot {
+  const FamilyHomeSnapshot({required this.subject, required this.snapshot});
+  final FamilySubject subject;
+  final HomeSnapshot snapshot;
 }

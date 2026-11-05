@@ -11,13 +11,14 @@ abstract class AlertsRepository {
 }
 
 class SupabaseAlertsRepository implements AlertsRepository {
-  const SupabaseAlertsRepository();
+  const SupabaseAlertsRepository(this.subjectId);
+  final String? subjectId;
   SupabaseClient get _db => SupabaseConfig.client;
-  String get _uid => SupabaseConfig.currentUserId ?? (throw AppFailure.unauthorized);
+  String get _subject => subjectId ?? (throw AppFailure.unauthorized);
 
   @override
   Future<List<HealthAlert>> list() async {
-    final List<Map<String, dynamic>> alerts = await _db.from('alerts').select('id,type,code,level,message_key,created_at,read_at').eq('subject_id', _uid).order('created_at', ascending: false);
+    final List<Map<String, dynamic>> alerts = await _db.from('alerts').select('id,type,code,level,message_key,created_at,read_at').eq('subject_id', _subject).order('created_at', ascending: false);
     final List<String> codes = alerts.map((Map<String, dynamic> row) => row['code']?.toString() ?? '').where((String code) => code.isNotEmpty).toSet().toList();
     final Map<String, Map<String, dynamic>> names = <String, Map<String, dynamic>>{};
     if (codes.isNotEmpty) {
@@ -28,9 +29,9 @@ class SupabaseAlertsRepository implements AlertsRepository {
   }
 
   @override
-  Future<int> unreadCount() async => (await _db.from('alerts').select('id').eq('subject_id', _uid).isFilter('read_at', null)).length;
+  Future<int> unreadCount() async => (await _db.from('alerts').select('id').eq('subject_id', _subject).isFilter('read_at', null)).length;
   @override
-  Future<void> markRead(String id) => _db.from('alerts').update(<String, dynamic>{'read_at': DateTime.now().toUtc().toIso8601String()}).eq('id', id).eq('subject_id', _uid);
+  Future<void> markRead(String id) => _db.from('alerts').update(<String, dynamic>{'read_at': DateTime.now().toUtc().toIso8601String()}).eq('id', id).eq('subject_id', _subject);
   @override
-  Future<void> markAllRead() => _db.from('alerts').update(<String, dynamic>{'read_at': DateTime.now().toUtc().toIso8601String()}).eq('subject_id', _uid).isFilter('read_at', null);
+  Future<void> markAllRead() => _db.from('alerts').update(<String, dynamic>{'read_at': DateTime.now().toUtc().toIso8601String()}).eq('subject_id', _subject).isFilter('read_at', null);
 }

@@ -1,4 +1,3 @@
-import 'package:medical24/core/errors/app_failure.dart';
 import 'package:medical24/features/health/body/data/body_models.dart';
 import 'package:medical24/supabase/supabase_config.dart';
 
@@ -13,8 +12,9 @@ abstract class BodyRepository {
 }
 
 class SupabaseBodyRepository implements BodyRepository {
-  const SupabaseBodyRepository();
-  String get _subject => SupabaseConfig.currentUserId ?? (throw AppFailure.unauthorized);
+  const SupabaseBodyRepository(this.subjectId);
+  final String? subjectId;
+  String get _subject => subjectId ?? (throw StateError('subject_unavailable'));
   Future<dynamic> _organRpc(String name, String organ) => SupabaseConfig.rpc(name, params: <String, dynamic>{'p_subject': _subject, 'p_organ': organ});
   List<Map<String, dynamic>> _rows(dynamic data) => (data as List? ?? const <dynamic>[]).whereType<Map>().map((Map row) => Map<String, dynamic>.from(row)).toList(growable: false);
 

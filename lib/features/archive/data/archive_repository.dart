@@ -16,9 +16,10 @@ import 'temp_file.dart';
 /// this class, and no access filter is written here: RLS decides, through
 /// `can_access_subject(subject_id)`.
 class ArchiveRepository {
-  const ArchiveRepository({this.pipeline = const ImagePipeline()});
+  const ArchiveRepository({this.pipeline = const ImagePipeline(), this.subjectId});
 
   final ImagePipeline pipeline;
+  final String? subjectId;
 
   static const String bucket = 'documents';
   static const String _table = 'documents';
@@ -36,6 +37,39 @@ class ArchiveRepository {
   /// `subjects/{subject_id}/documents/{document_id}`
   static String storageFolder(String subjectId, String documentId) =>
       'subjects/$subjectId/documents/$documentId';
+
+  /// MIME declared to Storage for the supported picker extensions.
+  static String? mimeTypeForFileName(String name) {
+    final String extension = name.split('.').last.toLowerCase();
+    return const <String, String>{
+      'pdf': 'application/pdf',
+      'jpg': 'image/jpeg',
+      'jpeg': 'image/jpeg',
+      'png': 'image/png',
+      'heic': 'image/heic',
+    }[extension];
+  }
+
+  /// Detects the content first, using the name only as a compatibility fallback.
+  static String? mimeTypeForBytes(Uint8List bytes, String name) {
+    if (bytes.length >= 4 && bytes[0] == 0x25 && bytes[1] == 0x50 &&
+        bytes[2] == 0x44 && bytes[3] == 0x46) return 'application/pdf';
+    if (bytes.length >= 3 && bytes[0] == 0xFF && bytes[1] == 0xD8 &&
+        bytes[2] == 0xFF) return 'image/jpeg';
+    if (bytes.length >= 4 && bytes[0] == 0x89 && bytes[1] == 0x50 &&
+        bytes[2] == 0x4E && bytes[3] == 0x47) return 'image/png';
+    if (bytes.length >= 12 && String.fromCharCodes(bytes.sublist(4, 8)) == 'ftyp' &&
+        const <String>{'heic', 'heix', 'mif1'}.contains(
+            String.fromCharCodes(bytes.sublist(8, 12)).toLowerCase())) {
+      return 'image/heic';
+    }
+    return mimeTypeForFileName(name);
+  }
+
+  static String? extensionForBytes(Uint8List bytes, String name) {
+    final String? mime = mimeTypeForBytes(bytes, name);
+    return mime == null ? null : ImagePipeline.extensionForMime(mime);
+  }
 
   // -------------------------------------------------------------------------
   // Create / upload / finalize
@@ -93,20 +127,22 @@ class ArchiveRepository {
     }
   }
 
-  /// Uploads `original.{ext}` into the document folder.
+  /// Uploads the selected bytes as `original.{ext}` into the document folder.
   Future<String> uploadOriginal(
     MedicalDocument document, {
     required Uint8List bytes,
-    required String mimeType,
+    required String originalName,
   }) async {
     ImagePipeline.validate(bytes);
-    final String path =
-        '${document.storagePath}/original.${ImagePipeline.extensionForMime(mimeType)}';
+    final String? contentType = mimeTypeForBytes(bytes, originalName);
+    if (contentType == null) throw ArchiveFailures.unsupportedType;
+    final String extension = ImagePipeline.extensionForMime(contentType);
+    final String path = '${document.storagePath}/original.$extension';
     try {
       await _db.storage.from(bucket).uploadBinary(
             path,
             bytes,
-            fileOptions: FileOptions(contentType: mimeType, upsert: true),
+            fileOptions: FileOptions(contentType: contentType, upsert: true),
           );
       return path;
     } catch (e) {
@@ -193,6 +229,9 @@ class ArchiveRepository {
     DateTime? documentDate,
     List<String> tags = const <String>[],
   }) async {
+    final String? selectedMime = mimeTypeForBytes(bytes, originalName);
+    if (selectedMime == null) throw ArchiveFailures.unsupportedType;
+    ImagePipeline.validate(bytes);
     final PreparedDocument prepared =
         await pipeline.prepare(bytes, originalName: originalName);
 
@@ -203,13 +242,12 @@ class ArchiveRepository {
       category: category,
       documentDate: documentDate ?? prepared.suggestedDate,
       originalName: originalName,
-      mimeType: prepared.mimeType,
-      sizeBytes: prepared.sizeBytes,
+      mimeType: selectedMime,
+      sizeBytes: bytes.lengthInBytes,
       tags: tags,
     );
 
-    await uploadOriginal(document,
-        bytes: prepared.originalBytes, mimeType: prepared.mimeType);
+    await uploadOriginal(document, bytes: bytes, originalName: originalName);
     for (final PreparedPage page in prepared.pages) {
       await uploadPage(document, page);
     }
@@ -280,7 +318,7 @@ class ArchiveRepository {
     }
 
     await uploadOriginal(document,
-        bytes: original, mimeType: 'application/pdf');
+        bytes: original, originalName: 'original.pdf');
     onProgress?.call(total, total);
 
     final IngestResult result = await finalize(document.id);
@@ -300,15 +338,10 @@ class ArchiveRepository {
   /// from a client-side filter.
   Future<DocumentUsage> documentUsage() async {
     try {
-      final dynamic data = await SupabaseConfig.rpc('document_usage');
-      final Map<String, dynamic>? row = data is List
-          ? (data.isEmpty ? null : Map<String, dynamic>.from(data.first as Map))
-          : (data is Map ? Map<String, dynamic>.from(data) : null);
-      if (row == null) return const DocumentUsage(used: 0, max: 0);
-      return DocumentUsage(
-        used: (row['used'] as num?)?.toInt() ?? 0,
-        max: (row['max'] as num?)?.toInt() ?? 0,
-      );
+      final String subject = subjectId ?? (throw StateError('subject_unavailable'));
+      final List<Map<String, dynamic>> rows = await _db.from(_table).select('id').eq('subject_id', subject).isFilter('deleted_at', null);
+      final dynamic limit = await SupabaseConfig.rpc('document_limit', params: <String, dynamic>{'p_user_id': subject});
+      return DocumentUsage(used: rows.length, max: (limit as num?)?.toInt() ?? 0);
     } catch (e) {
       throw _mapError(e, 'archive.documentUsage');
     }

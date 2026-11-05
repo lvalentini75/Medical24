@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +11,8 @@ import 'package:medical24/core/errors/app_failure.dart';
 import 'package:medical24/core/models/medical_document.dart';
 import 'package:medical24/core/router/app_routes.dart';
 import 'package:medical24/features/archive/data/archive_repository.dart';
+import 'package:medical24/features/archive/data/file_open.dart';
+import 'package:medical24/features/archive/data/picked_raw_file.dart';
 import 'package:medical24/features/archive/data/image_pipeline.dart';
 import 'package:medical24/features/archive/providers/archive_providers.dart';
 import 'package:medical24/features/archive/widgets/archive_labels.dart';
@@ -28,6 +30,7 @@ class AddDocumentSheet extends ConsumerStatefulWidget {
     super.key,
     this.initialFiles = const <DroppedFile>[],
     this.initialPages = const <Uint8List>[],
+    this.pickFiles,
   });
 
   /// Files already chosen elsewhere, e.g. dropped on the archive list
@@ -36,6 +39,9 @@ class AddDocumentSheet extends ConsumerStatefulWidget {
 
   /// Shots already taken elsewhere; they enter the multi-page flow.
   final List<Uint8List> initialPages;
+
+  /// Overrides the system picker in widget tests.
+  final Future<PickedDocument?> Function()? pickFiles;
 
   static Future<String?> show(
     BuildContext context, {
@@ -55,6 +61,8 @@ class AddDocumentSheet extends ConsumerStatefulWidget {
 }
 
 class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
+  static const int _maxFileBytes = 25 * 1024 * 1024;
+
   final ImagePicker _picker = ImagePicker();
   final TextEditingController _title = TextEditingController();
   final TextEditingController _doctor = TextEditingController();
@@ -62,7 +70,7 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
   final TextEditingController _tags = TextEditingController();
   final TextEditingController _episode = TextEditingController();
   /// Whole files (PDF or single image): each one becomes its own document.
-  final List<_PickedDocument> _files = <_PickedDocument>[];
+  final List<PickedDocument> _files = <PickedDocument>[];
 
   /// Camera / gallery shots: together they become one multi-page document
   /// whose original is the PDF composed on the client.
@@ -74,14 +82,18 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
   int _total = 0;
 
   bool get _hasContent => _files.isNotEmpty || _pages.isNotEmpty;
+  bool get _hasOversizedContent =>
+      _files.any((PickedDocument file) => file.bytes.lengthInBytes > _maxFileBytes) ||
+      _pages.any((_PickedPage page) => page.bytes.lengthInBytes > _maxFileBytes);
 
   @override
   void initState() {
     super.initState();
     for (final DroppedFile file in widget.initialFiles) {
-      _files.add(_PickedDocument(
+      _files.add(PickedDocument(
         name: file.name,
         bytes: file.bytes,
+        size: file.bytes.lengthInBytes,
         source: file.isPdf ? DocumentSource.pdf : DocumentSource.gallery,
       ));
     }
@@ -109,40 +121,117 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
   }
 
   Future<void> _pickCamera() async {
-    final XFile? file = await _picker.pickImage(source: ImageSource.camera);
-    if (file != null) await _addPage(file);
+    try {
+      final XFile? file = await _picker.pickImage(source: ImageSource.camera);
+      if (file == null) {
+        _showSelectionMessage();
+        return;
+      }
+      await _addPage(file, ImageSource.camera);
+    } catch (error) {
+      if (mounted) _showError(error);
+    }
   }
 
   Future<void> _pickGallery() async {
-    final List<XFile> files = await _picker.pickMultiImage();
-    for (final XFile file in files) {
-      await _addPage(file);
+    try {
+      final List<XFile> files = await _picker.pickMultiImage();
+      if (files.isEmpty) {
+        _showSelectionMessage();
+        return;
+      }
+      for (final XFile file in files) {
+        await _addPage(file, ImageSource.gallery);
+      }
+    } catch (error) {
+      if (mounted) _showError(error);
     }
   }
 
   Future<void> _pickFiles() async {
-    final List<PlatformFile> result = await FilePicker.pickFiles();
-    for (final PlatformFile file in result) {
-      final Uint8List bytes = await file.xFile.readAsBytes();
-      _files.add(_PickedDocument(
-          name: file.name,
-          bytes: bytes,
-          source: file.extension?.toLowerCase() == 'pdf'
-              ? DocumentSource.pdf
-              : DocumentSource.gallery));
+    try {
+      final PickedDocument? file =
+          await (widget.pickFiles?.call() ?? _pickSystemFile());
+      if (file == null) {
+        _showSelectionMessage();
+        return;
+      }
+      final Uint8List bytes = file.bytes;
+      final String? mimeType = ArchiveRepository.mimeTypeForBytes(bytes, file.name);
+      if (mimeType == null) {
+        throw ArchiveFailures.unsupportedType;
+      }
+      if (bytes.lengthInBytes <= _maxFileBytes) ImagePipeline.validate(bytes);
+      if (!mounted) return;
+      setState(() {
+        _files
+          ..clear()
+          ..add(PickedDocument(
+            name: file.name,
+            bytes: bytes,
+            size: bytes.lengthInBytes,
+            source: mimeType == 'application/pdf'
+                ? DocumentSource.pdf
+                : DocumentSource.gallery));
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(_files.clear);
+      _showError(error);
     }
-    if (mounted) setState(() {});
   }
 
-  Future<void> _addPage(XFile file) async {
+  Future<PickedDocument?> _pickSystemFile() async {
+    final RawPickedFile? f = await openSingleFile(
+        allowedExtensions: const <String>['pdf', 'jpg', 'jpeg', 'png', 'heic']);
+    if (f == null) return null;
+    final Uint8List bytes = f.bytes;
+    if (bytes.isEmpty) throw ArchiveFailures.emptyFile;
+    return PickedDocument(name: f.name, bytes: bytes, size: bytes.lengthInBytes);
+  }
+
+  Future<void> _addPage(XFile file, ImageSource source, {int? replaceIndex}) async {
     final Uint8List bytes = await file.readAsBytes();
-    if (mounted) setState(() => _pages.add(_PickedPage(bytes: bytes)));
+    if (bytes.lengthInBytes <= _maxFileBytes) ImagePipeline.validate(bytes);
+    if (mounted) {
+      setState(() {
+        final _PickedPage page =
+            _PickedPage(name: file.name, bytes: bytes, source: source);
+        if (replaceIndex == null) {
+          _pages.add(page);
+        } else {
+          _pages[replaceIndex] = page;
+        }
+      });
+    }
+  }
+
+  Future<void> _changePage(int index) async {
+    try {
+      final ImageSource source = _pages[index].source;
+      final XFile? file = await _picker.pickImage(source: source);
+      if (file == null) {
+        _showSelectionMessage();
+        return;
+      }
+      await _addPage(file, source, replaceIndex: index);
+    } catch (error) {
+      if (mounted) _showError(error);
+    }
+  }
+
+  void _showSelectionMessage() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(context.l10n.archiveFileNotSelected)));
   }
 
   void _rotatePage(int index) {
     try {
       final Uint8List rotated = ImagePipeline.rotate(_pages[index].bytes);
-      setState(() => _pages[index] = _PickedPage(bytes: rotated));
+      setState(() => _pages[index] =
+          _PickedPage(name: _pages[index].name, bytes: rotated,
+              source: _pages[index].source));
     } catch (error) {
       _showError(error);
     }
@@ -152,7 +241,9 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
     final Uint8List? cropped =
         await PageCropDialog.show(context, _pages[index].bytes);
     if (cropped != null && mounted) {
-      setState(() => _pages[index] = _PickedPage(bytes: cropped));
+      setState(() => _pages[index] =
+          _PickedPage(name: _pages[index].name, bytes: cropped,
+              source: _pages[index].source));
     }
   }
 
@@ -179,7 +270,7 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
       .toList(growable: false);
 
   Future<void> _upload() async {
-    if (!_hasContent || _title.text.trim().isEmpty) return;
+    if (!_hasContent || _hasOversizedContent || _title.text.trim().isEmpty) return;
     setState(() {
       _uploading = true;
       _completed = 0;
@@ -211,7 +302,7 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
         }
       }
 
-      for (final _PickedDocument file in _files) {
+      for (final PickedDocument file in _files) {
         MedicalDocument document =
             await ref.read(archiveListProvider.notifier).upload(
                   bytes: file.bytes,
@@ -308,7 +399,7 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
                     style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 148,
+                  height: 190,
                   child: ReorderableListView.builder(
                     scrollDirection: Axis.horizontal,
                     buildDefaultDragHandles: false,
@@ -326,6 +417,7 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
                         onRotate: _uploading ? null : () => _rotatePage(index),
                         onCrop: _uploading ? null : () => _cropPage(index),
                         onDelete: _uploading ? null : () => setState(() => _pages.removeAt(index)),
+                        onChange: _uploading ? null : () => _changePage(index),
                       ),
                     ),
                   ),
@@ -339,7 +431,7 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
                 Text(context.l10n.t('archivePagesPreview'), style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 132,
+                  height: 190,
                   child: ReorderableListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: _files.length,
@@ -348,13 +440,19 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
                       setState(() => _files.insert(newIndex, _files.removeAt(oldIndex)));
                     },
                     itemBuilder: (BuildContext context, int index) => _PickedPreview(
-                      key: ValueKey<_PickedDocument>(_files[index]),
+                      key: ValueKey<PickedDocument>(_files[index]),
                       file: _files[index],
                       onRotate: () => _rotateFile(index),
                       onDelete: () => setState(() => _files.removeAt(index)),
+                      onChange: _uploading ? null : _pickFiles,
                     ),
                   ),
                 ),
+              ],
+              if (_hasOversizedContent) ...<Widget>[
+                const SizedBox(height: 12),
+                Text(context.l10n.t('archiveFileTooLarge'),
+                    style: TextStyle(color: Theme.of(context).colorScheme.error)),
               ],
               const SizedBox(height: 16),
               TextField(controller: _title, decoration: InputDecoration(labelText: context.l10n.t('archiveTitleField'), helperText: context.l10n.t('commonRequired'))),
@@ -397,7 +495,7 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
         ],
         Padding(
           padding: const EdgeInsets.all(16),
-          child: M24Button(label: context.l10n.t('archiveUploadAction'), icon: M24Icons.upload, size: M24ButtonSize.large, loading: _uploading, onPressed: _uploading || limitReached || !_hasContent || _title.text.trim().isEmpty ? null : _upload),
+          child: M24Button(label: context.l10n.t('archiveUploadAction'), icon: M24Icons.upload, size: M24ButtonSize.large, loading: _uploading, onPressed: _uploading || limitReached || !_hasContent || _hasOversizedContent || _title.text.trim().isEmpty ? null : _upload),
         ),
       ]),
     );
@@ -405,47 +503,66 @@ class _AddDocumentSheetState extends ConsumerState<AddDocumentSheet> {
 }
 
 class _PickedPreview extends StatelessWidget {
-  const _PickedPreview({super.key, required this.file, required this.onRotate, required this.onDelete});
+  const _PickedPreview({super.key, required this.file, required this.onRotate, required this.onDelete, required this.onChange});
 
-  final _PickedDocument file;
+  final PickedDocument file;
   final VoidCallback onRotate;
   final VoidCallback onDelete;
+  final VoidCallback? onChange;
 
   @override
   Widget build(BuildContext context) {
-    final bool pdf = file.name.toLowerCase().endsWith('.pdf');
+    final bool pdf = file.source == DocumentSource.pdf;
     return Card(
       margin: const EdgeInsets.only(right: 8),
       child: SizedBox(
-        width: 118,
+        width: 210,
         child: Column(children: <Widget>[
-          Expanded(child: pdf ? const Center(child: Icon(LucideIcons.fileText, size: 42)) : Image.memory(file.bytes, fit: BoxFit.cover, width: 118)),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
-            IconButton(tooltip: context.l10n.t('archiveRotatePage'), onPressed: pdf ? null : onRotate, icon: const Icon(LucideIcons.rotateCw, size: 20)),
-            IconButton(tooltip: context.l10n.t('archiveDeletePage'), onPressed: onDelete, icon: const Icon(LucideIcons.trash2, size: 20)),
+          Expanded(child: pdf ? const Center(child: Icon(LucideIcons.fileText, size: 42)) : Image.memory(file.bytes, fit: BoxFit.cover, width: 210)),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 0),
+            child: Text(file.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+          ),
+          Text(_formatBytes(file.bytes.lengthInBytes), style: Theme.of(context).textTheme.bodySmall),
+          const SizedBox(height: 2),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+            _CompactIconAction(tooltip: context.l10n.t('archiveRotatePage'), icon: LucideIcons.rotateCw, onPressed: pdf ? null : onRotate),
+            _CompactIconAction(tooltip: context.l10n.archiveChangeFile, icon: LucideIcons.refreshCw, onPressed: onChange),
+            _CompactIconAction(tooltip: context.l10n.t('archiveDeletePage'), icon: LucideIcons.trash2, onPressed: onDelete),
           ]),
+          const SizedBox(height: 4),
         ]),
       ),
     );
   }
 }
 
-class _PickedDocument {
-  const _PickedDocument({required this.name, required this.bytes, required this.source});
+class PickedDocument {
+  const PickedDocument({required this.bytes, required this.name, required this.size, this.source = DocumentSource.gallery});
 
   final String name;
   final Uint8List bytes;
+  final int size;
   final DocumentSource source;
 
-  _PickedDocument copyWith({Uint8List? bytes}) =>
-      _PickedDocument(name: name, bytes: bytes ?? this.bytes, source: source);
+  PickedDocument copyWith({Uint8List? bytes}) => PickedDocument(
+      name: name, bytes: bytes ?? this.bytes, size: (bytes ?? this.bytes).lengthInBytes, source: source);
+}
+
+/// Backwards-compatible test seam for callers using the former name.
+class ArchivePickedFile extends PickedDocument {
+  ArchivePickedFile({required String name, required Uint8List bytes})
+      : super(name: name, bytes: bytes, size: bytes.lengthInBytes);
 }
 
 /// One camera/gallery shot of the multi-page flow, before normalisation.
 class _PickedPage {
-  const _PickedPage({required this.bytes});
+  const _PickedPage({this.name = 'image.jpg', required this.bytes,
+      this.source = ImageSource.camera});
 
+  final String name;
   final Uint8List bytes;
+  final ImageSource source;
 }
 
 /// Thumbnail of a shot with rotate, crop and delete.
@@ -456,6 +573,7 @@ class _PagePreview extends StatelessWidget {
     required this.onRotate,
     required this.onCrop,
     required this.onDelete,
+    required this.onChange,
   });
 
   final _PickedPage page;
@@ -463,12 +581,13 @@ class _PagePreview extends StatelessWidget {
   final VoidCallback? onRotate;
   final VoidCallback? onCrop;
   final VoidCallback? onDelete;
+  final VoidCallback? onChange;
 
   @override
   Widget build(BuildContext context) => Card(
         margin: const EdgeInsets.only(right: 8),
         child: SizedBox(
-          width: 126,
+          width: 152,
           child: Column(children: <Widget>[
             Expanded(
               child: Stack(fit: StackFit.expand, children: <Widget>[
@@ -485,23 +604,58 @@ class _PagePreview extends StatelessWidget {
                 ),
               ]),
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
-              IconButton(
+            Text(page.name, maxLines: 1, overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodySmall),
+            Text(_formatBytes(page.bytes.lengthInBytes),
+                style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 2),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+              _CompactIconAction(
                   tooltip: context.l10n.t('archiveRotatePage'),
-                  onPressed: onRotate,
-                  icon: const Icon(LucideIcons.rotateCw, size: 19)),
-              IconButton(
+                  icon: LucideIcons.rotateCw,
+                  onPressed: onRotate),
+              _CompactIconAction(
                   tooltip: context.l10n.t('archiveCropPage'),
-                  onPressed: onCrop,
-                  icon: const Icon(LucideIcons.crop, size: 19)),
-              IconButton(
+                  icon: LucideIcons.crop,
+                  onPressed: onCrop),
+              _CompactIconAction(
+                  tooltip: context.l10n.archiveChangeFile,
+                  icon: LucideIcons.refreshCw,
+                  onPressed: onChange),
+              _CompactIconAction(
                   tooltip: context.l10n.t('archiveDeletePage'),
-                  onPressed: onDelete,
-                  icon: const Icon(LucideIcons.trash2, size: 19)),
+                  icon: LucideIcons.trash2,
+                  onPressed: onDelete),
             ]),
+            const SizedBox(height: 4),
           ]),
         ),
       );
+}
+
+/// Small square icon action used in the compact page/file preview cards.
+class _CompactIconAction extends StatelessWidget {
+  const _CompactIconAction({required this.tooltip, required this.icon, required this.onPressed});
+
+  final String tooltip;
+  final IconData icon;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        tooltip: tooltip,
+        onPressed: onPressed,
+        icon: Icon(icon, size: 18),
+        visualDensity: VisualDensity.compact,
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints.tightFor(width: 32, height: 32),
+      );
+}
+
+String _formatBytes(int bytes) {
+  if (bytes >= 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+  if (bytes >= 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+  return '$bytes B';
 }
 
 /// File handed to the sheet from outside, e.g. dropped on the archive list.
@@ -513,3 +667,5 @@ class DroppedFile {
 
   bool get isPdf => name.toLowerCase().endsWith('.pdf');
 }
+
+/// Byte-only result used by the system picker and by widget tests.

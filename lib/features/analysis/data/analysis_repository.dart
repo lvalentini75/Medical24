@@ -19,12 +19,6 @@ class AnalysisRepository {
 
   SupabaseClient get _db => SupabaseConfig.client;
 
-  String get _uid {
-    final String? uid = SupabaseConfig.currentUserId;
-    if (uid == null) throw AppFailure.unauthorized;
-    return uid;
-  }
-
   // -------------------------------------------------------------------------
   // Extractions
   // -------------------------------------------------------------------------
@@ -135,12 +129,11 @@ class AnalysisRepository {
           rows.isEmpty ? null : Extraction.fromJson(rows.first));
 
   /// Realtime state of every extraction of the subject, newest first.
-  Stream<List<Extraction>> watchSubjectExtractions({String? subjectId}) {
-    final String subject = subjectId ?? _uid;
+  Stream<List<Extraction>> watchSubjectExtractions({required String subjectId}) {
     return _db
         .from(_extractions)
         .stream(primaryKey: <String>['id'])
-        .eq('subject_id', subject)
+        .eq('subject_id', subjectId)
         .order('created_at', ascending: false)
         .limit(50)
         .map((List<Map<String, dynamic>> rows) => rows
@@ -175,17 +168,16 @@ class AnalysisRepository {
   /// M4 draws. Superseded rows are excluded but never deleted.
   Future<List<Observation>> historyForCode(
     String code, {
-    String? subjectId,
+    required String subjectId,
     DateTime? from,
     DateTime? to,
     int limit = 500,
   }) async {
-    final String subject = subjectId ?? _uid;
     try {
       PostgrestFilterBuilder<List<Map<String, dynamic>>> query = _db
           .from(_observations)
           .select()
-          .eq('subject_id', subject)
+          .eq('subject_id', subjectId)
           .eq('code', code)
           .isFilter('superseded_at', null);
       if (from != null) {
@@ -206,16 +198,15 @@ class AnalysisRepository {
 
   /// Values waiting for the user confirmation (step 5 of the pipeline).
   Future<List<Observation>> pendingReview({
-    String? subjectId,
+    required String subjectId,
     String? documentId,
     int limit = 100,
   }) async {
-    final String subject = subjectId ?? _uid;
     try {
       PostgrestFilterBuilder<List<Map<String, dynamic>>> query = _db
           .from(_observations)
           .select()
-          .eq('subject_id', subject)
+          .eq('subject_id', subjectId)
           .eq('needs_review', true)
           .isFilter('superseded_at', null);
       if (documentId != null) query = query.eq('document_id', documentId);
@@ -231,15 +222,14 @@ class AnalysisRepository {
 
   /// Latest value of every biomarker the subject has, newest first.
   Future<List<Observation>> latestPerCode({
-    String? subjectId,
+    required String subjectId,
     int limit = 300,
   }) async {
-    final String subject = subjectId ?? _uid;
     try {
       final List<Map<String, dynamic>> rows = await _db
           .from(_observations)
           .select()
-          .eq('subject_id', subject)
+          .eq('subject_id', subjectId)
           .isFilter('superseded_at', null)
           .order('effective_at', ascending: false)
           .limit(limit);

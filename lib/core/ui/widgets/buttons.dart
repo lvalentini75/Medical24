@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:medical24/core/ui/tokens.dart';
 
 enum M24ButtonVariant { primary, accent, accentOutline, secondary, outline, outlinePrimary, tertiary, destructiveOutline, warning }
@@ -17,12 +18,18 @@ class M24Button extends StatelessWidget {
   Widget build(BuildContext context) {
     final M24Colors c = context.m24.colors;
     final bool desktop = MediaQuery.sizeOf(context).width >= 1200;
-    final double height = size == M24ButtonSize.small ? 36 : size == M24ButtonSize.large ? 56 : desktop ? 44 : 48;
+    final bool caregiverMode = Theme.of(context).extension<M24Accessibility>()?.caregiverMode ?? false;
+    final double height = caregiverMode ? 56 : size == M24ButtonSize.small ? 36 : size == M24ButtonSize.large ? 56 : desktop ? 44 : 48;
+    final bool secondaryAction = variant != M24ButtonVariant.primary && variant != M24ButtonVariant.accent && variant != M24ButtonVariant.warning;
+    if (caregiverMode && secondaryAction && onPressed != null) {
+      return PopupMenuButton<int>(tooltip: label, onSelected: (_) => onPressed!(), itemBuilder: (_) => <PopupMenuEntry<int>>[PopupMenuItem<int>(value: 1, child: Row(children: <Widget>[if (icon != null) ...<Widget>[Icon(icon, size: 20), const SizedBox(width: 12)], Flexible(child: Text(label))]))], child: Semantics(button: true, label: label, child: SizedBox.square(dimension: 56, child: Icon(LucideIcons.ellipsis, color: c.ink))));
+    }
     final Widget content = Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       if (loading) SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: variant == M24ButtonVariant.primary || variant == M24ButtonVariant.accent || variant == M24ButtonVariant.warning ? M24Colors.white : c.primary)) else if (icon != null) Icon(icon, size: 20),
-      if (loading || icon != null) const SizedBox(width: 8), Text(label),
+      if (loading || icon != null) const SizedBox(width: 8),
+      Flexible(child: Text(label, textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis)),
     ]);
-    final ButtonStyle style = ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(size == M24ButtonSize.large ? double.infinity : 44, height)), padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 18)), shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), textStyle: MaterialStatePropertyAll(context.m24.text.button), foregroundColor: MaterialStateProperty.resolveWith((s) => onPressed == null ? c.ink.withValues(alpha: .4) : _foreground(c)), backgroundColor: MaterialStateProperty.resolveWith((s) => onPressed == null ? _background(c).withValues(alpha: .4) : s.contains(MaterialState.pressed) ? _pressed(c) : s.contains(MaterialState.hovered) || s.contains(MaterialState.focused) ? _hover(c) : _background(c)), side: MaterialStatePropertyAll(_side(c)), elevation: MaterialStatePropertyAll(variant == M24ButtonVariant.accent && onPressed != null ? 3 : 0), shadowColor: MaterialStatePropertyAll(variant == M24ButtonVariant.accent ? c.accent.withValues(alpha: .25) : Colors.transparent));
+    final ButtonStyle style = ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(size == M24ButtonSize.large ? double.infinity : 44, height)), padding: MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: size == M24ButtonSize.small ? 12 : 18)), shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), textStyle: MaterialStatePropertyAll(context.m24.text.button), foregroundColor: MaterialStateProperty.resolveWith((s) => onPressed == null ? c.ink.withValues(alpha: .4) : _foreground(c)), backgroundColor: MaterialStateProperty.resolveWith((s) => onPressed == null ? _background(c).withValues(alpha: .4) : s.contains(MaterialState.pressed) ? _pressed(c) : s.contains(MaterialState.hovered) || s.contains(MaterialState.focused) ? _hover(c) : _background(c)), side: MaterialStatePropertyAll(_side(c)), elevation: MaterialStatePropertyAll(variant == M24ButtonVariant.accent && onPressed != null ? 3 : 0), shadowColor: MaterialStatePropertyAll(variant == M24ButtonVariant.accent ? c.accent.withValues(alpha: .25) : Colors.transparent));
     return TextButton(onPressed: loading ? null : onPressed, style: style, child: content);
   }
 

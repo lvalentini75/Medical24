@@ -12,9 +12,10 @@ abstract class PreventionRepository {
 }
 
 class SupabasePreventionRepository implements PreventionRepository {
-  const SupabasePreventionRepository();
+  const SupabasePreventionRepository(this.subjectId);
+  final String? subjectId;
   SupabaseClient get _db => SupabaseConfig.client;
-  String get _subject => SupabaseConfig.currentUserId ?? (throw AppFailure.unauthorized);
+  String get _subject => subjectId ?? (throw AppFailure.unauthorized);
 
   @override
   Future<PreventionSnapshot> load({bool refresh = true}) async {

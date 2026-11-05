@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdfrx/pdfrx.dart';
 
 import 'core/providers/app_providers.dart';
 import 'core/router/app_router.dart';
@@ -21,6 +22,12 @@ import 'supabase/supabase_config.dart';
 /// stays behind Edge Functions.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    // L'hosting web serve gli asset .js come octet-stream: pdfium viene caricato
+    // dal CDN, pinnato alla versione di pdfrx in pubspec.lock (aggiornare insieme).
+    Pdfrx.pdfiumWasmModulesUrl =
+        'https://cdn.jsdelivr.net/gh/espresso3389/pdfrx@pdfrx-v2.10.1/packages/pdfrx/assets/';
+  }
   configureUrlStrategy();
 
   // Android: block screenshots on clinical screens.
@@ -48,12 +55,13 @@ class Medical24App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final GoRouter router = ref.watch(appRouterProvider);
     final Locale locale = ref.watch(localeProvider);
+    final bool caregiverMode = ref.watch(caregiverModeProvider).value ?? false;
 
     return MaterialApp.router(
       title: 'Medical 24',
       debugShowCheckedModeBanner: false,
-      theme: M24Theme.light,
-      darkTheme: M24Theme.dark,
+      theme: M24Theme.lightFor(caregiverMode: caregiverMode),
+      darkTheme: M24Theme.darkFor(caregiverMode: caregiverMode),
       themeMode: ThemeMode.system,
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -64,9 +72,13 @@ class Medical24App extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       routerConfig: router,
-      builder: (BuildContext context, Widget? child) => AppLockGate(
-        child: child ?? const SizedBox.shrink(),
-      ),
+      builder: (BuildContext context, Widget? child) {
+        final MediaQueryData media = MediaQuery.of(context);
+        return MediaQuery(
+          data: media.copyWith(textScaler: caregiverMode ? TextScaler.linear(media.textScaler.scale(1) * 1.25) : media.textScaler),
+          child: AppLockGate(child: child ?? const SizedBox.shrink()),
+        );
+      },
     );
   }
 }

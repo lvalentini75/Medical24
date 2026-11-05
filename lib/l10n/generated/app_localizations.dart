@@ -1247,7 +1247,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsExportBody.
   ///
   /// In it, this message translates to:
-  /// **'Ricevi profilo, consensi e registro degli accessi in formato leggibile.'**
+  /// **'Scarica un pacchetto con i dati e i file del tuo account.'**
   String get settingsExportBody;
 
   /// No description provided for @settingsExportDone.
@@ -1255,6 +1255,168 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Export pronto'**
   String get settingsExportDone;
+
+  /// No description provided for @settingsExportTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Esporta i miei dati'**
+  String get settingsExportTitle;
+
+  /// No description provided for @settingsExportExplanation.
+  ///
+  /// In it, this message translates to:
+  /// **'Il pacchetto include profilo, consensi, documenti, valori, sintomi, dati di prevenzione, condivisioni e file originali disponibili. Resta disponibile per 7 giorni e puoi richiederne uno ogni 24 ore.'**
+  String get settingsExportExplanation;
+
+  /// No description provided for @settingsExportRequest.
+  ///
+  /// In it, this message translates to:
+  /// **'Richiedi l\'export'**
+  String get settingsExportRequest;
+
+  /// No description provided for @settingsExportRefresh.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiorna'**
+  String get settingsExportRefresh;
+
+  /// No description provided for @settingsExportDownload.
+  ///
+  /// In it, this message translates to:
+  /// **'Scarica'**
+  String get settingsExportDownload;
+
+  /// No description provided for @settingsExportWait.
+  ///
+  /// In it, this message translates to:
+  /// **'Stiamo preparando il pacchetto. Può richiedere qualche decina di secondi.'**
+  String get settingsExportWait;
+
+  /// No description provided for @settingsExportNoneTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun export richiesto'**
+  String get settingsExportNoneTitle;
+
+  /// No description provided for @settingsExportNoneBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Richiedi un pacchetto per scaricare una copia dei tuoi dati.'**
+  String get settingsExportNoneBody;
+
+  /// No description provided for @settingsExportPendingTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Export in corso'**
+  String get settingsExportPendingTitle;
+
+  /// No description provided for @settingsExportPendingBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Il pacchetto è in preparazione. Aggiorna tra poco per controllare lo stato.'**
+  String get settingsExportPendingBody;
+
+  /// No description provided for @settingsExportReadyTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Export pronto'**
+  String get settingsExportReadyTitle;
+
+  /// No description provided for @settingsExportReadyDetails.
+  ///
+  /// In it, this message translates to:
+  /// **'Scade il {date} · {bytes} · {count} file'**
+  String settingsExportReadyDetails(String date, String bytes, int count);
+
+  /// No description provided for @settingsExportFailedTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Export non riuscito'**
+  String get settingsExportFailedTitle;
+
+  /// No description provided for @settingsExportExpiredTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Export scaduto'**
+  String get settingsExportExpiredTitle;
+
+  /// No description provided for @settingsExportExpiredBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Il pacchetto non è più disponibile. Puoi richiederne uno nuovo.'**
+  String get settingsExportExpiredBody;
+
+  /// No description provided for @settingsExportDateUnavailable.
+  ///
+  /// In it, this message translates to:
+  /// **'data non disponibile'**
+  String get settingsExportDateUnavailable;
+
+  /// No description provided for @settingsExportIncompleteTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Il pacchetto non è completo'**
+  String get settingsExportIncompleteTitle;
+
+  /// No description provided for @settingsExportIncompleteBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Alcuni file non sono inclusi perché il pacchetto ha raggiunto il limite di dimensione.'**
+  String get settingsExportIncompleteBody;
+
+  /// No description provided for @settingsExportFailureBuild.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a preparare il pacchetto. Riprova.'**
+  String get settingsExportFailureBuild;
+
+  /// No description provided for @settingsExportFailureUpload.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a salvare il pacchetto. Riprova.'**
+  String get settingsExportFailureUpload;
+
+  /// No description provided for @settingsExportFailureFinalize.
+  ///
+  /// In it, this message translates to:
+  /// **'Il pacchetto non è stato finalizzato. Riprova.'**
+  String get settingsExportFailureFinalize;
+
+  /// No description provided for @settingsExportFailureUnknown.
+  ///
+  /// In it, this message translates to:
+  /// **'L\'export non è riuscito. Riprova.'**
+  String get settingsExportFailureUnknown;
+
+  /// No description provided for @settingsExportErrorDaily.
+  ///
+  /// In it, this message translates to:
+  /// **'Puoi chiedere un nuovo export tra circa {hours} ore.'**
+  String settingsExportErrorDaily(int hours);
+
+  /// No description provided for @settingsExportErrorDailyGeneric.
+  ///
+  /// In it, this message translates to:
+  /// **'Puoi richiedere un solo export ogni 24 ore.'**
+  String get settingsExportErrorDailyGeneric;
+
+  /// No description provided for @settingsExportErrorForbidden.
+  ///
+  /// In it, this message translates to:
+  /// **'Non hai il permesso di esportare questi dati.'**
+  String get settingsExportErrorForbidden;
+
+  /// No description provided for @settingsExportErrorServer.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a completare la richiesta. Riprova.'**
+  String get settingsExportErrorServer;
+
+  /// No description provided for @settingsExportDownloadError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti ad aprire il download. Aggiorna e riprova.'**
+  String get settingsExportDownloadError;
 
   /// No description provided for @settingsConsents.
   ///
@@ -1289,7 +1451,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsDeleteConfirmBody.
   ///
   /// In it, this message translates to:
-  /// **'L\'accesso si chiude subito. I dati vengono rimossi definitivamente entro 30 giorni. L\'operazione non si annulla.'**
+  /// **'I file vengono eliminati subito; il resto dei dati viene rimosso dopo 30 giorni. L\'operazione non si annulla. I link condivisi e il QR di emergenza smettono di funzionare immediatamente.'**
   String get settingsDeleteConfirmBody;
 
   /// No description provided for @settingsDeleteConfirmAction.
@@ -1297,6 +1459,48 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Elimina definitivamente'**
   String get settingsDeleteConfirmAction;
+
+  /// No description provided for @settingsDeleteConfirmTypeWord.
+  ///
+  /// In it, this message translates to:
+  /// **'ELIMINA'**
+  String get settingsDeleteConfirmTypeWord;
+
+  /// No description provided for @settingsDeleteConfirmTypeLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi ELIMINA per confermare'**
+  String get settingsDeleteConfirmTypeLabel;
+
+  /// No description provided for @settingsDeleteConfirmTypeHint.
+  ///
+  /// In it, this message translates to:
+  /// **'ELIMINA'**
+  String get settingsDeleteConfirmTypeHint;
+
+  /// No description provided for @settingsDeleteErrorConfirmation.
+  ///
+  /// In it, this message translates to:
+  /// **'La conferma non è valida. Scrivi ELIMINA e riprova.'**
+  String get settingsDeleteErrorConfirmation;
+
+  /// No description provided for @settingsDeleteErrorUnauthorized.
+  ///
+  /// In it, this message translates to:
+  /// **'La sessione è scaduta. Accedi di nuovo e riprova.'**
+  String get settingsDeleteErrorUnauthorized;
+
+  /// No description provided for @settingsDeleteErrorServer.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a eliminare l\'account. Riprova.'**
+  String get settingsDeleteErrorServer;
+
+  /// No description provided for @settingsDeleteSuccess.
+  ///
+  /// In it, this message translates to:
+  /// **'Account eliminato: i dati residui saranno rimossi il {date}.'**
+  String settingsDeleteSuccess(String date);
 
   /// No description provided for @settingsAppVersion.
   ///
@@ -1705,6 +1909,24 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'File o PDF'**
   String get archiveSourceFile;
+
+  /// No description provided for @archiveChangeFile.
+  ///
+  /// In it, this message translates to:
+  /// **'Cambia file'**
+  String get archiveChangeFile;
+
+  /// No description provided for @archiveFileNotSelected.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun file selezionato.'**
+  String get archiveFileNotSelected;
+
+  /// No description provided for @archiveFileTooLarge.
+  ///
+  /// In it, this message translates to:
+  /// **'Il file supera il limite di 25 MB. Scegli un file più piccolo.'**
+  String get archiveFileTooLarge;
 
   /// No description provided for @archiveSourceShare.
   ///
@@ -6663,6 +6885,1098 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Inserisci un numero valido.'**
   String get adminInvalidNumber;
+
+  /// No description provided for @doctorSubtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara e condividi in sicurezza le informazioni utili alla visita.'**
+  String get doctorSubtitle;
+
+  /// No description provided for @doctorShareTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi con il medico'**
+  String get doctorShareTitle;
+
+  /// No description provided for @doctorShareBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Crea un accesso protetto e temporaneo al tuo dossier.'**
+  String get doctorShareBody;
+
+  /// No description provided for @doctorLinksTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'I miei link'**
+  String get doctorLinksTitle;
+
+  /// No description provided for @doctorLinksBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Controlla accessi, scadenze e revoca i link.'**
+  String get doctorLinksBody;
+
+  /// No description provided for @doctorQuestionsTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Domande'**
+  String get doctorQuestionsTitle;
+
+  /// No description provided for @doctorQuestionsBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara le domande da portare alla visita.'**
+  String get doctorQuestionsBody;
+
+  /// No description provided for @doctorEmergencyTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Scheda di emergenza'**
+  String get doctorEmergencyTitle;
+
+  /// No description provided for @doctorEmergencyBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Tieni pronte le informazioni essenziali.'**
+  String get doctorEmergencyBody;
+
+  /// No description provided for @doctorComingNext.
+  ///
+  /// In it, this message translates to:
+  /// **'Questa funzione arriva nel prossimo passaggio del modulo Medico.'**
+  String get doctorComingNext;
+
+  /// No description provided for @doctorDossierTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Il mio dossier'**
+  String get doctorDossierTitle;
+
+  /// No description provided for @doctorShareStep.
+  ///
+  /// In it, this message translates to:
+  /// **'Passo {current} di {total}'**
+  String doctorShareStep(int current, int total);
+
+  /// No description provided for @doctorShareReady.
+  ///
+  /// In it, this message translates to:
+  /// **'Link pronto'**
+  String get doctorShareReady;
+
+  /// No description provided for @doctorShareWhat.
+  ///
+  /// In it, this message translates to:
+  /// **'Cosa condividere'**
+  String get doctorShareWhat;
+
+  /// No description provided for @doctorShareEverything.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutto il dossier'**
+  String get doctorShareEverything;
+
+  /// No description provided for @doctorBodyAreas.
+  ///
+  /// In it, this message translates to:
+  /// **'Aree del corpo'**
+  String get doctorBodyAreas;
+
+  /// No description provided for @doctorPeriod.
+  ///
+  /// In it, this message translates to:
+  /// **'Periodo'**
+  String get doctorPeriod;
+
+  /// No description provided for @doctorFrom.
+  ///
+  /// In it, this message translates to:
+  /// **'Da'**
+  String get doctorFrom;
+
+  /// No description provided for @doctorTo.
+  ///
+  /// In it, this message translates to:
+  /// **'A'**
+  String get doctorTo;
+
+  /// No description provided for @doctorDocumentCategories.
+  ///
+  /// In it, this message translates to:
+  /// **'Categorie di documenti'**
+  String get doctorDocumentCategories;
+
+  /// No description provided for @doctorShareProtect.
+  ///
+  /// In it, this message translates to:
+  /// **'Proteggi il link'**
+  String get doctorShareProtect;
+
+  /// No description provided for @doctorPinHelp.
+  ///
+  /// In it, this message translates to:
+  /// **'Usa 4–6 cifre: non tutte uguali e non in sequenza crescente o decrescente.'**
+  String get doctorPinHelp;
+
+  /// No description provided for @doctorPin.
+  ///
+  /// In it, this message translates to:
+  /// **'PIN'**
+  String get doctorPin;
+
+  /// No description provided for @doctorPinConfirm.
+  ///
+  /// In it, this message translates to:
+  /// **'Conferma PIN'**
+  String get doctorPinConfirm;
+
+  /// No description provided for @doctorExpiryDays.
+  ///
+  /// In it, this message translates to:
+  /// **'Scadenza: {days} giorni'**
+  String doctorExpiryDays(int days);
+
+  /// No description provided for @doctorMaxOpens.
+  ///
+  /// In it, this message translates to:
+  /// **'Aperture massime: {count}'**
+  String doctorMaxOpens(int count);
+
+  /// No description provided for @doctorShareReview.
+  ///
+  /// In it, this message translates to:
+  /// **'Controlla e crea'**
+  String get doctorShareReview;
+
+  /// No description provided for @doctorShareSelection.
+  ///
+  /// In it, this message translates to:
+  /// **'{organs} aree · {categories} categorie'**
+  String doctorShareSelection(int organs, int categories);
+
+  /// No description provided for @doctorShareLimits.
+  ///
+  /// In it, this message translates to:
+  /// **'Scade tra {days} giorni · massimo {opens} aperture'**
+  String doctorShareLimits(int days, int opens);
+
+  /// No description provided for @doctorCreateLink.
+  ///
+  /// In it, this message translates to:
+  /// **'Crea link'**
+  String get doctorCreateLink;
+
+  /// No description provided for @doctorShareCode.
+  ///
+  /// In it, this message translates to:
+  /// **'Codice a sei cifre'**
+  String get doctorShareCode;
+
+  /// No description provided for @doctorPinVoiceWarning.
+  ///
+  /// In it, this message translates to:
+  /// **'Comunica il PIN a voce, non per messaggio.'**
+  String get doctorPinVoiceWarning;
+
+  /// No description provided for @doctorPublicAddress.
+  ///
+  /// In it, this message translates to:
+  /// **'Indirizzo pubblico'**
+  String get doctorPublicAddress;
+
+  /// No description provided for @doctorCopy.
+  ///
+  /// In it, this message translates to:
+  /// **'Copia'**
+  String get doctorCopy;
+
+  /// No description provided for @doctorCopied.
+  ///
+  /// In it, this message translates to:
+  /// **'Copiato'**
+  String get doctorCopied;
+
+  /// No description provided for @doctorShareAction.
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi'**
+  String get doctorShareAction;
+
+  /// No description provided for @doctorGeneratePdf.
+  ///
+  /// In it, this message translates to:
+  /// **'Genera PDF'**
+  String get doctorGeneratePdf;
+
+  /// No description provided for @doctorDownloadPdf.
+  ///
+  /// In it, this message translates to:
+  /// **'Scarica PDF'**
+  String get doctorDownloadPdf;
+
+  /// No description provided for @doctorOpensLeft.
+  ///
+  /// In it, this message translates to:
+  /// **'Aperture residue: {count}'**
+  String doctorOpensLeft(int count);
+
+  /// No description provided for @doctorPdfError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a preparare il PDF.'**
+  String get doctorPdfError;
+
+  /// No description provided for @doctorErrorWeakPin.
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli un PIN di 4–6 cifre, non tutte uguali e non in sequenza.'**
+  String get doctorErrorWeakPin;
+
+  /// No description provided for @doctorErrorPinMismatch.
+  ///
+  /// In it, this message translates to:
+  /// **'I due PIN non coincidono.'**
+  String get doctorErrorPinMismatch;
+
+  /// No description provided for @doctorErrorTooManyLinks.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai già cinque link attivi. Revocane uno prima di crearne un altro.'**
+  String get doctorErrorTooManyLinks;
+
+  /// No description provided for @doctorErrorInvalidScope.
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli almeno un\'area, un periodo o una categoria.'**
+  String get doctorErrorInvalidScope;
+
+  /// No description provided for @doctorErrorCreate.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a creare il link. Riprova.'**
+  String get doctorErrorCreate;
+
+  /// No description provided for @doctorStatusActive.
+  ///
+  /// In it, this message translates to:
+  /// **'Attivo'**
+  String get doctorStatusActive;
+
+  /// No description provided for @doctorStatusExpired.
+  ///
+  /// In it, this message translates to:
+  /// **'Scaduto'**
+  String get doctorStatusExpired;
+
+  /// No description provided for @doctorStatusRevoked.
+  ///
+  /// In it, this message translates to:
+  /// **'Revocato'**
+  String get doctorStatusRevoked;
+
+  /// No description provided for @doctorStatusLocked.
+  ///
+  /// In it, this message translates to:
+  /// **'Bloccato'**
+  String get doctorStatusLocked;
+
+  /// No description provided for @doctorStatusExhausted.
+  ///
+  /// In it, this message translates to:
+  /// **'Esaurito'**
+  String get doctorStatusExhausted;
+
+  /// No description provided for @doctorLinkExpires.
+  ///
+  /// In it, this message translates to:
+  /// **'Scade il {date}'**
+  String doctorLinkExpires(String date);
+
+  /// No description provided for @doctorLinkUsage.
+  ///
+  /// In it, this message translates to:
+  /// **'{used} aperture su {max}'**
+  String doctorLinkUsage(int used, int max);
+
+  /// No description provided for @doctorLastOpen.
+  ///
+  /// In it, this message translates to:
+  /// **'Ultima apertura'**
+  String get doctorLastOpen;
+
+  /// No description provided for @doctorRelativeNow.
+  ///
+  /// In it, this message translates to:
+  /// **'Adesso'**
+  String get doctorRelativeNow;
+
+  /// No description provided for @doctorRelativeMinutes.
+  ///
+  /// In it, this message translates to:
+  /// **'{count} min fa'**
+  String doctorRelativeMinutes(int count);
+
+  /// No description provided for @doctorRelativeHours.
+  ///
+  /// In it, this message translates to:
+  /// **'{count} ore fa'**
+  String doctorRelativeHours(int count);
+
+  /// No description provided for @doctorRelativeDays.
+  ///
+  /// In it, this message translates to:
+  /// **'{count} giorni fa'**
+  String doctorRelativeDays(int count);
+
+  /// No description provided for @doctorLinksError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a caricare i link.'**
+  String get doctorLinksError;
+
+  /// No description provided for @doctorLinksEmpty.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun link'**
+  String get doctorLinksEmpty;
+
+  /// No description provided for @doctorLinksEmptyBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Crea un link protetto per condividere il dossier.'**
+  String get doctorLinksEmptyBody;
+
+  /// No description provided for @doctorLinkDetail.
+  ///
+  /// In it, this message translates to:
+  /// **'Dettaglio link'**
+  String get doctorLinkDetail;
+
+  /// No description provided for @doctorLinkMissing.
+  ///
+  /// In it, this message translates to:
+  /// **'Questo link non è più disponibile.'**
+  String get doctorLinkMissing;
+
+  /// No description provided for @doctorOpenLog.
+  ///
+  /// In it, this message translates to:
+  /// **'Registro delle aperture'**
+  String get doctorOpenLog;
+
+  /// No description provided for @doctorNoOpens.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna apertura registrata.'**
+  String get doctorNoOpens;
+
+  /// No description provided for @doctorOutcomeOk.
+  ///
+  /// In it, this message translates to:
+  /// **'Aperto'**
+  String get doctorOutcomeOk;
+
+  /// No description provided for @doctorOutcomeWrongPin.
+  ///
+  /// In it, this message translates to:
+  /// **'PIN errato'**
+  String get doctorOutcomeWrongPin;
+
+  /// No description provided for @doctorRevoke.
+  ///
+  /// In it, this message translates to:
+  /// **'Revoca'**
+  String get doctorRevoke;
+
+  /// No description provided for @doctorRevokeConfirmTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Revocare questo link?'**
+  String get doctorRevokeConfirmTitle;
+
+  /// No description provided for @doctorRevokeConfirmBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Il medico non potrà più aprirlo.'**
+  String get doctorRevokeConfirmBody;
+
+  /// No description provided for @doctorRevokeError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a revocare il link.'**
+  String get doctorRevokeError;
+
+  /// No description provided for @doctorDossierError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a caricare il dossier.'**
+  String get doctorDossierError;
+
+  /// No description provided for @doctorDossierEmpty.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun dossier'**
+  String get doctorDossierEmpty;
+
+  /// No description provided for @doctorDossierEmptyBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Genera una fotografia aggiornata e ordinata dei tuoi dati.'**
+  String get doctorDossierEmptyBody;
+
+  /// No description provided for @doctorDossierGenerate.
+  ///
+  /// In it, this message translates to:
+  /// **'Genera'**
+  String get doctorDossierGenerate;
+
+  /// No description provided for @doctorDossierGenerated.
+  ///
+  /// In it, this message translates to:
+  /// **'Generato il {date}'**
+  String doctorDossierGenerated(String date);
+
+  /// No description provided for @doctorHealthStatus.
+  ///
+  /// In it, this message translates to:
+  /// **'Stato di salute'**
+  String get doctorHealthStatus;
+
+  /// No description provided for @doctorAreasToFollow.
+  ///
+  /// In it, this message translates to:
+  /// **'Aree da seguire'**
+  String get doctorAreasToFollow;
+
+  /// No description provided for @doctorRisks.
+  ///
+  /// In it, this message translates to:
+  /// **'Rischi'**
+  String get doctorRisks;
+
+  /// No description provided for @doctorOutOfRange.
+  ///
+  /// In it, this message translates to:
+  /// **'Valori fuori intervallo'**
+  String get doctorOutOfRange;
+
+  /// No description provided for @doctorRecommendedExams.
+  ///
+  /// In it, this message translates to:
+  /// **'Esami consigliati'**
+  String get doctorRecommendedExams;
+
+  /// No description provided for @doctorDocuments.
+  ///
+  /// In it, this message translates to:
+  /// **'Documenti'**
+  String get doctorDocuments;
+
+  /// No description provided for @doctorRuleVersions.
+  ///
+  /// In it, this message translates to:
+  /// **'Versioni delle regole'**
+  String get doctorRuleVersions;
+
+  /// No description provided for @doctorDisclaimerTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Avvertenza'**
+  String get doctorDisclaimerTitle;
+
+  /// No description provided for @doctorDossierDisclaimer.
+  ///
+  /// In it, this message translates to:
+  /// **'Le informazioni non sostituiscono il parere del medico.'**
+  String get doctorDossierDisclaimer;
+
+  /// No description provided for @doctorNoData.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun dato disponibile.'**
+  String get doctorNoData;
+
+  /// No description provided for @doctorHealthCounts.
+  ///
+  /// In it, this message translates to:
+  /// **'{ok} nella norma · {monitor} da monitorare · {attention} in attenzione'**
+  String doctorHealthCounts(int ok, int monitor, int attention);
+
+  /// No description provided for @doctorTrendUp.
+  ///
+  /// In it, this message translates to:
+  /// **'in aumento'**
+  String get doctorTrendUp;
+
+  /// No description provided for @doctorTrendDown.
+  ///
+  /// In it, this message translates to:
+  /// **'in diminuzione'**
+  String get doctorTrendDown;
+
+  /// No description provided for @doctorTrendStable.
+  ///
+  /// In it, this message translates to:
+  /// **'stabile'**
+  String get doctorTrendStable;
+
+  /// No description provided for @doctorTrendUnknown.
+  ///
+  /// In it, this message translates to:
+  /// **'tendenza non disponibile'**
+  String get doctorTrendUnknown;
+
+  /// No description provided for @doctorOrganHeart.
+  ///
+  /// In it, this message translates to:
+  /// **'Cuore e circolazione'**
+  String get doctorOrganHeart;
+
+  /// No description provided for @doctorOrganLung.
+  ///
+  /// In it, this message translates to:
+  /// **'Polmoni e respiro'**
+  String get doctorOrganLung;
+
+  /// No description provided for @doctorOrganLiver.
+  ///
+  /// In it, this message translates to:
+  /// **'Fegato'**
+  String get doctorOrganLiver;
+
+  /// No description provided for @doctorOrganKidney.
+  ///
+  /// In it, this message translates to:
+  /// **'Reni e vie urinarie'**
+  String get doctorOrganKidney;
+
+  /// No description provided for @doctorOrganMetabolism.
+  ///
+  /// In it, this message translates to:
+  /// **'Metabolismo e pancreas'**
+  String get doctorOrganMetabolism;
+
+  /// No description provided for @doctorOrganGut.
+  ///
+  /// In it, this message translates to:
+  /// **'Stomaco e intestino'**
+  String get doctorOrganGut;
+
+  /// No description provided for @doctorOrganBlood.
+  ///
+  /// In it, this message translates to:
+  /// **'Sangue'**
+  String get doctorOrganBlood;
+
+  /// No description provided for @doctorOrganImmune.
+  ///
+  /// In it, this message translates to:
+  /// **'Difese e infiammazione'**
+  String get doctorOrganImmune;
+
+  /// No description provided for @doctorOrganThyroid.
+  ///
+  /// In it, this message translates to:
+  /// **'Tiroide e ormoni'**
+  String get doctorOrganThyroid;
+
+  /// No description provided for @doctorOrganBrain.
+  ///
+  /// In it, this message translates to:
+  /// **'Cervello e nervi'**
+  String get doctorOrganBrain;
+
+  /// No description provided for @doctorOrganMusculoskeletal.
+  ///
+  /// In it, this message translates to:
+  /// **'Ossa e muscoli'**
+  String get doctorOrganMusculoskeletal;
+
+  /// No description provided for @doctorOrganReproductive.
+  ///
+  /// In it, this message translates to:
+  /// **'Apparato riproduttivo'**
+  String get doctorOrganReproductive;
+
+  /// No description provided for @doctorOrganBreast.
+  ///
+  /// In it, this message translates to:
+  /// **'Seno'**
+  String get doctorOrganBreast;
+
+  /// No description provided for @doctorOrganReproductiveFemale.
+  ///
+  /// In it, this message translates to:
+  /// **'Utero e ovaie'**
+  String get doctorOrganReproductiveFemale;
+
+  /// No description provided for @doctorOrganProstate.
+  ///
+  /// In it, this message translates to:
+  /// **'Prostata'**
+  String get doctorOrganProstate;
+
+  /// No description provided for @doctorOrganReproductiveMale.
+  ///
+  /// In it, this message translates to:
+  /// **'Testicoli e ormoni'**
+  String get doctorOrganReproductiveMale;
+
+  /// No description provided for @doctorQuestionsSubtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara, invia e conserva le risposte per la visita.'**
+  String get doctorQuestionsSubtitle;
+
+  /// No description provided for @doctorQuestionNew.
+  ///
+  /// In it, this message translates to:
+  /// **'Nuova domanda'**
+  String get doctorQuestionNew;
+
+  /// No description provided for @doctorQuestionFilterAll.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutte'**
+  String get doctorQuestionFilterAll;
+
+  /// No description provided for @doctorQuestionStatusDraft.
+  ///
+  /// In it, this message translates to:
+  /// **'Bozza'**
+  String get doctorQuestionStatusDraft;
+
+  /// No description provided for @doctorQuestionStatusSent.
+  ///
+  /// In it, this message translates to:
+  /// **'Inviata'**
+  String get doctorQuestionStatusSent;
+
+  /// No description provided for @doctorQuestionStatusAnswered.
+  ///
+  /// In it, this message translates to:
+  /// **'Risposta'**
+  String get doctorQuestionStatusAnswered;
+
+  /// No description provided for @doctorQuestionStatusClosed.
+  ///
+  /// In it, this message translates to:
+  /// **'Chiusa'**
+  String get doctorQuestionStatusClosed;
+
+  /// No description provided for @doctorQuestionsError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a caricare le domande.'**
+  String get doctorQuestionsError;
+
+  /// No description provided for @doctorQuestionsEmpty.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna domanda'**
+  String get doctorQuestionsEmpty;
+
+  /// No description provided for @doctorQuestionsEmptyBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi una domanda da portare al medico.'**
+  String get doctorQuestionsEmptyBody;
+
+  /// No description provided for @doctorQuestionTitleLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Titolo'**
+  String get doctorQuestionTitleLabel;
+
+  /// No description provided for @doctorQuestionBodyLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Domanda'**
+  String get doctorQuestionBodyLabel;
+
+  /// No description provided for @doctorQuestionEmailLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Email del medico'**
+  String get doctorQuestionEmailLabel;
+
+  /// No description provided for @doctorQuestionLinkLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Link allegato'**
+  String get doctorQuestionLinkLabel;
+
+  /// No description provided for @doctorQuestionNoLink.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun link'**
+  String get doctorQuestionNoLink;
+
+  /// No description provided for @doctorQuestionSaveDraft.
+  ///
+  /// In it, this message translates to:
+  /// **'Salva bozza'**
+  String get doctorQuestionSaveDraft;
+
+  /// No description provided for @doctorQuestionRequired.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserisci titolo e domanda.'**
+  String get doctorQuestionRequired;
+
+  /// No description provided for @doctorCharacterCounter.
+  ///
+  /// In it, this message translates to:
+  /// **'{count}/{max}'**
+  String doctorCharacterCounter(int count, int max);
+
+  /// No description provided for @doctorQuestionDetail.
+  ///
+  /// In it, this message translates to:
+  /// **'Dettaglio domanda'**
+  String get doctorQuestionDetail;
+
+  /// No description provided for @doctorQuestionMissing.
+  ///
+  /// In it, this message translates to:
+  /// **'Questa domanda non è più disponibile.'**
+  String get doctorQuestionMissing;
+
+  /// No description provided for @doctorQuestionDoctorEmail.
+  ///
+  /// In it, this message translates to:
+  /// **'Medico: {email}'**
+  String doctorQuestionDoctorEmail(String email);
+
+  /// No description provided for @doctorQuestionAnswerTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Risposta'**
+  String get doctorQuestionAnswerTitle;
+
+  /// No description provided for @doctorAnswerViaLink.
+  ///
+  /// In it, this message translates to:
+  /// **'Dal link del medico'**
+  String get doctorAnswerViaLink;
+
+  /// No description provided for @doctorAnswerViaApp.
+  ///
+  /// In it, this message translates to:
+  /// **'Registrata da te'**
+  String get doctorAnswerViaApp;
+
+  /// No description provided for @doctorQuestionEdit.
+  ///
+  /// In it, this message translates to:
+  /// **'Modifica'**
+  String get doctorQuestionEdit;
+
+  /// No description provided for @doctorQuestionSend.
+  ///
+  /// In it, this message translates to:
+  /// **'Invia'**
+  String get doctorQuestionSend;
+
+  /// No description provided for @doctorQuestionDelete.
+  ///
+  /// In it, this message translates to:
+  /// **'Elimina'**
+  String get doctorQuestionDelete;
+
+  /// No description provided for @doctorQuestionRecordAnswer.
+  ///
+  /// In it, this message translates to:
+  /// **'Registra risposta'**
+  String get doctorQuestionRecordAnswer;
+
+  /// No description provided for @doctorQuestionClose.
+  ///
+  /// In it, this message translates to:
+  /// **'Chiudi'**
+  String get doctorQuestionClose;
+
+  /// No description provided for @doctorQuestionAnswerLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Testo della risposta'**
+  String get doctorQuestionAnswerLabel;
+
+  /// No description provided for @doctorQuestionDeleteConfirm.
+  ///
+  /// In it, this message translates to:
+  /// **'Eliminare questa bozza?'**
+  String get doctorQuestionDeleteConfirm;
+
+  /// No description provided for @doctorQuestionDeleteConfirmBody.
+  ///
+  /// In it, this message translates to:
+  /// **'La domanda verrà eliminata definitivamente.'**
+  String get doctorQuestionDeleteConfirmBody;
+
+  /// No description provided for @doctorQuestionErrorDailyLimit.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai raggiunto il limite giornaliero di domande.'**
+  String get doctorQuestionErrorDailyLimit;
+
+  /// No description provided for @doctorQuestionErrorNotEditable.
+  ///
+  /// In it, this message translates to:
+  /// **'Questa domanda non è più modificabile.'**
+  String get doctorQuestionErrorNotEditable;
+
+  /// No description provided for @doctorQuestionErrorNotSendable.
+  ///
+  /// In it, this message translates to:
+  /// **'Questa domanda non può essere inviata.'**
+  String get doctorQuestionErrorNotSendable;
+
+  /// No description provided for @doctorQuestionErrorNotAnswerable.
+  ///
+  /// In it, this message translates to:
+  /// **'Non è possibile registrare una risposta per questa domanda.'**
+  String get doctorQuestionErrorNotAnswerable;
+
+  /// No description provided for @doctorQuestionErrorInvalidLink.
+  ///
+  /// In it, this message translates to:
+  /// **'Il link allegato non è più valido.'**
+  String get doctorQuestionErrorInvalidLink;
+
+  /// No description provided for @doctorQuestionErrorUnknown.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a completare l\'operazione.'**
+  String get doctorQuestionErrorUnknown;
+
+  /// No description provided for @doctorEmergencySubtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Informazioni essenziali da rendere disponibili a chi soccorre.'**
+  String get doctorEmergencySubtitle;
+
+  /// No description provided for @doctorEmergencyLoadError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a caricare la scheda di emergenza.'**
+  String get doctorEmergencyLoadError;
+
+  /// No description provided for @doctorEmergencyDetails.
+  ///
+  /// In it, this message translates to:
+  /// **'Dati della scheda'**
+  String get doctorEmergencyDetails;
+
+  /// No description provided for @doctorEmergencyBloodGroup.
+  ///
+  /// In it, this message translates to:
+  /// **'Gruppo sanguigno'**
+  String get doctorEmergencyBloodGroup;
+
+  /// No description provided for @doctorEmergencyAllergies.
+  ///
+  /// In it, this message translates to:
+  /// **'Allergie'**
+  String get doctorEmergencyAllergies;
+
+  /// No description provided for @doctorEmergencyMedications.
+  ///
+  /// In it, this message translates to:
+  /// **'Farmaci'**
+  String get doctorEmergencyMedications;
+
+  /// No description provided for @doctorEmergencyConditions.
+  ///
+  /// In it, this message translates to:
+  /// **'Patologie'**
+  String get doctorEmergencyConditions;
+
+  /// No description provided for @doctorEmergencyContacts.
+  ///
+  /// In it, this message translates to:
+  /// **'Contatti'**
+  String get doctorEmergencyContacts;
+
+  /// No description provided for @doctorEmergencyNotes.
+  ///
+  /// In it, this message translates to:
+  /// **'Note'**
+  String get doctorEmergencyNotes;
+
+  /// No description provided for @doctorEmergencyVisible.
+  ///
+  /// In it, this message translates to:
+  /// **'Visibile a chi soccorre'**
+  String get doctorEmergencyVisible;
+
+  /// No description provided for @doctorEmergencyAddItem.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi una voce'**
+  String get doctorEmergencyAddItem;
+
+  /// No description provided for @doctorEmergencyAddContact.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi contatto'**
+  String get doctorEmergencyAddContact;
+
+  /// No description provided for @doctorEmergencyRemoveContact.
+  ///
+  /// In it, this message translates to:
+  /// **'Rimuovi contatto'**
+  String get doctorEmergencyRemoveContact;
+
+  /// No description provided for @doctorEmergencyContactName.
+  ///
+  /// In it, this message translates to:
+  /// **'Nome'**
+  String get doctorEmergencyContactName;
+
+  /// No description provided for @doctorEmergencyContactPhone.
+  ///
+  /// In it, this message translates to:
+  /// **'Telefono'**
+  String get doctorEmergencyContactPhone;
+
+  /// No description provided for @doctorEmergencyContactRelation.
+  ///
+  /// In it, this message translates to:
+  /// **'Relazione'**
+  String get doctorEmergencyContactRelation;
+
+  /// No description provided for @doctorEmergencyNoChanges.
+  ///
+  /// In it, this message translates to:
+  /// **'Non ci sono modifiche da salvare.'**
+  String get doctorEmergencyNoChanges;
+
+  /// No description provided for @doctorEmergencySaved.
+  ///
+  /// In it, this message translates to:
+  /// **'Scheda salvata'**
+  String get doctorEmergencySaved;
+
+  /// No description provided for @doctorEmergencySaveError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a salvare la scheda.'**
+  String get doctorEmergencySaveError;
+
+  /// No description provided for @doctorEmergencyErrorUnknownKey.
+  ///
+  /// In it, this message translates to:
+  /// **'Uno dei campi non è riconosciuto.'**
+  String get doctorEmergencyErrorUnknownKey;
+
+  /// No description provided for @doctorEmergencyErrorInvalidValue.
+  ///
+  /// In it, this message translates to:
+  /// **'Controlla i valori inseriti.'**
+  String get doctorEmergencyErrorInvalidValue;
+
+  /// No description provided for @doctorEmergencyCodeTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Codice da mostrare'**
+  String get doctorEmergencyCodeTitle;
+
+  /// No description provided for @doctorEmergencyCodeAfterSave.
+  ///
+  /// In it, this message translates to:
+  /// **'Salva la scheda per creare il codice QR.'**
+  String get doctorEmergencyCodeAfterSave;
+
+  /// No description provided for @doctorEmergencyRegenerate.
+  ///
+  /// In it, this message translates to:
+  /// **'Rigenera il codice'**
+  String get doctorEmergencyRegenerate;
+
+  /// No description provided for @doctorEmergencyRegenerateConfirm.
+  ///
+  /// In it, this message translates to:
+  /// **'Rigenerare il codice?'**
+  String get doctorEmergencyRegenerateConfirm;
+
+  /// No description provided for @doctorEmergencyRegenerateWarning.
+  ///
+  /// In it, this message translates to:
+  /// **'Il vecchio QR smette di funzionare.'**
+  String get doctorEmergencyRegenerateWarning;
+
+  /// No description provided for @doctorEmergencyRegenerateError.
+  ///
+  /// In it, this message translates to:
+  /// **'Non siamo riusciti a rigenerare il codice.'**
+  String get doctorEmergencyRegenerateError;
+
+  /// No description provided for @doctorEmergencyPreview.
+  ///
+  /// In it, this message translates to:
+  /// **'Come la vede chi soccorre'**
+  String get doctorEmergencyPreview;
+
+  /// No description provided for @doctorEmergencyNameUnavailable.
+  ///
+  /// In it, this message translates to:
+  /// **'Nome non disponibile'**
+  String get doctorEmergencyNameUnavailable;
+
+  /// No description provided for @doctorEmergencyPreviewEmpty.
+  ///
+  /// In it, this message translates to:
+  /// **'Attiva almeno un campo con un valore per mostrarlo nell\'anteprima.'**
+  String get doctorEmergencyPreviewEmpty;
+
+  /// No description provided for @doctorBloodONegative.
+  ///
+  /// In it, this message translates to:
+  /// **'0−'**
+  String get doctorBloodONegative;
+
+  /// No description provided for @doctorBloodOPositive.
+  ///
+  /// In it, this message translates to:
+  /// **'0+'**
+  String get doctorBloodOPositive;
+
+  /// No description provided for @doctorBloodANegative.
+  ///
+  /// In it, this message translates to:
+  /// **'A−'**
+  String get doctorBloodANegative;
+
+  /// No description provided for @doctorBloodAPositive.
+  ///
+  /// In it, this message translates to:
+  /// **'A+'**
+  String get doctorBloodAPositive;
+
+  /// No description provided for @doctorBloodBNegative.
+  ///
+  /// In it, this message translates to:
+  /// **'B−'**
+  String get doctorBloodBNegative;
+
+  /// No description provided for @doctorBloodBPositive.
+  ///
+  /// In it, this message translates to:
+  /// **'B+'**
+  String get doctorBloodBPositive;
+
+  /// No description provided for @doctorBloodABNegative.
+  ///
+  /// In it, this message translates to:
+  /// **'AB−'**
+  String get doctorBloodABNegative;
+
+  /// No description provided for @doctorBloodABPositive.
+  ///
+  /// In it, this message translates to:
+  /// **'AB+'**
+  String get doctorBloodABPositive;
 }
 
 class _AppLocalizationsDelegate

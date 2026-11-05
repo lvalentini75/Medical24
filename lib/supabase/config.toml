@@ -21,6 +21,30 @@ entrypoint = "./functions/document-ingest/index.ts"
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/document-ingest/*.html" ]
 
+[functions.dossier-open]
+enabled = true
+# Chi apre il link non ha un account: la pagina pubblica chiama con la sola
+# apikey anonima. I controlli (codice, PIN, blocchi, aperture) li fa la 0024.
+verify_jwt = false
+import_map = "./functions/dossier-open/deno.json"
+entrypoint = "./functions/dossier-open/index.ts"
+
+[functions.dossier-pdf]
+enabled = true
+# Il PDF e' del paziente: lo snapshot si legge con il JWT dell'utente, quindi
+# sotto RLS. Senza token la funzione risponde 401.
+verify_jwt = true
+import_map = "./functions/dossier-pdf/deno.json"
+entrypoint = "./functions/dossier-pdf/index.ts"
+
+[functions.export-data]
+enabled = true
+# L'export e' dei propri dati: la richiesta passa da data_export_request con il
+# JWT dell'utente, quindi sotto RLS. Senza token la funzione risponde 401.
+verify_jwt = true
+import_map = "./functions/export-data/deno.json"
+entrypoint = "./functions/export-data/index.ts"
+
 [functions.explain]
 enabled = true
 verify_jwt = true
@@ -40,6 +64,7 @@ entrypoint = "./functions/extract/index.ts"
 
 [functions.extract-batch]
 enabled = true
+# solo service_role: verify_jwt non basta, il controllo dell'header è nel codice
 verify_jwt = true
 import_map = "./functions/extract-batch/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
@@ -51,6 +76,7 @@ entrypoint = "./functions/extract-batch/index.ts"
 
 [functions.extract-batch-poll]
 enabled = true
+# solo service_role: verify_jwt non basta, il controllo dell'header è nel codice
 verify_jwt = true
 import_map = "./functions/extract-batch-poll/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
@@ -59,3 +85,23 @@ entrypoint = "./functions/extract-batch-poll/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/extract-batch-poll/*.html" ]
+
+[functions.family-member-create]
+enabled = true
+# Il profilo gestito nasce per conto di chi lo amministra: serve il suo JWT.
+# L'utente ombra e la chiamata a family_member_register passano dal
+# service_role dentro la funzione, mai dal client.
+verify_jwt = true
+import_map = "./functions/family-member-create/deno.json"
+entrypoint = "./functions/family-member-create/index.ts"
+
+[functions.family-member-remove]
+enabled = true
+verify_jwt = true
+import_map = "./functions/family-member-remove/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/family-member-remove/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/family-member-remove/*.html" ]

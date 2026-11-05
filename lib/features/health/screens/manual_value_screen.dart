@@ -13,6 +13,7 @@ import 'package:medical24/core/widgets/app_state_views.dart';
 import 'package:medical24/features/health/data/health_models.dart';
 import 'package:medical24/features/health/data/health_repository.dart';
 import 'package:medical24/features/health/providers/health_providers.dart';
+import 'package:medical24/features/family/providers/family_providers.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
 
 const String systolicCode = '8480-6';

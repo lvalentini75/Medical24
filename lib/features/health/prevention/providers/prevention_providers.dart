@@ -5,8 +5,9 @@ import 'package:medical24/features/health/prevention/data/prevention_repository.
 import 'package:medical24/features/health/data/health_models.dart';
 import 'package:medical24/features/health/providers/health_providers.dart';
 import 'package:medical24/features/home/providers/home_providers.dart';
+import 'package:medical24/features/family/providers/family_providers.dart';
 
-final Provider<PreventionRepository> preventionRepositoryProvider = Provider<PreventionRepository>((Ref ref) => const SupabasePreventionRepository());
+final Provider<PreventionRepository> preventionRepositoryProvider = Provider<PreventionRepository>((Ref ref) => SupabasePreventionRepository(ref.watch(currentSubjectProvider).value?.id));
 final FutureProvider<PreventionSnapshot> preventionSnapshotProvider = FutureProvider<PreventionSnapshot>((Ref ref) async {
   try {
     return await ref.watch(preventionRepositoryProvider).load();

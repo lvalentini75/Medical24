@@ -252,6 +252,9 @@ class LocalizationLookup {
       'settingsDeleteConfirmBody':
           'L\'accesso si chiude subito. I dati vengono rimossi definitivamente entro 30 giorni. L\'operazione non si annulla.',
       'settingsDeleteConfirmAction': 'Elimina definitivamente',
+      'settingsDeleteConfirmTypeWord': 'ELIMINA',
+      'settingsDeleteConfirmTypeLabel': 'Scrivi ELIMINA per confermare',
+      'settingsDeleteConfirmTypeHint': 'ELIMINA',
       'settingsAppVersion': 'Versione app',
       'consentsLogTitle': 'Registro dei consensi',
       'consentsLogEmpty': 'Nessun consenso registrato.',
@@ -492,6 +495,8 @@ class LocalizationLookup {
       'healthExtractionConfirmed': 'Estrazione confermata', 'healthSource': 'Fonte', 'healthNotSet': 'Non impostata', 'healthOtherConfirmed': 'Altri valori confermati',
       'healthManualSubtitle': 'Aggiungi una rilevazione effettuata da te.', 'healthManualFormTitle': 'Dati della rilevazione', 'symptomsEditable': 'Modificabile', 'symptomsRecorded': 'Registrato',
       'alertsUnread': 'Da leggere', 'alertsRead': 'Letto',
+      'accessibilityTitle': 'Accessibilità', 'accessibilityCaregiverMode': 'Modalità caregiver', 'accessibilityCaregiverModeBody': 'Testo più grande, contrasto elevato, pulsanti più comodi e azioni secondarie raccolte nel menu.',
+      'familyAlertSubject': 'Avviso per {name}', 'familyHomeTitle': 'Famiglia', 'familyHomeError': 'Non siamo riusciti a caricare il riepilogo della famiglia.', 'familyHealthCritical': 'Richiede attenzione', 'familyHealthWarning': 'Da controllare', 'familyHealthStable': 'Nessun avviso urgente', 'familyHealthEmpty': 'Quadro in preparazione', 'familyUnreadAlerts': '{count} avvisi non letti',
       'homeUploadFirstReport': 'Carica il primo referto', 'homeHealthSpace': 'Il tuo spazio salute',
       'homeGreetingMorning': 'Buongiorno, {name}.', 'homeGreetingEvening': 'Buonasera, {name}.', 'homeGreetingDesktopNoName': 'Buongiorno.', 'homeUpdatedAt': 'Aggiornato al {date}',
       'homeLatestReportDate': 'Ultimo referto: {date}', 'homeReviewValues': '{count} valori da verificare', 'homeFromReport': 'Dal referto del {date}', 'homeHealthStatusPreparingShort': 'In preparazione',
@@ -723,6 +728,9 @@ class LocalizationLookup {
       'settingsDeleteConfirmBody':
           'Access closes right away. Data is permanently removed within 30 days. This cannot be undone.',
       'settingsDeleteConfirmAction': 'Delete permanently',
+      'settingsDeleteConfirmTypeWord': 'DELETE',
+      'settingsDeleteConfirmTypeLabel': 'Type DELETE to confirm',
+      'settingsDeleteConfirmTypeHint': 'DELETE',
       'settingsAppVersion': 'App version',
       'consentsLogTitle': 'Consent log',
       'consentsLogEmpty': 'No consent recorded yet.',
@@ -960,6 +968,8 @@ class LocalizationLookup {
       'healthExtractionConfirmed': 'Extraction confirmed', 'healthSource': 'Source', 'healthNotSet': 'Not set', 'healthOtherConfirmed': 'Other confirmed values',
       'healthManualSubtitle': 'Add a measurement you took yourself.', 'healthManualFormTitle': 'Measurement details', 'symptomsEditable': 'Editable', 'symptomsRecorded': 'Recorded',
       'alertsUnread': 'Unread', 'alertsRead': 'Read',
+      'accessibilityTitle': 'Accessibility', 'accessibilityCaregiverMode': 'Caregiver mode', 'accessibilityCaregiverModeBody': 'Larger text, higher contrast, larger buttons and secondary actions grouped in the menu.',
+      'familyAlertSubject': 'Alert for {name}', 'familyHomeTitle': 'Family', 'familyHomeError': 'We could not load the family overview.', 'familyHealthCritical': 'Needs attention', 'familyHealthWarning': 'Needs checking', 'familyHealthStable': 'No urgent alerts', 'familyHealthEmpty': 'Overview in preparation', 'familyUnreadAlerts': '{count} unread alerts',
       'homeUploadFirstReport': 'Upload your first report', 'homeHealthSpace': 'Your health space',
       'homeGreetingMorning': 'Good morning, {name}.', 'homeGreetingEvening': 'Good evening, {name}.', 'homeGreetingDesktopNoName': 'Good morning.', 'homeUpdatedAt': 'Updated {date}',
       'homeLatestReportDate': 'Latest report: {date}', 'homeReviewValues': '{count} values to review', 'homeFromReport': 'From the report dated {date}', 'homeHealthStatusPreparingShort': 'In preparation',
@@ -1018,6 +1028,63 @@ extension AppLocalizationsLookup on AppLocalizations {
   String treatmentsRelativeMinutes(int count) => localeName.startsWith('en') ? (count == 1 ? '1 minute ago' : '$count minutes ago') : (count == 1 ? '1 minuto fa' : '$count minuti fa');
   String treatmentsRelativeHours(int count) => localeName.startsWith('en') ? (count == 1 ? '1 hour ago' : '$count hours ago') : (count == 1 ? '1 ora fa' : '$count ore fa');
   String treatmentsRelativeDays(int count) => localeName.startsWith('en') ? (count == 1 ? '1 day ago' : '$count days ago') : (count == 1 ? '1 giorno fa' : '$count giorni fa');
+}
+
+/// Family and subject-selection strings mirrored in the ARB sources.
+extension FamilyAppLocalizations on AppLocalizations {
+  String _f(String it, String en) => localeName.startsWith('en') ? en : it;
+  String get familyTitle => _f('Famiglia', 'Family');
+  String get familySettingsBody => _f('Profili gestiti, caregiver e inviti.', 'Managed profiles, caregivers and invitations.');
+  String get familyManagedProfiles => _f('Profili che gestisci', 'Profiles you manage');
+  String familyManagedCount(int count, int limit) => _f('$count di $limit', '$count of $limit');
+  String get familyAddProfile => _f('Aggiungi profilo', 'Add profile');
+  String get familyEditProfile => _f('Modifica profilo', 'Edit profile');
+  String get familyManagedEmpty => _f('Non gestisci ancora altri profili.', 'You do not manage any other profiles yet.');
+  String get familyWhoCanSee => _f('Chi può vedere i tuoi dati', 'Who can see your data');
+  String get familyDelegatesEmpty => _f('Nessun caregiver può vedere i tuoi dati.', 'No caregiver can see your data.');
+  String get familyInviteByEmail => _f('Invita per email', 'Invite by email');
+  String get familyReceivedInvites => _f('Inviti ricevuti', 'Invitations received');
+  String get familyInvitesEmpty => _f('Non hai inviti in attesa.', 'You have no pending invitations.');
+  String get familyFollowing => _f('Profili che segui', 'Profiles you follow');
+  String get familyFollowingEmpty => _f('Non segui altri profili.', 'You do not follow other profiles.');
+  String get familyFullName => _f('Nome e cognome', 'Full name');
+  String get familyBirthDate => _f('Data di nascita', 'Date of birth');
+  String get familyGender => _f('Sesso', 'Sex');
+  String get familyGenderFemale => _f('Femminile', 'Female');
+  String get familyGenderMale => _f('Maschile', 'Male');
+  String get familyGenderOther => _f('Altro', 'Other');
+  String get familyGenderUndisclosed => _f('Preferisco non dirlo', 'Prefer not to say');
+  String get familyRelationship => _f('Relazione', 'Relationship');
+  String get familyNameRequired => _f('Inserisci il nome.', 'Enter the name.');
+  String get familyDeclarationText => _f("Dichiaro di esercitare la responsabilità genitoriale su questa persona o di avere la sua delega a gestire i suoi dati sanitari, e di aver letto l'informativa", 'I declare that I have parental responsibility for this person or their authorization to manage their health data, and that I have read the privacy notice');
+  String get familyDeclarationVersion => _f('Dichiarazione guardian-2026-11', 'Declaration guardian-2026-11');
+  String get familyErrorDeclarationRequired => _f('Per aggiungere il profilo devi accettare la dichiarazione.', 'You must accept the declaration to add the profile.');
+  String get familyEmail => 'Email';
+  String get familyInvite => _f('Invita', 'Invite');
+  String get familyInviteCaregiver => _f('Invita caregiver', 'Invite caregiver');
+  String get familyCaregiver => 'Caregiver';
+  String get familyStatusActive => _f('Attivo', 'Active');
+  String get familyStatusInvited => _f('Invitato', 'Invited');
+  String get familyRevoke => _f('Revoca', 'Revoke');
+  String get familyAccept => _f('Accetta', 'Accept');
+  String get familyReject => _f('Rifiuta', 'Decline');
+  String familyInvitedBy(String name) => _f('Invito da $name', 'Invited by $name');
+  String get familyStopFollowing => _f('Smetti di seguire', 'Stop following');
+  String get familyRemove => _f('Rimuovi', 'Remove');
+  String get familyRemoveTitle => _f('Rimuovere il profilo gestito?', 'Remove managed profile?');
+  String familyRemoveBody(String name) => _f('Il profilo di $name verrà chiuso e non sarà più accessibile. I dati restano recuperabili per 30 giorni e poi vengono cancellati definitivamente.', "$name's profile will be closed and no longer accessible. The data can be recovered for 30 days and is then permanently deleted.");
+  String get familyLoadError => _f('Non siamo riusciti a caricare la famiglia.', 'We could not load your family.');
+  String get familySaveError => _f("Non siamo riusciti a completare l'operazione. Riprova.", 'We could not complete the operation. Try again.');
+  String get familyStoragePurgeFailed => _f('Profilo chiuso, alcuni file non sono stati rimossi: riprova', 'Profile closed, some files were not removed: try again');
+  String get familyErrorManagedLimit => _f('Hai raggiunto il limite di profili gestiti.', 'You have reached the managed-profile limit.');
+  String get familyErrorTooManyDelegates => _f('Questo profilo ha già il numero massimo di caregiver.', 'This profile already has the maximum number of caregivers.');
+  String get familyErrorAlreadyInvited => _f('Questo indirizzo è già stato invitato.', 'This address has already been invited.');
+  String get familyErrorNotInvited => _f("L'invito non è più disponibile.", 'This invitation is no longer available.');
+  String get subjectChoose => _f('Scegli il soggetto', 'Choose subject');
+  String get subjectManaged => _f('gestito', 'managed');
+  String get subjectManageFamily => _f('Gestisci famiglia', 'Manage family');
+  String subjectViewing(String name) => _f('Stai vedendo i dati di $name', "You are viewing $name's data");
+  String get subjectBackToYou => _f('Torna a te', 'Back to you');
 }
 
 /// Typed admin strings mirrored in the ARB sources.

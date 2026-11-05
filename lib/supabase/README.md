@@ -126,10 +126,144 @@ La distribuzione delle cure e': 12 riabilitazione, 10 prevenzione/diagnostica co
 
 La funzione interna `m24_seed_0020_treatments_demo()` e' revocata a `public`, `anon` e `authenticated` e serve soltanto a eseguire e verificare nuovamente lo stesso seed senza duplicazioni. Il test `tests/0020_treatments_seed_test.sql` dichiara `plan(35)` e si esegue solo sul progetto dev dal SQL Editor.
 
+## 0021 — Medico v1: dossier condiviso, domande, scheda di emergenza
+
+La migrazione `20261110_090000_migration.sql` (registro `0021_doctor_v1_schema`) crea le cinque tabelle del modulo M9 Medico v1: `share_links`, `share_link_opens`, `dossier_snapshots`, `questions` ed `emergency_cards`. Tutte hanno RLS attiva e **forzata**, una sola policy di `select` e nessuna policy di scrittura: le funzioni applicative arrivano con P08-A2, le Edge Functions (`dossier-pdf`) più avanti. Nessun seed, nessuna schermata.
+
+Enum introdotti: `share_open_outcome` (`ok`, `wrong_pin`, `expired`, `revoked`, `locked`, `exhausted`), `question_status` (`draft`, `sent`, `answered`, `closed`), `question_channel` (`link`, `app`). Estensioni richieste: `pgcrypto` (già attiva) e `btree_gist` per il vincolo di esclusione sul codice.
+
+- `share_links`: `code` è di sei cifre (`^[0-9]{6}$`); `pin_hash` accetta solo un hash bcrypt (`^\$2[aby]?\$`), prodotto da `crypt(pin, gen_salt('bf'))` nelle funzioni di A2 — **il PIN in chiaro non entra mai nel database, nei log e negli URL**. `scope` è validato da `m24_valid_share_scope`: o esattamente `{"all": true}`, o un oggetto con sole chiavi `organs`, `from`, `to`, `categories`, array di stringhe e date `AAAA-MM-GG` con `from ≤ to`. Default: scadenza a 7 giorni, `max_opens` 20, contatori a zero. Il codice è univoco tra i link **non revocati le cui finestre di validità si sovrappongono** (vincolo di esclusione GiST `share_links_code_active_excl` su `code` e `tstzrange(created_at, expires_at)`, `where revoked_at is null`): scaduto il link, il codice torna disponibile.
+- `share_link_opens`: registro delle aperture con esito, `ip_hash` e `user_agent_hash` — mai l'IP o lo user agent in chiaro, mai un dato clinico. Append-only: il trigger `trg_share_link_opens_append_only` rifiuta `update` e `delete` con `42501` anche per `postgres` (unica eccezione, l'interruttore di sessione `medical24.allow_purge` usato dalla cancellazione dell'account). È ciò che il paziente vede nella pagina del link.
+- `dossier_snapshots`: `payload` jsonb con stato di salute, rischi con livello, organi in attenzione, ultimi valori fuori intervallo con tendenza, esami consigliati ed elenco dei documenti nello scope (solo id, titolo, categoria e data); `pdf_path` e `rule_versions` con le versioni delle regole usate. Append-only con lo stesso trigger.
+- `questions`: `title` ≤ 120 caratteri (la colonna si chiama `title`, non `subject`: in tutto il progetto "subject" è il paziente), `body` ≤ 4000, `answer` con `answered_at` e `answered_via` coerenti (vincolo `questions_answer_consistency`: `status = 'answered'` se e solo se risposta e data sono presenti).
+- `emergency_cards`: una riga per soggetto (`subject_id` chiave primaria); `blood_group` ristretto ai valori ABO/Rh; `contacts` array di `{name, phone, relation}` validato da `m24_valid_emergency_contacts`; `notes` ≤ 500; `public_token` di 32 caratteri esadecimali casuali, univoco e rigenerabile; `fields_public` oggetto di soli booleani sui sei campi (`m24_valid_public_fields`). **Nessuna policy per `anon`**: la pagina pubblica legge con una funzione `security definer` a token, in A2.
+
+Indici: `share_links(subject_id, created_at desc)` e `share_links(code)` parziale sui non revocati, `share_link_opens(share_link_id, opened_at desc)`, `dossier_snapshots(subject_id, generated_at desc)`, `questions(subject_id, created_at desc)`, `emergency_cards(public_token)`.
+
+Audit: `trg_share_links_audit` scrive `share_link.created` alla creazione e `share_link.revoked` al primo valorizzare di `revoked_at`; `trg_share_link_opens_audit` scrive `share_link.opened` solo per le aperture con esito `ok`. In tutti e tre i casi `actor_id` è `null` (chi apre il link non ha un account) e `subject_id` è quello del soggetto.
+
+Accesso: una sola policy di `select` per tabella, tutte basate su `can_access_subject(subject_id)` (per `share_link_opens` attraverso il join sul link). `anon` non ha alcun privilegio; `authenticated` ha solo `select`: ogni tentativo di `insert`, `update` o `delete` diretto fallisce con `42501`.
+
+Il test `tests/0021_doctor_v1_schema_test.sql` dichiara `plan(32)` e si esegue solo sul progetto dev dal SQL Editor (fixture Alice e Bob).
+
+## 0022 — Medico v1: costruzione del dossier
+
+La migrazione `20261111_090000_migration.sql` (registro `0022_doctor_v1_dossier`) aggiunge **tre funzioni** sopra lo schema della 0021, che non viene toccata. Nessuna tabella nuova, nessuna Edge Function, nessuna schermata, nessun seed.
+
+`dossier_build(p_subject uuid, p_scope jsonb default '{"all": true}'::jsonb, p_share_link_id uuid default null) → uuid`. `security definer`, `set search_path = public, extensions`, `execute` revocato a `public` e `anon` e concesso solo ad `authenticated` e `service_role`. Richiede `can_access_subject(p_subject)` oppure il `service_role` (altrimenti `not_allowed`, `42501`); `p_subject` nullo, scope non valido secondo `m24_valid_share_scope` e `p_share_link_id` che non appartiene al soggetto sono `22023` (`invalid_subject`, `invalid_scope`, `invalid_share_link`).
+
+Inserisce una riga in `dossier_snapshots` (con `generated_at = clock_timestamp()`) e ne restituisce l'id. Il `payload` ha `version = 1` e queste chiavi:
+
+- `subject`: solo `full_name`, `birth_date`, `gender` da `profiles`; nient'altro.
+- `scope`: lo scope ricevuto, così com'è.
+- `health_status`: `level`, `organs_ok`, `organs_monitor`, `organs_attention`, `organs_missing` da `latest_organ_states`; `level` è `attention` se almeno un organo è in attenzione, altrimenti `monitor` se almeno uno è da monitorare, `missing` se non c'è alcun dato, altrimenti `ok`.
+- `organs`: da `latest_organ_states` i soli stati `monitor` e `attention` (`organ_id`, `state`, `computed_at`, `rule_version`), ordinati con gli organi in **attenzione prima** di quelli da monitorare e, a parità di stato, per `organ_id`; con `scope.organs` solo quelli elencati.
+- `risks`: da `latest_risk_scores` (`family`, `level`, `score`, `computed_at`, `rule_version`).
+- `out_of_range`: per ogni codice l'ultimo valore confermato e non superato con flag fuori intervallo (`below`, `above`, `critical_low`, `critical_high`), con `code`, `name` (dal catalogo nella lingua del profilo), `value`, `unit`, `ref_low`, `ref_high`, `flag`, `effective_at`, `document_id`, `trend`, `previous_value`, `previous_at`. `trend` è `up`/`down`/`stable` rispetto al valore confermato precedente dello stesso codice (`stable` entro il 5%), `null` se non esiste un precedente. Con `scope.organs` solo i codici di quegli organi in `organ_biomarker_map`; con `from`/`to` solo gli `effective_at` nell'intervallo; ordinamento `effective_at desc`, massimo 40 righe.
+- `recommended_exams`: da `recommendations` con `status = 'open'` (`id`, `kind`, `title`, `reason`, `due_at`, `origin`), massimo 20.
+- `documents`: da `documents` nello scope (`categories` e `from`/`to` su `document_date`): solo `id`, `title`, `category`, `document_date`, data decrescente, massimo 100. **Mai `storage_path`, mai il testo del documento.**
+- `counts`: `observations_confirmed` e `documents_total` con gli stessi filtri dello scope.
+- `disclaimer_key`: `'dossier.disclaimer'`.
+
+Nessun testo generato dall'IA entra nel dossier. `rule_versions` della riga è `{organ_rules: [...], risk_rules: [...]}` con le sole versioni distinte effettivamente usate. Audit: `dossier.built` con attore `auth.uid()` (nullo per il `service_role`), `target_table = 'dossier_snapshots'`, `target_id` dello snapshot e `subject_id` del soggetto — nessun dato clinico.
+
+`dossier_latest(p_subject uuid) → jsonb`. `security definer`, `stable`, `execute` revocato a `public` e `anon` e concesso ad `authenticated` e `service_role`; richiede `can_access_subject(p_subject)` oppure il `service_role` (`42501`), `p_subject` nullo è `22023`. Restituisce l'**ultimo dossier personale** del soggetto — l'ultimo `dossier_snapshots` **senza `share_link_id`**, perché i dossier congelati per un link appartengono a quel link e non alla schermata del paziente — nella forma `{id, generated_at, payload, pdf_path}`; `null` se non ce n'è nessuno.
+
+`dossier_snapshot_set_pdf(p_snapshot uuid, p_path text) → void`. `security definer`, `execute` revocato a `public`, `anon` e `authenticated` e concesso **soltanto a `service_role`**: la scrive esclusivamente la Edge Function `dossier-pdf`, e una chiamata da `authenticated` fallisce con `42501` prima di entrare nel corpo. Il percorso deve essere esattamente `subjects/{subject_id}/dossier/{snapshot_id}.pdf`, altrimenti `invalid_pdf_path` (`22023`); snapshot inesistente e percorso vuoto sono anch'essi `22023`. La scrittura avviene una volta sola: la seconda è rifiutata dal trigger `m24_guard_dossier_snapshot` della 0021 con `42501`.
+
+Il test `tests/0022_doctor_v1_dossier_test.sql` dichiara `plan(23)` e si esegue solo sul progetto dev dal SQL Editor (Alice con due stati d'organo, un punteggio di rischio, tre osservazioni confermate, un documento e un esame consigliato; Bob estraneo). Per la durata della prova i trigger di ricalcolo su `observations` restano disattivati, così il dossier legge esattamente la fixture dichiarata.
+
+## 0023 — Medico v1: domande al medico e scheda di emergenza
+
+La migrazione `20261112_090000_migration.sql` (registro `0023_doctor_v1_questions_ice`) aggiunge le **funzioni delle domande** e quelle della **scheda di emergenza (ICE)** sopra lo schema della 0021, che non viene toccato. Nessuna tabella nuova, nessuna Edge Function, nessuna schermata, nessun seed.
+
+Tutte le funzioni sono `security definer` con `set search_path = public, extensions`, `execute` revocato a `public` e `anon` e concesso soltanto ai ruoli indicati. Errori: `22023` per l'input non valido (`invalid_subject`, `invalid_title`, `invalid_body`, `invalid_answer`, `invalid_doctor_email`, `invalid_share_link`, `invalid_question`), `42501` `not_allowed` per l'accesso, `P0001` con codice parlante per lo stato (`daily_limit`, `not_editable`, `not_sendable`, `not_answerable`, `already_closed`, `not_deletable`). Ogni cambio di stato scrive `audit_log` con azione `question.<azione>`, `target_table = 'questions'`, `target_id` della domanda e `subject_id` del soggetto: mai il testo della domanda o della risposta.
+
+La guardia interna `m24_question_for_update(p_id)` (nessun `execute` per `anon` e `authenticated`) blocca la riga e verifica `can_access_subject(subject_id)` una volta sola per tutte le azioni del paziente.
+
+Per `authenticated` con `can_access_subject` sul soggetto della domanda:
+
+- `question_create(p_subject uuid, p_title text, p_body text, p_share_link_id uuid default null, p_doctor_email text default null) → uuid`: nasce `draft`; titolo e testo ritagliati (1–120 e 1–4000 caratteri); `p_share_link_id`, se presente, deve essere un link dello stesso soggetto (`invalid_share_link`); massimo **20 domande create al giorno per soggetto** (`daily_limit`). Audit `question.created`.
+- `question_update(p_id uuid, p_title text, p_body text) → void`: solo in `draft`, altrimenti `not_editable`. Audit `question.updated`.
+- `question_send(p_id uuid) → void`: `draft → sent`, altrimenti `not_sendable`. Audit `question.sent`.
+- `question_record_answer(p_id uuid, p_answer text) → void`: `sent → answered` con `answered_via = 'app'` e `answered_at = now()` — è il paziente che registra una risposta ricevuta **fuori dall'app**; da ogni altro stato `not_answerable`. Risposta ritagliata, 1–8000 caratteri. Audit `question.answered`.
+- `question_close(p_id uuid) → void`: da qualunque stato diverso da `closed` a `closed`, **conservando la risposta**; se è già chiusa `already_closed`. Audit `question.closed`.
+- `question_delete(p_id uuid) → void`: solo in `draft`, altrimenti `not_deletable`. Audit `question.deleted`.
+
+Soltanto per `service_role` (la pagina pubblica del dossier passa dalla Edge Function `dossier-open`; `execute` revocato anche ad `authenticated`):
+
+- `questions_for_link(p_share_link_id uuid) → jsonb`: le domande `sent` e `answered` allegate a quel link, in ordine di creazione, nella forma `{id, title, body, status, answer, answered_at, created_at}` — **mai `subject_id`, mai `doctor_email`**.
+- `question_answer_via_link(p_share_link_id uuid, p_question_id uuid, p_answer text) → void`: la domanda deve appartenere a quel link (`invalid_question`, `22023`) ed essere `sent` (`not_answerable`, `P0001`); diventa `answered` con `answered_via = 'link'`. Risposta ritagliata, 1–8000 caratteri. L'audit ha `actor_id` nullo, come `share_link.opened` della 0021: chi risponde dal link non ha un account.
+
+### Scheda di emergenza (ICE)
+
+- `emergency_card_upsert(p_subject uuid, p_payload jsonb) → jsonb`, `execute` solo ad `authenticated`, richiede `can_access_subject(p_subject)` (`42501`). Chiavi ammesse: `blood_group`, `allergies`, `medications`, `conditions`, `contacts`, `notes`, `fields_public`; qualunque altra chiave è `unknown_key` (`22023`). Gli array di testi arrivano **ritagliati, senza elementi vuoti, al massimo 80 caratteri l'uno e 20 in tutto** (altrimenti `invalid_<chiave>`, `22023`), normalizzati **prima** dell'update così che un payload sbagliato non lasci scritture a metà. Crea la riga se manca (con `public_token` dal default della 0021) e **aggiorna solo le chiavi presenti**: le assenti restano come sono, e `fields_public` si fonde voce per voce. I valori fuori dai vincoli della 0021 (gruppo sanguigno non canonico, contatto senza telefono, `fields_public` non booleani) falliscono con `23514`. Restituisce la riga completa, `public_token` compreso. Audit `emergency_card.updated`.
+- `emergency_card_regenerate_token(p_subject uuid) → text`, `execute` solo ad `authenticated`, `can_access_subject` (`42501`): nuovo `encode(gen_random_bytes(16), 'hex')`, il vecchio indirizzo pubblico smette di funzionare; scheda inesistente `22023`. Audit `emergency_card.token_regenerated`.
+- `emergency_card_public(p_token text) → jsonb`, `execute` ad **`anon` e `authenticated`**: il token deve essere di 32 caratteri esadecimali, altrimenti `null`; se la scheda esiste restituisce `display_name` (il `full_name` di `profiles`), `updated_at` e **i soli campi con `fields_public = true`** — `notes` è `false` per impostazione predefinita; se non esiste restituisce `null`, senza distinguere i due casi. Nessun altro dato del profilo. Audit `emergency_card.viewed` con `actor_id` nullo (chi soccorre non ha un account) e il `subject_id` del soggetto.
+
+La funzione interna `m24_emergency_text_array(jsonb, text)` (nessun `execute` per `anon` e `authenticated`) normalizza gli array di testi.
+
+Il test `tests/0023_doctor_v1_questions_ice_test.sql` dichiara `plan(39)` e si esegue solo sul progetto dev dal SQL Editor (Alice e Bob con un link attivo ciascuno): ciclo di vita completo della domanda, link di un altro soggetto, tetto di 20 domande al giorno, accesso negato a Bob, funzioni riservate viste dal contesto interno, e per la scheda chiave ignota, gruppo sanguigno non valido, upsert parziale, rigenerazione del token e pagina pubblica letta come `anon`.
+
+Nella 0022, inoltre, l'array `organs` del payload è ora ordinato con gli organi in **attenzione prima** di quelli da monitorare e, a parità di stato, per `organ_id`; la migrazione resta idempotente.
+
+## 0024 — Medico v1: creazione, revoca, elenco e apertura dei link
+
+La migrazione `20261113_090000_migration.sql` (registro `0024_doctor_v1_links`) aggiunge **cinque funzioni** sopra lo schema della 0021 (non toccato), `dossier_build` della 0022 e `questions_for_link` della 0023. Nessuna tabella nuova, nessuna Edge Function, nessuna schermata, nessun seed.
+
+Le tre funzioni del paziente sono `security definer` con `set search_path = public, extensions`, `execute` revocato a `public`, `anon` e `service_role` e concesso **soltanto ad `authenticated`**. Errori: `22023` per l'input non valido (`invalid_subject`, `weak_pin`, `invalid_expires_in`, `invalid_max_opens`, `invalid_scope`, `invalid_share_link`), `42501` `not_allowed` per l'accesso, `P0001` con codice parlante (`too_many_links`, `code_exhausted`). **Il PIN non viene mai salvato, loggato o restituito in chiaro**: in colonna finisce solo `crypt(p_pin, gen_salt('bf'))` e nessun messaggio di errore lo riporta.
+
+La guardia interna `m24_valid_pin(text)` (nessun `execute` per `anon` e `authenticated`) accetta un PIN di 4–6 cifre che non siano tutte uguali e non formino una sequenza crescente o decrescente (`1234`, `123456`, `4321`, `9876`…).
+
+- `share_link_create(p_subject uuid, p_pin text, p_scope jsonb default '{"all": true}'::jsonb, p_expires_in interval default '7 days', p_max_opens int default 20) → jsonb`: richiede `can_access_subject(p_subject)`. Scadenza fra **un'ora e trenta giorni**, aperture **da 1 a 100**, scope validato con `m24_valid_share_scope`; massimo **cinque link attivi** (non revocati e non scaduti) per soggetto, altrimenti `too_many_links`. Il codice è di sei cifre casuali (`lpad(floor(random()*1000000)::int::text, 6, '0')`), mai tutte uguali; se il vincolo di esclusione della 0021 lo rifiuta (`23P01`) si riprova, fino a dieci volte, poi `code_exhausted`. `created_by = auth.uid()`. Dopo l'insert chiama `dossier_build(p_subject, p_scope, id)` per congelare lo snapshot del link e restituisce `{id, code, scope, expires_at, max_opens, snapshot_id}`: **il PIN non torna indietro**. L'audit `share_link.created` lo scrive il trigger `trg_share_links_audit` della 0021.
+- `share_link_revoke(p_id uuid) → void`: solo il proprietario (`can_access_subject` sul soggetto del link, altrimenti `42501`; link inesistente `22023`). Valorizza `revoked_at = now()` se è nullo, altrimenti non fa nulla, così l'audit `share_link.revoked` resta uno solo.
+- `share_links_for_subject(p_subject uuid) → jsonb`: i link del soggetto degli **ultimi novanta giorni**, dal più recente, nella forma `{id, code, scope, created_at, expires_at, max_opens, opens_count, last_opened_at, status, opens}`. `status` è calcolato nell'ordine `revoked`, `expired`, `locked` (`locked_until > now()`), `exhausted` (`opens_count >= max_opens`), `active`; `opens` sono le ultime dieci righe di `share_link_opens` con `{opened_at, outcome}`. **Mai `pin_hash`, mai gli hash dell'IP e dello user agent.**
+
+### Apertura del link (solo `service_role`)
+
+Le due funzioni seguenti hanno `execute` revocato a `public`, `anon` e `authenticated`, concesso soltanto a `service_role`, e in più controllano `auth.role() = 'service_role'` come `questions_for_link` della 0023: le chiama unicamente la Edge Function `dossier-open`, perché chi apre il link non ha un account.
+
+- `share_link_open(p_code text, p_pin text, p_ip_hash text default null, p_ua_hash text default null) → jsonb`: cerca il link **più recente** con quel codice (`select … for update`). Se non esiste restituisce `{outcome: 'not_found'}` **senza scrivere nulla**. Altrimenti registra sempre una riga in `share_link_opens` con l'esito, `p_ip_hash` e `p_ua_hash`, e risponde nell'ordine: `revoked` (se `revoked_at` non è nullo); `expired` (se `now()` è fuori da `[created_at, expires_at)`); `locked` con `locked_until` (se `locked_until > now()`); `exhausted` (se `opens_count >= max_opens`); con PIN errato `failed_attempts + 1` e risposta `wrong_pin` con `attempts_left`, ma al **quinto** errore `locked_until = now() + 15 minuti`, `failed_attempts = 0` ed esito `locked`. Con il PIN giusto incrementa `opens_count`, scrive `last_opened_at = now()`, azzera `failed_attempts` e restituisce `{outcome: 'ok', share_link_id, subject_id, scope, expires_at, opens_left, snapshot: {id, generated_at, payload, rule_versions}, questions}`, dove lo `snapshot` è l'ultimo `dossier_snapshots` del link e `questions` è `questions_for_link(id)`. **Le risposte di errore portano solo `outcome` e, quando servono, `attempts_left` o `locked_until`: mai `subject_id`, mai il dossier.** L'audit `share_link.opened` lo scrive il trigger della 0021 sulla riga del registro.
+- `share_open_rate_check(p_ip_hash text) → boolean`: `false` quando lo stesso hash di IP ha **più di venti** esiti `wrong_pin` negli ultimi **quindici minuti**, `true` altrimenti; con `p_ip_hash` nullo `true`.
+
+Il test `tests/0024_doctor_v1_links_test.sql` dichiara `plan(37)` e si esegue solo sul progetto dev dal SQL Editor: creazione con codice a sei cifre, hash bcrypt, snapshot collegato e audit; PIN deboli rifiutati; sesto link attivo; Bob sul soggetto di Alice; elenco con `status` e senza `pin_hash`; revoca; e, dal contesto interno, codice inesistente, i cinque tentativi con il blocco, l'apertura riuscita, link esaurito, revocato e scaduto, il freno per IP e il rifiuto ad `authenticated`.
+
+## P08-A3-1 — Edge Function `dossier-open`
+
+`functions/dossier-open/index.ts` è la pagina pubblica del dossier: **unica funzione con `verify_jwt = false`** (`[functions.dossier-open]` in `config.toml`), perché chi apre il link non ha un account e la pagina chiama con la sola apikey anonima. Dentro usa il `service_role` e chiama solo `share_open_rate_check` e `share_link_open` (0024) e `question_answer_via_link` (0023). Nessuna migrazione, nessuna schermata; si pubblica dal modulo Schema Deployment con **«Migration File: No file selected»**.
+
+Segreto obbligatorio: **`DOSSIER_HASH_SECRET`** (se manca, `500 config_missing`).
+
+- `{action: 'open', code, pin}` → codice di sei cifre e PIN di 4–6 cifre, altrimenti `400 invalid_body`; `share_open_rate_check` falso → `429 rate_limited`; esiti di `share_link_open`: `ok` → 200, `wrong_pin`/`locked`/`revoked`/`expired`/`exhausted` → 403 con `{outcome, attempts_left?, locked_until?}`, `not_found` → 404 `{outcome}`. Su `wrong_pin` e `locked` la risposta attende **300 ms fissi**. Su `ok` tornano `share_link_id`, `scope`, `expires_at`, `opens_left`, `snapshot`, `questions` e `session`: **`subject_id` non esce mai**.
+- `session` = base64url di `{share_link_id, subject_id, snapshot_id, exp = ora + 30 minuti}` + `'.'` + HMAC-SHA256 firmata con il segreto: `answer` e `pdf` non consumano una seconda apertura. Firma manomessa o sessione scaduta → `401 session_invalid`.
+- `{action: 'answer', session, question_id, answer}` → risposta di 1–8000 caratteri, `question_answer_via_link`, `200 {answered: true}`; `P0001` → `409 not_answerable`.
+- `{action: 'pdf', session}` → `pdf_path` dello snapshot della sessione; nullo → `404 pdf_missing`, altrimenti URL firmato di 600 s del bucket privato `dossiers` → `200 {url, expires_in: 600}`.
+- Hash: `HMAC-SHA256(DOSSIER_HASH_SECRET, AAAA-MM-GG UTC + valore)` in esadecimale, prime **32 cifre**; IP dal primo valore di `x-forwarded-for` o da `cf-connecting-ip`, user agent dall'omonima intestazione; solo Web Crypto.
+- **Nei log mai codice, PIN, IP, user agent o dossier**: una riga per chiamata con `action`, esito o codice d'errore e latenza. CORS come `explain`.
+
+Test: `deno test --allow-env lib/supabase/functions/dossier-open/index_test.ts` — senza rete e senza database.
+
+## P08-A3-2 — Edge Function `dossier-pdf`
+
+`functions/dossier-pdf/index.ts` genera il PDF del dossier; il renderer vive in `functions/_shared/dossier_pdf.ts` ed è una funzione pura (nessuna rete, nessun database), così i test lo chiamano direttamente. `[functions.dossier-pdf]` ha **`verify_jwt = true`**: il PDF è del paziente. Nessuna migrazione, nessuna schermata, nessun segreto nuovo; si pubblica dal modulo Schema Deployment con **«Migration File: No file selected»**.
+
+`POST {snapshot_id, lang?: 'it' | 'en'}` con il JWT dell'utente **obbligatorio** (senza `Authorization: Bearer …` → `401 unauthenticated`).
+
+- Lo snapshot si legge con il **client dell'utente** (JWT inoltrato, quindi sotto RLS): riga assente o non sua → `404 snapshot_not_found`; `snapshot_id` non UUID → `400 invalid_input`.
+- `pdf_path` già valorizzato → **nessuna rigenerazione**: URL firmato di **600 s** del bucket privato `dossiers` → `200 {pdf_path, url, expires_in: 600}`.
+- Altrimenti il PDF nasce dal payload congelato da `dossier_build` (**versione 1**, 0022) con **pdf-lib** (`https://esm.sh/pdf-lib@1.17.1`), font standard **Helvetica**, **A4**, margini **48 pt**, interruzione di pagina automatica, numero di pagina e «Generato da Medical 24 il &lt;data&gt;» a piè di pagina. Sezioni: titolo («Dossier di salute» / «Health dossier»), persona (nome, data di nascita, genere), scope in parole, stato di salute con i conteggi, aree da seguire, rischi (famiglia, livello, punteggio, versione della regola), valori fuori intervallo (nome, valore e unità, intervallo, segnalazione, data, tendenza e valore precedente), esami consigliati, documenti (titolo, categoria, data), versioni delle regole, avvertenze.
+- Lingua da `body.lang`, altrimenti `Accept-Language`, altrimenti `it`.
+- Caricamento con il `service_role` nel bucket privato `dossiers` (creato se manca, `public = false`) in `subjects/{subject_id}/dossier/{snapshot_id}.pdf`, poi `dossier_snapshot_set_pdf` (0022, riservata al `service_role`), infine l'URL firmato → `200 {pdf_path, url, expires_in: 600}`.
+- Errori `500` con codice: **`render_failed`**, **`upload_failed`**.
+- **Avvertenze incorporate nel modulo**, in italiano e in inglese: il dossier non è una diagnosi e non sostituisce la visita; i dati provengono dai referti caricati dalla persona e dalle misure che ha registrato; le valutazioni e le decisioni di cura spettano al medico.
+- **Nei log solo `snapshot_id`, esito, byte e latenza**: una riga per chiamata. CORS come `explain`.
+
+Test: `deno test --allow-env --allow-net lib/supabase/functions/dossier-pdf/index_test.ts` (la rete serve solo a scaricare `pdf-lib` da esm.sh; database e storage sono finti) — buffer che inizia con `%PDF`, due pagine con cento documenti, PDF di una pagina dal payload vuoto, titolo e piè di pagina in inglese con `lang: 'en'`, e i percorsi dell'handler (401, 404, `pdf_path` già presente, generazione completa, `render_failed`, `upload_failed`).
+
 ## Edge Functions
 
 From **Edge Functions**, deploy `document-ingest`, `extract`,
-`extract-batch`, `extract-batch-poll`, `explain` and `delete-account` using the
+`extract-batch`, `extract-batch-poll`, `explain`, `dossier-open`, `dossier-pdf` and `delete-account` using the
 function directories under `lib/supabase/functions/`. Keep JWT verification enabled for
 authenticated endpoints. Configure required secrets in **Edge Functions >
 Secrets**; never place them in SQL, tests, or the Flutter client.

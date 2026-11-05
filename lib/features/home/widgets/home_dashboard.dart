@@ -19,6 +19,8 @@ import 'package:medical24/features/health/prevention/data/prevention_models.dart
 import 'package:medical24/features/health/prevention/providers/prevention_providers.dart';
 import 'package:medical24/features/health/prevention/widgets/prevention_widgets.dart';
 import 'package:medical24/features/home/data/home_models.dart';
+import 'package:medical24/features/home/providers/home_providers.dart';
+import 'package:medical24/features/family/providers/family_providers.dart';
 import 'package:medical24/features/treatments/widgets/treatment_widgets.dart';
 import 'package:medical24/l10n/generated/localization_lookup.dart';
 
@@ -41,7 +43,7 @@ class _HomeDashboardState extends ConsumerState<HomeDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.snapshot.isEmpty) return ListView(children: <Widget>[M24EmptyState(icon: M24Icons.upload, title: context.l10n.t('homeEmptyTitle'), message: context.l10n.t('homeEmptyBody'), actionLabel: context.l10n.t('homeUploadFirstReport'), onAction: () => AddDocumentSheet.show(context)), const SizedBox(height: 24), const FeaturedTreatments()]);
+    if (widget.snapshot.isEmpty) return ListView(children: <Widget>[const FamilyHomeCard(), const SizedBox(height: 12), M24EmptyState(icon: M24Icons.upload, title: context.l10n.t('homeEmptyTitle'), message: context.l10n.t('homeEmptyBody'), actionLabel: context.l10n.t('homeUploadFirstReport'), onAction: () => AddDocumentSheet.show(context)), const SizedBox(height: 24), const FeaturedTreatments()]);
     final HomeValue? selected = _selected;
     final List<BiomarkerSummary> catalog = ref.watch(healthCatalogProvider).value ?? const <BiomarkerSummary>[];
     final bool isPhone = MediaQuery.sizeOf(context).width < 1200;
@@ -66,6 +68,8 @@ class HomePhoneDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<HomeDocument> documents = homeRecentDocuments(snapshot);
     return ListView(padding: const EdgeInsets.only(bottom: 80), children: <Widget>[
+      const FamilyHomeCard(),
+      const SizedBox(height: 12),
       HomeHealthCard(selected: selected, history: history, catalog: catalog),
       if (snapshot.documentsToReview.isNotEmpty) ...<Widget>[const SizedBox(height: 12), M24Banner(title: context.l10n.t('homeReviewValues', args: <String, String>{'count': '${snapshot.documentsToReview.length}'}), subtitle: homeReviewSubtitle(context, snapshot.documentsToReview.first), onTap: () => context.push(AppRoutes.analysisReview(snapshot.documentsToReview.first.id)))],
       const SizedBox(height: 12),
@@ -109,7 +113,7 @@ class HomeDesktopDashboard extends StatelessWidget {
       Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
         Expanded(flex: 8, child: HomeValuesOverTimeCard(snapshot: snapshot, selected: selected, history: history, catalog: catalog, period: period, onPeriodChanged: onPeriodChanged, onValueChanged: onValueChanged)),
         const SizedBox(width: 24),
-        Expanded(flex: 4, child: Column(children: <Widget>[const HomeOrganStatusCard(), const SizedBox(height: 24), HomeConfirmedValuesCard(values: snapshot.values, catalog: catalog), const SizedBox(height: 24), HomeTasksCard(snapshot: snapshot, catalog: catalog), const SizedBox(height: 24), const HomeDoctorCard()])),
+        Expanded(flex: 4, child: Column(children: <Widget>[const FamilyHomeCard(), const SizedBox(height: 24), const HomeOrganStatusCard(), const SizedBox(height: 24), HomeConfirmedValuesCard(values: snapshot.values, catalog: catalog), const SizedBox(height: 24), HomeTasksCard(snapshot: snapshot, catalog: catalog), const SizedBox(height: 24), const HomeDoctorCard()])),
       ]),
       const SizedBox(height: 24),
       M24Card(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
@@ -122,6 +126,47 @@ class HomeDesktopDashboard extends StatelessWidget {
       const SizedBox(height: 24),
       M24Disclaimer(phoneText: context.l10n.t('disclaimerPhone'), desktopText: context.l10n.t('disclaimerDesktop')),
     ]);
+  }
+}
+
+class FamilyHomeCard extends ConsumerWidget {
+  const FamilyHomeCard({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<List<FamilyHomeSnapshot>> state = ref.watch(familyHomeSnapshotsProvider);
+    return state.when(
+      loading: () => M24Card(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[Text(context.l10n.t('familyHomeTitle'), style: context.m24.text.h2), const SizedBox(height: 16), const Center(child: CircularProgressIndicator())])),
+      error: (_, __) => M24Card(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[Text(context.l10n.t('familyHomeTitle'), style: context.m24.text.h2), const SizedBox(height: 8), Text(context.l10n.t('familyHomeError'), style: context.m24.text.bodySmall), const SizedBox(height: 8), M24Button(label: context.l10n.t('commonRetry'), onPressed: () => ref.invalidate(familyHomeSnapshotsProvider), variant: M24ButtonVariant.secondary)])),
+      data: (items) {
+        if (items.isEmpty) return const SizedBox.shrink();
+        final double screenWidth = MediaQuery.sizeOf(context).width;
+        final bool tablet = screenWidth >= 600 && screenWidth < 1200;
+        final List<Widget> rows = items.map((item) => FamilyHomeSubjectRow(item: item, onTap: () async {
+          await ref.read(currentSubjectProvider.notifier).select(item.subject);
+        })).toList(growable: false);
+        return M24Card(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
+          Text(context.l10n.t('familyHomeTitle'), style: context.m24.text.h2),
+          const SizedBox(height: 12),
+          if (tablet) LayoutBuilder(builder: (context, constraints) => Wrap(spacing: 12, runSpacing: 12, children: rows.map((row) => SizedBox(width: (constraints.maxWidth - 12) / 2, child: row)).toList(growable: false))) else ...rows,
+        ]));
+      },
+    );
+  }
+}
+
+class FamilyHomeSubjectRow extends StatelessWidget {
+  const FamilyHomeSubjectRow({super.key, required this.item, required this.onTap});
+  final FamilyHomeSnapshot item;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final HomeSnapshot snapshot = item.snapshot;
+    final bool critical = snapshot.unreadAlerts.any((alert) => alert.type == HealthAlertType.critical);
+    final bool warning = snapshot.unreadAlerts.any((alert) => alert.type == HealthAlertType.warning);
+    final String status = critical ? context.l10n.t('familyHealthCritical') : warning ? context.l10n.t('familyHealthWarning') : snapshot.isEmpty ? context.l10n.t('familyHealthEmpty') : context.l10n.t('familyHealthStable');
+    return M24ListRow(icon: M24Icons.users, iconVariant: critical ? M24IconTileVariant.danger : warning ? M24IconTileVariant.warning : M24IconTileVariant.primary, title: item.subject.fullName, subtitle: '$status · ${context.l10n.t('familyUnreadAlerts', args: <String, String>{'count': '${snapshot.counts.unreadAlerts}'})}', onTap: onTap);
   }
 }
 

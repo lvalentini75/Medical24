@@ -7,7 +7,7 @@ class M24Icons {
   static const IconData health = LucideIcons.heart;
   static const IconData archive = LucideIcons.fileText;
   static const IconData treatments = LucideIcons.pill;
-  static const IconData doctor = LucideIcons.users;
+  static const IconData doctor = LucideIcons.stethoscope;
   static const IconData upload = LucideIcons.fileUp;
   static const IconData review = LucideIcons.fileCheck;
   static const IconData chart = LucideIcons.chartNoAxesColumn;
@@ -61,4 +61,5 @@ class M24Icons {
   static const IconData verified = LucideIcons.badgeCheck;
   static const IconData phone = LucideIcons.phone;
   static const IconData website = LucideIcons.globe;
+  static const IconData copy = LucideIcons.copy;
 }

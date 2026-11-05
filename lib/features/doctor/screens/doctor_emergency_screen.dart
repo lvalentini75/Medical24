@@ -1,0 +1,93 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:medical24/core/providers/app_providers.dart';
+import 'package:medical24/core/ui/icons.dart';
+import 'package:medical24/core/ui/tokens.dart';
+import 'package:medical24/core/ui/widgets/widgets.dart';
+import 'package:medical24/core/widgets/app_state_views.dart';
+import 'package:medical24/features/doctor/data/doctor_models.dart';
+import 'package:medical24/features/doctor/data/doctor_repository.dart';
+import 'package:medical24/features/doctor/providers/doctor_providers.dart';
+import 'package:medical24/l10n/generated/app_localizations.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
+
+class DoctorEmergencyScreen extends ConsumerStatefulWidget {
+  const DoctorEmergencyScreen({super.key});
+  @override
+  ConsumerState<DoctorEmergencyScreen> createState() => _DoctorEmergencyScreenState();
+}
+
+class _DoctorEmergencyScreenState extends ConsumerState<DoctorEmergencyScreen> {
+  static const List<String> bloodGroups = <String>['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'];
+  static const List<String> fieldKeys = <String>['blood_group', 'allergies', 'medications', 'conditions', 'contacts', 'notes'];
+  final TextEditingController notes = TextEditingController();
+  String? bloodGroup, token, error;
+  List<String> allergies = <String>[], medications = <String>[], conditions = <String>[];
+  List<EmergencyContact> contacts = <EmergencyContact>[];
+  Map<String, bool> visibility = <String, bool>{for (final key in fieldKeys) key: key != 'notes'};
+  final Set<String> changed = <String>{};
+  bool loaded = false, saving = false, regenerating = false;
+
+  @override
+  void dispose() { notes.dispose(); super.dispose(); }
+  void _load(EmergencyCard? card) { loaded = true; if (card == null) return; bloodGroup = card.bloodGroup; allergies = [...card.allergies]; medications = [...card.medications]; conditions = [...card.conditions]; contacts = [...card.contacts]; visibility = {...visibility, ...card.fieldsPublic}; token = card.publicToken; notes.text = card.notes ?? ''; }
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    return SectionPage(title: l10n.doctorEmergencyTitle, subtitle: l10n.doctorEmergencySubtitle, showDisclaimer: true, child: ref.watch(doctorEmergencyCardProvider).when(loading: () => const AppLoadingView(), error: (_, __) => AppErrorView(message: l10n.doctorEmergencyLoadError, onRetry: () => ref.invalidate(doctorEmergencyCardProvider)), data: (card) {
+      if (!loaded) _load(card);
+      return LayoutBuilder(builder: (context, constraints) {
+        final Widget form = DoctorEmergencyForm(bloodGroup: bloodGroup, bloodGroups: bloodGroups, allergies: allergies, medications: medications, conditions: conditions, contacts: contacts, notes: notes, visibility: visibility, saving: saving, error: error, onBloodGroup: (value) => setState(() { bloodGroup = value; changed.add('blood_group'); }), onItems: (key, values) => setState(() { if (key == 'allergies') allergies = values; if (key == 'medications') medications = values; if (key == 'conditions') conditions = values; changed.add(key); }), onContacts: (values) => setState(() { contacts = values; changed.add('contacts'); }), onNotesChanged: (_) => changed.add('notes'), onVisibility: (key, value) => setState(() { visibility[key] = value; changed.add('fields_public'); }), onSave: _save);
+        final Widget code = DoctorEmergencyCode(token: token, address: token == null ? null : _address(token!), regenerating: regenerating, onCopy: _copy, onShare: _share, onRegenerate: _regenerate);
+        final Widget preview = DoctorEmergencyPreview(name: ref.watch(myProfileProvider).value?.fullName, bloodGroup: bloodGroup, allergies: allergies, medications: medications, conditions: conditions, contacts: contacts, notes: notes.text, visibility: visibility);
+        if (constraints.maxWidth >= 1000) return SingleChildScrollView(child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[Expanded(flex: 3, child: form), const SizedBox(width: 24), Expanded(flex: 2, child: Column(children: <Widget>[code, const SizedBox(height: 16), preview]))]));
+        return ListView(children: <Widget>[form, const SizedBox(height: 16), code, const SizedBox(height: 16), preview]);
+      });
+    }));
+  }
+
+  Uri _address(String value) => Uri(scheme: 'https', host: Uri.base.host, port: Uri.base.hasPort && Uri.base.port != 443 ? Uri.base.port : null, path: '/ice/$value');
+  Future<void> _save() async {
+    final AppLocalizations l10n = AppLocalizations.of(context); final Map<String, dynamic> payload = <String, dynamic>{};
+    if (changed.contains('blood_group')) payload['blood_group'] = bloodGroup; if (changed.contains('allergies')) payload['allergies'] = allergies; if (changed.contains('medications')) payload['medications'] = medications; if (changed.contains('conditions')) payload['conditions'] = conditions; if (changed.contains('contacts')) payload['contacts'] = contacts.map((item) => item.toJson()).toList(); if (changed.contains('notes')) payload['notes'] = notes.text; if (changed.contains('fields_public')) payload['fields_public'] = visibility;
+    if (payload.isEmpty && token != null) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.doctorEmergencyNoChanges))); return; }
+    setState(() { saving = true; error = null; });
+    try { final card = await ref.read(doctorRepositoryProvider).saveEmergencyCard(payload); changed.clear(); token = card.publicToken; ref.invalidate(doctorEmergencyCardProvider); if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.doctorEmergencySaved))); } on DoctorException catch (exception) { if (mounted) setState(() => error = exception.code == 'unknown_key' ? l10n.doctorEmergencyErrorUnknownKey : exception.code == '23514' ? l10n.doctorEmergencyErrorInvalidValue : l10n.doctorEmergencySaveError); }
+    if (mounted) setState(() => saving = false);
+  }
+  Future<void> _copy() async { if (token == null) return; await Clipboard.setData(ClipboardData(text: _address(token!).toString())); if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).doctorCopied))); }
+  Future<void> _share() async { if (token != null) await SharePlus.instance.share(ShareParams(text: _address(token!).toString())); }
+  Future<void> _regenerate() async { final l10n = AppLocalizations.of(context); final confirmed = await showDialog<bool>(context: context, builder: (dialogContext) => AlertDialog(title: Text(l10n.doctorEmergencyRegenerateConfirm), content: Text(l10n.doctorEmergencyRegenerateWarning), actions: <Widget>[TextButton(onPressed: () => dialogContext.pop(false), child: Text(l10n.commonCancel)), TextButton(onPressed: () => dialogContext.pop(true), child: Text(l10n.doctorEmergencyRegenerate))])) ?? false; if (!confirmed) return; setState(() => regenerating = true); try { token = await ref.read(doctorRepositoryProvider).regenerateEmergencyToken(); ref.invalidate(doctorEmergencyCardProvider); } catch (_) { if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.doctorEmergencyRegenerateError))); } if (mounted) setState(() => regenerating = false); }
+}
+
+class DoctorEmergencyForm extends StatelessWidget {
+  const DoctorEmergencyForm({super.key, required this.bloodGroup, required this.bloodGroups, required this.allergies, required this.medications, required this.conditions, required this.contacts, required this.notes, required this.visibility, required this.saving, required this.onBloodGroup, required this.onItems, required this.onContacts, required this.onNotesChanged, required this.onVisibility, required this.onSave, this.error});
+  final String? bloodGroup, error; final List<String> bloodGroups, allergies, medications, conditions; final List<EmergencyContact> contacts; final TextEditingController notes; final Map<String, bool> visibility; final bool saving; final ValueChanged<String?> onBloodGroup; final void Function(String, List<String>) onItems; final ValueChanged<List<EmergencyContact>> onContacts; final ValueChanged<String> onNotesChanged; final void Function(String, bool) onVisibility; final VoidCallback onSave;
+  @override
+  Widget build(BuildContext context) { final l10n = AppLocalizations.of(context); return M24Card(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
+    Text(l10n.doctorEmergencyDetails, style: context.m24.text.h2), const SizedBox(height: 16),
+    DropdownButtonFormField<String>(initialValue: bloodGroup, decoration: InputDecoration(labelText: l10n.doctorEmergencyBloodGroup), items: bloodGroups.map((value) => DropdownMenuItem(value: value, child: Text(_bloodLabel(l10n, value)))).toList(), onChanged: onBloodGroup), EmergencyVisibilitySwitch(value: visibility['blood_group'] ?? false, onChanged: (value) => onVisibility('blood_group', value)), const Divider(),
+    EmergencyChipEditor(label: l10n.doctorEmergencyAllergies, values: allergies, onChanged: (values) => onItems('allergies', values)), EmergencyVisibilitySwitch(value: visibility['allergies'] ?? false, onChanged: (value) => onVisibility('allergies', value)), const Divider(),
+    EmergencyChipEditor(label: l10n.doctorEmergencyMedications, values: medications, onChanged: (values) => onItems('medications', values)), EmergencyVisibilitySwitch(value: visibility['medications'] ?? false, onChanged: (value) => onVisibility('medications', value)), const Divider(),
+    EmergencyChipEditor(label: l10n.doctorEmergencyConditions, values: conditions, onChanged: (values) => onItems('conditions', values)), EmergencyVisibilitySwitch(value: visibility['conditions'] ?? false, onChanged: (value) => onVisibility('conditions', value)), const Divider(),
+    EmergencyContactsEditor(contacts: contacts, onChanged: onContacts), EmergencyVisibilitySwitch(value: visibility['contacts'] ?? false, onChanged: (value) => onVisibility('contacts', value)), const Divider(),
+    TextField(controller: notes, maxLength: 500, minLines: 3, maxLines: 6, onChanged: onNotesChanged, decoration: InputDecoration(labelText: l10n.doctorEmergencyNotes)), EmergencyVisibilitySwitch(value: visibility['notes'] ?? false, onChanged: (value) => onVisibility('notes', value)),
+    if (error != null) Text(error!, style: context.m24.text.bodySmall.copyWith(color: context.m24.colors.danger)), const SizedBox(height: 16), Align(alignment: Alignment.centerLeft, child: M24Button(label: l10n.commonSave, loading: saving, onPressed: onSave)),
+  ])); }
+  String _bloodLabel(AppLocalizations l10n, String value) => <String, String>{'O-': l10n.doctorBloodONegative, 'O+': l10n.doctorBloodOPositive, 'A-': l10n.doctorBloodANegative, 'A+': l10n.doctorBloodAPositive, 'B-': l10n.doctorBloodBNegative, 'B+': l10n.doctorBloodBPositive, 'AB-': l10n.doctorBloodABNegative, 'AB+': l10n.doctorBloodABPositive}[value]!;
+}
+
+class EmergencyVisibilitySwitch extends StatelessWidget { const EmergencyVisibilitySwitch({super.key, required this.value, required this.onChanged}); final bool value; final ValueChanged<bool> onChanged; @override Widget build(BuildContext context) => SwitchListTile(contentPadding: EdgeInsets.zero, title: Text(AppLocalizations.of(context).doctorEmergencyVisible), value: value, onChanged: onChanged); }
+
+class EmergencyChipEditor extends StatefulWidget { const EmergencyChipEditor({super.key, required this.label, required this.values, required this.onChanged}); final String label; final List<String> values; final ValueChanged<List<String>> onChanged; @override State<EmergencyChipEditor> createState() => _EmergencyChipEditorState(); }
+class _EmergencyChipEditorState extends State<EmergencyChipEditor> { final TextEditingController controller = TextEditingController(); @override void dispose() { controller.dispose(); super.dispose(); } @override Widget build(BuildContext context) { final l10n = AppLocalizations.of(context); return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[Text(widget.label, style: context.m24.text.title), const SizedBox(height: 8), Wrap(spacing: 8, runSpacing: 8, children: widget.values.map((value) => InputChip(label: Text(value), onDeleted: () => widget.onChanged(widget.values.where((item) => item != value).toList()))).toList()), const SizedBox(height: 8), Row(children: <Widget>[Expanded(child: TextField(controller: controller, maxLength: 80, decoration: InputDecoration(hintText: l10n.doctorEmergencyAddItem, counterText: ''))), const SizedBox(width: 8), IconButton(icon: const Icon(M24Icons.plus), tooltip: l10n.commonAdd, onPressed: widget.values.length >= 20 ? null : () { final value = controller.text.trim(); if (value.isNotEmpty) { widget.onChanged(<String>[...widget.values, value]); controller.clear(); } })])]); } }
+
+class EmergencyContactsEditor extends StatelessWidget { const EmergencyContactsEditor({super.key, required this.contacts, required this.onChanged}); final List<EmergencyContact> contacts; final ValueChanged<List<EmergencyContact>> onChanged; @override Widget build(BuildContext context) { final l10n = AppLocalizations.of(context); return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[Text(l10n.doctorEmergencyContacts, style: context.m24.text.title), for (int index = 0; index < contacts.length; index++) ListTile(contentPadding: EdgeInsets.zero, title: Text(contacts[index].name), subtitle: Text('${contacts[index].phone}${contacts[index].relationship.isEmpty ? '' : ' · ${contacts[index].relationship}'}'), trailing: IconButton(icon: const Icon(M24Icons.delete), tooltip: l10n.doctorEmergencyRemoveContact, onPressed: () => onChanged(<EmergencyContact>[...contacts]..removeAt(index)))), if (contacts.length < 5) M24Button(label: l10n.doctorEmergencyAddContact, icon: M24Icons.plus, variant: M24ButtonVariant.outline, onPressed: () => _add(context))]); } Future<void> _add(BuildContext context) async { final l10n = AppLocalizations.of(context); final name = TextEditingController(), phone = TextEditingController(), relation = TextEditingController(); final save = await showDialog<bool>(context: context, builder: (dialogContext) => AlertDialog(title: Text(l10n.doctorEmergencyAddContact), content: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[TextField(controller: name, maxLength: 80, decoration: InputDecoration(labelText: l10n.doctorEmergencyContactName)), TextField(controller: phone, maxLength: 32, keyboardType: TextInputType.phone, decoration: InputDecoration(labelText: l10n.doctorEmergencyContactPhone)), TextField(controller: relation, decoration: InputDecoration(labelText: l10n.doctorEmergencyContactRelation))]), actions: <Widget>[TextButton(onPressed: () => dialogContext.pop(false), child: Text(l10n.commonCancel)), TextButton(onPressed: () => dialogContext.pop(true), child: Text(l10n.commonAdd))])); if (save == true && name.text.trim().isNotEmpty && phone.text.trim().isNotEmpty) onChanged(<EmergencyContact>[...contacts, EmergencyContact(name: name.text.trim(), phone: phone.text.trim(), relationship: relation.text.trim())]); name.dispose(); phone.dispose(); relation.dispose(); } }
+
+class DoctorEmergencyCode extends StatelessWidget { const DoctorEmergencyCode({super.key, required this.token, required this.address, required this.regenerating, required this.onCopy, required this.onShare, required this.onRegenerate}); final String? token; final Uri? address; final bool regenerating; final VoidCallback onCopy, onShare, onRegenerate; @override Widget build(BuildContext context) { final l10n = AppLocalizations.of(context); return M24Card(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[Text(l10n.doctorEmergencyCodeTitle, style: context.m24.text.h2), const SizedBox(height: 8), if (token == null) Text(l10n.doctorEmergencyCodeAfterSave) else ...<Widget>[Center(child: QrImageView(data: address.toString(), size: 220, backgroundColor: Theme.of(context).colorScheme.surface)), const SizedBox(height: 12), SelectableText(address.toString()), const SizedBox(height: 12), Wrap(spacing: 8, runSpacing: 8, children: <Widget>[M24Button(label: l10n.doctorCopy, icon: M24Icons.copy, variant: M24ButtonVariant.outline, onPressed: onCopy), M24Button(label: l10n.doctorShareAction, icon: M24Icons.share, variant: M24ButtonVariant.secondary, onPressed: onShare)]), const SizedBox(height: 12), M24Button(label: l10n.doctorEmergencyRegenerate, icon: M24Icons.refresh, loading: regenerating, variant: M24ButtonVariant.destructiveOutline, onPressed: onRegenerate)] ])); } }
+
+class DoctorEmergencyPreview extends StatelessWidget { const DoctorEmergencyPreview({super.key, required this.name, required this.bloodGroup, required this.allergies, required this.medications, required this.conditions, required this.contacts, required this.notes, required this.visibility}); final String? name, bloodGroup, notes; final List<String> allergies, medications, conditions; final List<EmergencyContact> contacts; final Map<String, bool> visibility; @override Widget build(BuildContext context) { final l10n = AppLocalizations.of(context); final rows = <Widget>[]; void add(String key, String label, String value) { if ((visibility[key] ?? false) && value.trim().isNotEmpty) rows.add(Padding(padding: const EdgeInsets.only(top: 12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[Text(label, style: context.m24.text.label), Text(value, style: context.m24.text.body)]))); } add('blood_group', l10n.doctorEmergencyBloodGroup, bloodGroup ?? ''); add('allergies', l10n.doctorEmergencyAllergies, allergies.join(', ')); add('medications', l10n.doctorEmergencyMedications, medications.join(', ')); add('conditions', l10n.doctorEmergencyConditions, conditions.join(', ')); add('contacts', l10n.doctorEmergencyContacts, contacts.map((item) => '${item.name}: ${item.phone}').join('\n')); add('notes', l10n.doctorEmergencyNotes, notes ?? ''); return M24Card(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[Text(l10n.doctorEmergencyPreview, style: context.m24.text.h2), const SizedBox(height: 8), Text(name?.trim().isNotEmpty == true ? name! : l10n.doctorEmergencyNameUnavailable, style: context.m24.text.h3), if (rows.isEmpty) Padding(padding: const EdgeInsets.only(top: 12), child: Text(l10n.doctorEmergencyPreviewEmpty)) else ...rows])); } }

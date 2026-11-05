@@ -1,4 +1,3 @@
-import 'package:medical24/core/errors/app_failure.dart';
 import 'package:medical24/features/health/data/health_models.dart';
 import 'package:medical24/supabase/supabase_config.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -20,11 +19,11 @@ class ManualValueException implements Exception {
 
 /// Supabase implementation. Authorization is always enforced by backend RLS.
 class SupabaseHealthRepository implements HealthRepository {
-  const SupabaseHealthRepository();
+  const SupabaseHealthRepository(this.subjectId);
+  final String? subjectId;
 
   SupabaseClient get _db => SupabaseConfig.client;
-  String get _subjectId => SupabaseConfig.currentUserId ?? (throw AppFailure.unauthorized);
-
+  String get _subjectId => subjectId ?? (throw StateError('subject_unavailable'));
   @override
   Future<List<BiomarkerSummary>> catalog() async {
     final dynamic data = await SupabaseConfig.rpc('biomarker_catalog_for_subject', params: <String, dynamic>{'p_subject': _subjectId});

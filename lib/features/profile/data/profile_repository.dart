@@ -147,7 +147,9 @@ class ProfileRepository {
   /// Soft delete now + scheduled purge after 30 days (Edge Function).
   Future<void> deleteAccount() async {
     try {
-      await _db.functions.invoke('delete-account');
+      // The Edge Function requires an explicit confirmation in the body.
+      await _db.functions.invoke('delete-account',
+          body: <String, dynamic>{'confirm': 'DELETE'});
       AppLogger.event('account_delete_requested');
     } catch (e) {
       // Fallback on the SQL function if the Edge Function is not deployed yet.

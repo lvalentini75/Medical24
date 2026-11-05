@@ -18,10 +18,21 @@ class HealthAlertList extends StatelessWidget {
   Widget build(BuildContext context) => ListView.separated(itemCount: alerts.length, separatorBuilder: (_, __) => const SizedBox(height: 12), itemBuilder: (BuildContext context, int index) => HealthAlertRow(alert: alerts[index], onOpen: () => onOpen(alerts[index])));
 }
 
+/// Alert-center list that keeps the subject attached to each caregiver alert.
+class SubjectHealthAlertList extends StatelessWidget {
+  const SubjectHealthAlertList({super.key, required this.alerts, required this.onOpen});
+  final List<SubjectHealthAlert> alerts;
+  final ValueChanged<SubjectHealthAlert> onOpen;
+
+  @override
+  Widget build(BuildContext context) => ListView.separated(itemCount: alerts.length, separatorBuilder: (_, __) => const SizedBox(height: 12), itemBuilder: (BuildContext context, int index) => HealthAlertRow(alert: alerts[index].alert, subjectName: alerts[index].isSelf ? null : alerts[index].subjectName, onOpen: () => onOpen(alerts[index])));
+}
+
 class HealthAlertRow extends StatelessWidget {
-  const HealthAlertRow({super.key, required this.alert, required this.onOpen});
+  const HealthAlertRow({super.key, required this.alert, required this.onOpen, this.subjectName});
   final HealthAlert alert;
   final VoidCallback onOpen;
+  final String? subjectName;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +41,7 @@ class HealthAlertRow extends StatelessWidget {
     final M24StatusPillVariant pill = switch (alert.type) { HealthAlertType.critical => M24StatusPillVariant.danger, HealthAlertType.warning => M24StatusPillVariant.warning, HealthAlertType.info => M24StatusPillVariant.info };
     final IconData icon = switch (alert.type) { HealthAlertType.critical => LucideIcons.circleAlert, HealthAlertType.warning => LucideIcons.triangleAlert, HealthAlertType.info => M24Icons.info };
     return M24Card(tint: alert.isUnread && alert.type == HealthAlertType.warning ? M24CardTint.warning : M24CardTint.none, padding: EdgeInsets.zero, child: Column(children: <Widget>[
-      M24ListRow(icon: icon, iconVariant: tile, title: alert.name(language), subtitle: '${context.l10n.t('alertsLevel_${alert.level}')} · ${DateFormat.yMd(language).add_Hm().format(alert.createdAt)}', status: M24StatusPill(label: context.l10n.t(alert.isUnread ? 'alertsUnread' : 'alertsRead'), variant: alert.isUnread ? pill : M24StatusPillVariant.neutral), onTap: onOpen),
+      M24ListRow(icon: icon, iconVariant: tile, title: subjectName == null ? alert.name(language) : context.l10n.t('familyAlertSubject', args: <String, String>{'name': subjectName!}), subtitle: '${context.l10n.t('alertsLevel_${alert.level}')} · ${DateFormat.yMd(language).add_Hm().format(alert.createdAt)}', status: M24StatusPill(label: context.l10n.t(alert.isUnread ? 'alertsUnread' : 'alertsRead'), variant: alert.isUnread ? pill : M24StatusPillVariant.neutral), onTap: onOpen),
       Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 14), child: Align(alignment: Alignment.centerLeft, child: Text(context.l10n.t(alert.messageKey), style: context.m24.text.bodySmall))),
       if (alert.type == HealthAlertType.critical) Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 16), child: Align(alignment: Alignment.centerLeft, child: M24Button(label: context.l10n.t('alertsContactDoctor'), icon: LucideIcons.stethoscope, onPressed: () => context.go(AppRoutes.doctor), variant: M24ButtonVariant.warning, size: M24ButtonSize.small))),
     ]));

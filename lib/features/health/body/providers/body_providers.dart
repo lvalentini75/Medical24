@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:medical24/features/health/body/data/body_models.dart';
 import 'package:medical24/features/health/body/data/body_repository.dart';
+import 'package:medical24/features/family/providers/family_providers.dart';
 
-final Provider<BodyRepository> bodyRepositoryProvider = Provider<BodyRepository>((Ref ref) => const SupabaseBodyRepository());
-final FutureProvider<List<OrganOverview>> organOverviewProvider = FutureProvider<List<OrganOverview>>((Ref ref) => ref.watch(bodyRepositoryProvider).overview());
+final Provider<BodyRepository> bodyRepositoryProvider = Provider<BodyRepository>((Ref ref) => SupabaseBodyRepository(ref.watch(currentSubjectProvider).value?.id));
+final FutureProvider<List<OrganOverview>> organOverviewProvider = FutureProvider<List<OrganOverview>>((Ref ref) => ref.watch(currentSubjectProvider).value == null ? Future<List<OrganOverview>>.value(const <OrganOverview>[]) : ref.watch(bodyRepositoryProvider).overview());
 final organBiomarkersProvider = FutureProvider.family<List<OrganBiomarker>, String>((Ref ref, String organ) => ref.watch(bodyRepositoryProvider).biomarkers(organ));
 final organHistoryProvider = FutureProvider.family<List<OrganHistoryEntry>, String>((Ref ref, String organ) => ref.watch(bodyRepositoryProvider).history(organ));
 final organComparisonProvider = FutureProvider.family<OrganComparison, String>((Ref ref, String organ) => ref.watch(bodyRepositoryProvider).comparison(organ));

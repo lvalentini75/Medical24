@@ -94,7 +94,7 @@ insert into tap_lines (line) select is(
 
 insert into tap_lines (line) select is(
   (select round(n.value_num, 2) from public.normalize_unit('4548-4', 42, 'mmol/mol') n),
-  5.90::numeric, 'HbA1c: 42 mmol/mol diventano 5.90 % con la formula IFCC');
+  5.99::numeric, 'HbA1c: 42 mmol/mol diventano 5.99 % con la formula IFCC');
 
 -- ---------------------------------------------------------------------------
 -- 4. resolve_flag: 6 asserzioni

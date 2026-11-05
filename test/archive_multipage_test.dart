@@ -10,6 +10,7 @@ import 'package:image/image.dart' as img;
 import 'package:medical24/core/models/medical_document.dart';
 import 'package:medical24/core/theme/app_theme.dart';
 import 'package:medical24/features/archive/data/archive_repository.dart';
+import 'package:medical24/features/archive/data/image_pipeline.dart';
 import 'package:medical24/features/archive/providers/archive_providers.dart';
 import 'package:medical24/features/archive/widgets/add_document_sheet.dart';
 import 'package:medical24/features/archive/widgets/duplicate_notice_dialog.dart';
@@ -142,6 +143,50 @@ Widget app(Widget child, {List<Object> overrides = const <Object>[]}) =>
     );
 
 void main() {
+  testWidgets('byte picker shows file name and size and enables upload',
+      (WidgetTester tester) async {
+    final Uint8List pdf = Uint8List.fromList(<int>[
+      0x25, 0x50, 0x44, 0x46, 0x2d, ...List<int>.filled(2043, 0),
+    ]);
+    await tester.pumpWidget(app(Scaffold(
+      body: AddDocumentSheet(
+        pickFiles: () async =>
+            ArchivePickedFile(name: 'referto.pdf', bytes: pdf),
+      ),
+    )));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('File or PDF'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('referto.pdf'), findsOneWidget);
+    expect(find.text('2.0 KB'), findsOneWidget);
+    final FilledButton upload = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Upload'));
+    expect(upload.onPressed, isNotNull);
+  });
+
+  testWidgets('picker rejects files over 25 MB and keeps upload disabled',
+      (WidgetTester tester) async {
+    final Uint8List oversized = Uint8List(ImagePipeline.maxBytes + 1);
+    oversized.setAll(0, <int>[0x25, 0x50, 0x44, 0x46, 0x2d]);
+    await tester.pumpWidget(app(Scaffold(
+      body: AddDocumentSheet(
+        pickFiles: () async => ArchivePickedFile(
+            name: 'troppo-grande.pdf', bytes: oversized),
+      ),
+    )));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('File or PDF'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('The file is larger than 25 MB.'), findsOneWidget);
+    final FilledButton upload = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Upload'));
+    expect(upload.onPressed, isNull);
+  });
+
   testWidgets('multi-page flow: three shots, reorder, delete one page',
       (WidgetTester tester) async {
     final FakeArchiveState state = FakeArchiveState();

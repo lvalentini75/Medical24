@@ -3,19 +3,15 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/models/medical_document.dart';
-import '../../../core/providers/app_providers.dart';
+import 'package:medical24/features/family/providers/family_providers.dart';
 import '../data/archive_repository.dart';
 
 /// Single instance of the archive repository.
 final Provider<ArchiveRepository> archiveRepositoryProvider =
-    Provider<ArchiveRepository>((Ref ref) => const ArchiveRepository());
+    Provider<ArchiveRepository>((Ref ref) => ArchiveRepository(subjectId: ref.watch(currentSubjectProvider).value?.id));
 
-/// Subject whose archive is shown. Until family delegation (P05) it is
-/// always the signed-in user; `can_access_subject` guards it anyway.
-final Provider<String?> archiveSubjectIdProvider = Provider<String?>((Ref ref) {
-  final profile = ref.watch(myProfileProvider);
-  return profile.hasValue ? profile.requireValue?.id : null;
-});
+/// Subject whose archive is shown; RLS still decides whether it is accessible.
+final Provider<String?> archiveSubjectIdProvider = Provider<String?>((Ref ref) => ref.watch(currentSubjectProvider).value?.id);
 
 /// Active filters of the archive list.
 class ArchiveFilter {
@@ -309,7 +305,10 @@ final archivePagesProvider = FutureProvider.family<List<DocumentPage>, String>(
 /// Documents used and plan limit, read from `document_usage()`.
 final FutureProvider<DocumentUsage> archiveUsageProvider =
     FutureProvider<DocumentUsage>(
-        (Ref ref) => ref.watch(archiveRepositoryProvider).documentUsage());
+        (Ref ref) {
+          final String? subjectId = ref.watch(archiveSubjectIdProvider);
+          return subjectId == null ? Future<DocumentUsage>.value(const DocumentUsage(used: 0, max: 0)) : ref.watch(archiveRepositoryProvider).documentUsage();
+        });
 
 /// 10-minute signed URL for a private object.
 final archiveSignedUrlProvider = FutureProvider.family<String, String>(

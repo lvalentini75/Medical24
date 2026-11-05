@@ -1,38 +1,57 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
-import '../../../core/errors/app_failure.dart';
-import '../../../core/models/user_profile.dart';
-import '../../../core/providers/app_providers.dart';
-import '../../../core/router/app_routes.dart';
-import '../../../core/security/app_lock_controller.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/app_state_views.dart';
-import 'package:medical24/l10n/generated/localization_lookup.dart';
-import '../widgets/settings_section.dart';
 import 'package:medical24/core/ui/icons.dart';
-import 'package:medical24/core/ui/widgets/surfaces.dart';
 import 'package:medical24/core/ui/tokens.dart';
+import 'package:medical24/core/errors/app_failure.dart';
+import 'package:medical24/core/models/user_profile.dart';
+import 'package:medical24/core/providers/app_providers.dart';
+import 'package:medical24/core/router/app_routes.dart';
+import 'package:medical24/core/security/app_lock_controller.dart';
+import 'package:medical24/core/theme/app_theme.dart';
+import 'package:medical24/core/widgets/app_state_views.dart';
+import 'package:medical24/features/settings/data/settings_privacy_repository.dart';
+import 'package:medical24/features/settings/data/settings_privacy_localizations.dart';
+import 'package:medical24/features/settings/screens/export_data_screen.dart';
+import 'package:medical24/features/settings/widgets/delete_account_dialog.dart';
+import 'package:medical24/features/settings/widgets/settings_section.dart';
+import 'package:medical24/features/family/providers/family_providers.dart';
+import 'package:medical24/features/family/widgets/subject_selector.dart';
+import 'package:medical24/l10n/generated/localization_lookup.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   static const String appVersion = '1.0.0 (P00)';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _showExport = false;
+  final SettingsPrivacyRepository _privacyRepository = const SupabaseSettingsPrivacyRepository();
+
+  @override
+  Widget build(BuildContext context) {
+    if (_showExport) return ExportDataScreen(repository: _privacyRepository, onBack: () => setState(() => _showExport = false));
     final AppLocalizations l10n = context.l10n;
     final String language = Localizations.localeOf(context).languageCode;
     final AsyncValue<UserProfile?> profile = ref.watch(myProfileProvider);
     final AppLockState lock = ref.watch(appLockProvider);
+    final AsyncValue<bool> caregiverMode = ref.watch(caregiverModeProvider);
+    final String? currentSubjectId = ref.watch(currentSubjectProvider).value?.id;
+    final String? userId = ref.watch(sessionProvider)?.user.id;
+    final bool viewingSelf = currentSubjectId == null || currentSubjectId == userId;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.t('settingsTitle'))),
-      body: profile.when(
+      body: Column(children: <Widget>[
+        const SubjectContextBanner(),
+        Expanded(child: profile.when(
         loading: () => const AppLoadingView(),
         error: (Object e, StackTrace _) => AppErrorView(
           message: AppFailure.from(e, where: 'settings').localized(language),
@@ -44,7 +63,7 @@ class SettingsScreen extends ConsumerWidget {
             child: ListView(
               padding: AppSpacing.paddingLg,
               children: <Widget>[
-                SettingsSection(
+                if (viewingSelf) SettingsSection(
                   title: l10n.t('settingsProfileSection'),
                   children: <Widget>[
                     ListTile(
@@ -54,10 +73,30 @@ class SettingsScreen extends ConsumerWidget {
                       trailing: const Icon(M24Icons.chevronRight),
                       onTap: () => context.push(AppRoutes.settingsProfile),
                     ),
+                    ListTile(
+                      leading: const Icon(M24Icons.users),
+                      title: Text(l10n.familyTitle),
+                      subtitle: Text(l10n.familySettingsBody),
+                      trailing: const Icon(M24Icons.chevronRight),
+                      onTap: () => context.push(AppRoutes.settingsFamily),
+                    ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.md),
-                SettingsSection(
+                if (viewingSelf) const SizedBox(height: AppSpacing.md),
+                if (viewingSelf) SettingsSection(
+                  title: l10n.t('accessibilityTitle'),
+                  children: <Widget>[
+                    SwitchListTile(
+                      secondary: const Icon(M24Icons.users),
+                      title: Text(l10n.t('accessibilityCaregiverMode')),
+                      subtitle: Text(l10n.t('accessibilityCaregiverModeBody')),
+                      value: caregiverMode.value ?? false,
+                      onChanged: caregiverMode.isLoading ? null : ref.read(caregiverModeProvider.notifier).setEnabled,
+                    ),
+                  ],
+                ),
+                if (viewingSelf) const SizedBox(height: AppSpacing.md),
+                if (viewingSelf) SettingsSection(
                   title: l10n.t('settingsPreferencesSection'),
                   children: <Widget>[
                     ListTile(
@@ -103,8 +142,8 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.md),
-                SettingsSection(
+                if (viewingSelf) const SizedBox(height: AppSpacing.md),
+                if (viewingSelf) SettingsSection(
                   title: l10n.t('settingsSecuritySection'),
                   children: <Widget>[
                     SwitchListTile(
@@ -138,18 +177,19 @@ class SettingsScreen extends ConsumerWidget {
                       trailing: const Icon(M24Icons.chevronRight),
                       onTap: () => context.push(AppRoutes.settingsConsents),
                     ),
-                    ListTile(
+                    if (viewingSelf) ListTile(
                       leading: const Icon(M24Icons.download),
                       title: Text(l10n.t('settingsExportData')),
                       subtitle: Text(l10n.t('settingsExportBody')),
-                      onTap: () => _exportData(context, ref),
+                      trailing: const Icon(M24Icons.chevronRight),
+                      onTap: () => setState(() => _showExport = true),
                     ),
-                    ListTile(
+                    if (viewingSelf) ListTile(
                       leading: Icon(M24Icons.delete, color: context.m24.colors.danger),
                       title: Text(l10n.t('settingsDeleteAccount'),
                           style: TextStyle(color: context.m24.colors.danger)),
                       subtitle: Text(l10n.t('settingsDeleteBody')),
-                      onTap: () => _confirmDelete(context, ref),
+                      onTap: () => _confirmDelete(context),
                     ),
                   ],
                 ),
@@ -160,7 +200,7 @@ class SettingsScreen extends ConsumerWidget {
                     ListTile(
                       leading: const Icon(M24Icons.info),
                       title: Text(l10n.t('settingsAppVersion')),
-                      trailing: Text(appVersion),
+                      trailing: const Text(SettingsScreen.appVersion),
                     ),
                     ListTile(
                       leading: const Icon(M24Icons.logout),
@@ -178,7 +218,8 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
         ),
-      ),
+      )),
+      ]),
     );
   }
 
@@ -220,58 +261,8 @@ class SettingsScreen extends ConsumerWidget {
     controller.dispose();
   }
 
-  Future<void> _exportData(BuildContext context, WidgetRef ref) async {
+  Future<void> _confirmDelete(BuildContext context) async {
     final AppLocalizations l10n = context.l10n;
-    try {
-      final repo = ref.read(profileRepositoryProvider);
-      final UserProfile? profile = await repo.fetchMyProfile();
-      final List<Map<String, dynamic>> consents = (await repo.fetchMyConsents())
-          .map((c) => c.toJson())
-          .toList();
-      final List<Map<String, dynamic>> audit = await repo.fetchMyAuditLog();
-      final String payload = const JsonEncoder.withIndent('  ')
-          .convert(<String, dynamic>{
-        'profile': profile?.toJson(),
-        'consents': consents,
-        'audit_log': audit,
-      });
-      await Clipboard.setData(ClipboardData(text: payload));
-      await repo.logAudit('data_exported', targetTable: 'profiles');
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.t('settingsExportDone'))));
-      }
-    } catch (e) {
-      final String language = Localizations.localeOf(context).languageCode;
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                AppFailure.from(e, where: 'settings.export').localized(language))));
-      }
-    }
-  }
-
-  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
-    final AppLocalizations l10n = context.l10n;
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext ctx) => AlertDialog(
-        title: Text(l10n.t('settingsDeleteConfirmTitle')),
-        content: Text(l10n.t('settingsDeleteConfirmBody')),
-        actions: <Widget>[
-          TextButton(
-              onPressed: () => ctx.pop(false),
-              child: Text(l10n.t('commonCancel'))),
-          FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.statusRed),
-            onPressed: () => ctx.pop(true),
-            child: Text(l10n.t('settingsDeleteConfirmAction')),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true) return;
-
     final AppLockState lock = ref.read(appLockProvider);
     if (lock.biometricsAvailable) {
       final bool ok = await ref
@@ -279,18 +270,17 @@ class SettingsScreen extends ConsumerWidget {
           .authenticate(l10n.t('settingsDeleteConfirmTitle'));
       if (!ok) return;
     }
-
+    final DeleteAccountResult? result = await DeleteAccountDialog.show(context, onDelete: _privacyRepository.deleteAccount);
+    if (result == null || !context.mounted) return;
     try {
-      await ref.read(profileRepositoryProvider).deleteAccount();
       await ref.read(authRepositoryProvider).signOut();
-      if (context.mounted) context.go(AppRoutes.welcome);
-    } catch (e) {
-      final String language = Localizations.localeOf(context).languageCode;
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(AppFailure.from(e, where: 'settings.delete')
-                .localized(language))));
-      }
+    } catch (_) {
+      // The Edge Function already invalidated every server session.
+    }
+    if (context.mounted) {
+      final String date = DateFormat.yMMMd(Localizations.localeOf(context).languageCode).format(result.purgeAt.toLocal());
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.settingsDeleteSuccess(date))));
+      context.go(AppRoutes.welcome);
     }
   }
 }

@@ -12,7 +12,13 @@ import 'package:medical24/features/archive/screens/archive_screen.dart';
 import 'package:medical24/features/analysis/screens/document_analysis_screen.dart';
 import 'package:medical24/features/health/screens/manual_value_screen.dart';
 import 'package:medical24/features/home/screens/home_screen.dart';
-import 'package:medical24/features/home/screens/placeholder_sections.dart';
+import 'package:medical24/features/family/screens/family_screen.dart';
+import 'package:medical24/features/doctor/screens/doctor_dossier_screen.dart';
+import 'package:medical24/features/doctor/screens/doctor_links_screen.dart';
+import 'package:medical24/features/doctor/screens/doctor_screen.dart';
+import 'package:medical24/features/doctor/screens/doctor_share_screen.dart';
+import 'package:medical24/features/doctor/screens/doctor_questions_screen.dart';
+import 'package:medical24/features/doctor/screens/doctor_emergency_screen.dart';
 import 'package:medical24/features/treatments/screens/treatment_compare_screen.dart';
 import 'package:medical24/features/treatments/screens/treatment_detail_screen.dart';
 import 'package:medical24/features/treatments/screens/treatment_favorites_screen.dart';
@@ -150,6 +156,12 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
             builder: (BuildContext context, GoRouterState state) =>
                 const ConsentsLogScreen(),
           ),
+          GoRoute(
+            path: 'family',
+            name: 'settingsFamily',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (BuildContext context, GoRouterState state) => const FamilyScreen(),
+          ),
         ],
       ),
       ShellRoute(
@@ -278,8 +290,19 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
             GoRoute(
               path: AppRoutes.doctor,
               name: 'doctor',
-              builder: (BuildContext context, GoRouterState state) =>
-                  const DoctorSectionScreen(),
+              builder: (BuildContext context, GoRouterState state) => const DoctorScreen(),
+              routes: <RouteBase>[
+                GoRoute(path: 'share', name: 'doctorShare', builder: (BuildContext context, GoRouterState state) => const DoctorShareScreen()),
+                GoRoute(path: 'links', name: 'doctorLinks', builder: (BuildContext context, GoRouterState state) => const DoctorLinksScreen(), routes: <RouteBase>[
+                  GoRoute(path: ':id', name: 'doctorLinkDetail', builder: (BuildContext context, GoRouterState state) => DoctorLinkDetailScreen(id: state.pathParameters['id']!)),
+                ]),
+                GoRoute(path: 'dossier', name: 'doctorDossier', builder: (BuildContext context, GoRouterState state) => const DoctorDossierScreen()),
+                GoRoute(path: 'questions', name: 'doctorQuestions', builder: (BuildContext context, GoRouterState state) => const DoctorQuestionsScreen(), routes: <RouteBase>[
+                  GoRoute(path: 'new', name: 'doctorQuestionNew', builder: (BuildContext context, GoRouterState state) => const DoctorQuestionFormScreen()),
+                  GoRoute(path: ':id', name: 'doctorQuestionDetail', builder: (BuildContext context, GoRouterState state) => DoctorQuestionDetailScreen(id: state.pathParameters['id']!)),
+                ]),
+                GoRoute(path: 'emergency', name: 'doctorEmergency', builder: (BuildContext context, GoRouterState state) => const DoctorEmergencyScreen()),
+              ],
             ),
           ]),
         ],

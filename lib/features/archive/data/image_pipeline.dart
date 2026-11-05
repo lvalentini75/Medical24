@@ -430,4 +430,10 @@ class ArchiveFailures {
     'The upload did not complete. Please try again.',
     code: 'ingest_failed',
   );
+
+  static const AppFailure fileReadFailed = AppFailure(
+    'Non è stato possibile leggere il file selezionato.',
+    'The selected file could not be read.',
+    code: 'file_read_failed',
+  );
 }

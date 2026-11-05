@@ -29,10 +29,10 @@ class M24TextStyles extends ThemeExtension<M24TextStyles> {
   const M24TextStyles({required this.display, required this.h1, required this.h2, required this.h3, required this.title, required this.body, required this.bodySmall, required this.label, required this.caption, required this.navLabel, required this.button, required this.stat});
   final TextStyle display, h1, h2, h3, title, body, bodySmall, label, caption, navLabel, button, stat;
 
-  static M24TextStyles create(M24Colors colors, {required bool desktop}) {
+  static M24TextStyles create(M24Colors colors, {required bool desktop, bool highContrastSecondary = false}) {
     TextStyle style(double size, double height, FontWeight weight, Color color, {double? spacing}) => TextStyle(fontFamily: 'Inter', fontSize: size, height: height / size, fontWeight: weight, color: color, letterSpacing: spacing, fontFeatures: const <FontFeature>[FontFeature.tabularFigures()]);
     return M24TextStyles(
-      display: style(desktop ? 32 : 36, desktop ? 36 : 40, FontWeight.w700, colors.ink, spacing: -0.64), h1: style(32, desktop ? 40 : 38, desktop ? FontWeight.w600 : FontWeight.w700, colors.ink, spacing: -0.64), h2: style(desktop ? 20 : 22, 28, FontWeight.w600, colors.ink), h3: style(18, desktop ? 26 : 24, FontWeight.w600, colors.ink), title: style(desktop ? 15 : 17, 22, FontWeight.w600, colors.ink), body: style(desktop ? 15 : 16, desktop ? 22 : 24, FontWeight.w400, colors.ink), bodySmall: style(desktop ? 14 : 15, desktop ? 20 : 22, FontWeight.w400, colors.inkSecondary), label: style(14, 20, FontWeight.w500, colors.ink), caption: style(13, 18, FontWeight.w400, colors.inkMuted), navLabel: style(desktop ? 15 : 12, desktop ? 20 : 16, FontWeight.w500, colors.inkSecondary), button: style(desktop ? 15 : 16, 20, FontWeight.w600, colors.ink), stat: style(28, 32, FontWeight.w700, colors.ink),
+      display: style(desktop ? 32 : 36, desktop ? 36 : 40, FontWeight.w700, colors.ink, spacing: -0.64), h1: style(32, desktop ? 40 : 38, desktop ? FontWeight.w600 : FontWeight.w700, colors.ink, spacing: -0.64), h2: style(desktop ? 20 : 22, 28, FontWeight.w600, colors.ink), h3: style(18, desktop ? 26 : 24, FontWeight.w600, colors.ink), title: style(desktop ? 15 : 17, 22, FontWeight.w600, colors.ink), body: style(desktop ? 15 : 16, desktop ? 22 : 24, FontWeight.w400, colors.ink), bodySmall: style(desktop ? 14 : 15, desktop ? 20 : 22, FontWeight.w400, highContrastSecondary ? colors.ink : colors.inkSecondary), label: style(14, 20, FontWeight.w500, colors.ink), caption: style(13, 18, FontWeight.w400, highContrastSecondary ? colors.ink : colors.inkMuted), navLabel: style(desktop ? 15 : 12, desktop ? 20 : 16, FontWeight.w500, highContrastSecondary ? colors.ink : colors.inkSecondary), button: style(desktop ? 15 : 16, 20, FontWeight.w600, colors.ink), stat: style(28, 32, FontWeight.w700, colors.ink),
     );
   }
 
@@ -40,6 +40,16 @@ class M24TextStyles extends ThemeExtension<M24TextStyles> {
   M24TextStyles copyWith() => this;
   @override
   M24TextStyles lerp(covariant M24TextStyles? other, double t) => other == null ? this : M24TextStyles(display: TextStyle.lerp(display, other.display, t)!, h1: TextStyle.lerp(h1, other.h1, t)!, h2: TextStyle.lerp(h2, other.h2, t)!, h3: TextStyle.lerp(h3, other.h3, t)!, title: TextStyle.lerp(title, other.title, t)!, body: TextStyle.lerp(body, other.body, t)!, bodySmall: TextStyle.lerp(bodySmall, other.bodySmall, t)!, label: TextStyle.lerp(label, other.label, t)!, caption: TextStyle.lerp(caption, other.caption, t)!, navLabel: TextStyle.lerp(navLabel, other.navLabel, t)!, button: TextStyle.lerp(button, other.button, t)!, stat: TextStyle.lerp(stat, other.stat, t)!);
+}
+
+@immutable
+class M24Accessibility extends ThemeExtension<M24Accessibility> {
+  const M24Accessibility({required this.caregiverMode});
+  final bool caregiverMode;
+  @override
+  M24Accessibility copyWith({bool? caregiverMode}) => M24Accessibility(caregiverMode: caregiverMode ?? this.caregiverMode);
+  @override
+  M24Accessibility lerp(covariant M24Accessibility? other, double t) => t < .5 || other == null ? this : other;
 }
 
 class M24Tokens {
@@ -52,6 +62,7 @@ extension M24BuildContext on BuildContext {
   M24Tokens get m24 {
     final ThemeData theme = Theme.of(this);
     final M24Colors colors = theme.extension<M24Colors>() ?? M24Colors.light;
-    return M24Tokens(colors, M24TextStyles.create(colors, desktop: MediaQuery.sizeOf(this).width >= 1200));
+    final bool highContrast = theme.extension<M24Accessibility>()?.caregiverMode ?? false;
+    return M24Tokens(colors, M24TextStyles.create(colors, desktop: MediaQuery.sizeOf(this).width >= 1200, highContrastSecondary: highContrast));
   }
 }
